@@ -1,0 +1,19 @@
+#notesTextArea {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#notesTextArea .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#notesTextArea .scroll-pane .viewport{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#notesTextArea .scroll-pane .content{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
