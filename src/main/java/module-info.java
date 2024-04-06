@@ -13,8 +13,8 @@ module prodegus.musetasks {
     opens prodegus.musetasks.database to javafx.fxml;
     exports prodegus.musetasks.database;
 
-    opens prodegus.musetasks.overview to javafx.fxml;
-    exports prodegus.musetasks.overview;
+    opens prodegus.musetasks.workspace to javafx.fxml;
+    exports prodegus.musetasks.workspace;
 
     opens prodegus.musetasks.contacts to javafx.fxml;
     exports prodegus.musetasks.contacts;

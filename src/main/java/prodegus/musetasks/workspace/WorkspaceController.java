@@ -1,4 +1,4 @@
-package prodegus.musetasks.overview;
+package prodegus.musetasks.workspace;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -18,17 +19,20 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 
-public class OverviewController implements Initializable {
+public class WorkspaceController implements Initializable {
 
     @FXML private Button editCancelNotesButton;
     @FXML private TextField contactSearchBar;
     @FXML private TableView<Contact> contactTableView;
+    @FXML private TableColumn<Contact, Boolean> selectColumn;
     @FXML private TableColumn<Contact, String> lastNameColumn;
     @FXML private TableColumn<Contact, String> firstNameColumn;
     @FXML private TableColumn<Contact, String> categoryColumn;
@@ -38,6 +42,7 @@ public class OverviewController implements Initializable {
     @FXML private TextArea newNoteTextField;
     @FXML private TextArea notesTextArea;
     @FXML private Button saveNotesButton;
+    @FXML private ToggleGroup contactCategoryToggle;
     @FXML private ToggleButton toggleAll;
     @FXML private ToggleButton toggleOthers;
     @FXML private ToggleButton toggleParents;
@@ -51,6 +56,17 @@ public class OverviewController implements Initializable {
     private SortedList<Contact> sortableContacts;
     private Contact selectedContact;
     private boolean notesEditMode = false;
+
+    @FXML
+    void deleteContacts(ActionEvent event) {
+        Set<Contact> selectedContacts = new HashSet<>();
+        for (Contact contact : contactTableView.getItems()) {
+            if (contact.isSelected()) {
+                deleteContact(contact);
+            }
+        }
+        refreshContacts();
+    }
 
     @FXML
     void loadFromXls(ActionEvent event) {
@@ -131,7 +147,14 @@ public class OverviewController implements Initializable {
 
     void refreshContacts() {
         refreshContactList(contacts);
+        refreshContactView();
         tableViewSelect();
+    }
+
+    void refreshContactView() {
+        filteredContacts = new FilteredList<>(contacts, contact -> true);
+        sortableContacts = new SortedList<>(filteredContacts);
+        contactTableView.setItems(sortableContacts);
     }
 
     void activateNotesEditMode() {
@@ -204,21 +227,24 @@ public class OverviewController implements Initializable {
         deactivateNotesEditMode();
     }
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Initialize contacts
         contacts = getContactList();
         filteredContacts = new FilteredList<>(contacts, contact -> true);
         sortableContacts = new SortedList<>(filteredContacts);
         sortableContacts.comparatorProperty().bind(contactTableView.comparatorProperty());
 
         // Initialize ToggleGroup
-        ToggleGroup filterToggleGroup = new ToggleGroup();
-        toggleAll.setToggleGroup(filterToggleGroup);
-        toggleOthers.setToggleGroup(filterToggleGroup);
-        toggleParents.setToggleGroup(filterToggleGroup);
-        toggleProspectives.setToggleGroup(filterToggleGroup);
-        toggleStudents.setToggleGroup(filterToggleGroup);
-        toggleTeachers.setToggleGroup(filterToggleGroup);
+//        ToggleGroup filterToggleGroup = new ToggleGroup();
+//        toggleAll.setToggleGroup(filterToggleGroup);
+//        toggleOthers.setToggleGroup(filterToggleGroup);
+//        toggleParents.setToggleGroup(filterToggleGroup);
+//        toggleProspectives.setToggleGroup(filterToggleGroup);
+//        toggleStudents.setToggleGroup(filterToggleGroup);
+//        toggleTeachers.setToggleGroup(filterToggleGroup);
 
 
         // Initialize SearchBar
@@ -234,21 +260,30 @@ public class OverviewController implements Initializable {
         });
 
         // Initialize TableView: All contacts
+        selectColumn.setCellValueFactory(cd -> cd.getValue().selectedProperty());
+        selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
+
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastname"));
-        lastNameColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.15));
+        lastNameColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.14));
+
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstname"));
-        firstNameColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.15));
+        firstNameColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.14));
+
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        categoryColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.15));
+        categoryColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.14));
+
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-        locationColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.15));
+        locationColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.14));
+
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        emailColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.20));
+        emailColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.19));
+
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        phoneColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.20));
+        phoneColumn.prefWidthProperty().bind(contactTableView.widthProperty().multiply(0.19));
+
+        contactTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contactTableView.setItems(sortableContacts);
         contactTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
-
         contactTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -257,7 +292,7 @@ public class OverviewController implements Initializable {
                 notesTextArea.setText(selectedContact.getNotes());
                 notesTextArea.setScrollTop(Double.MAX_VALUE);
                 notesTextArea.appendText(""); // workaround to scroll to bottom of TextArea
-                OverviewController.this.deactivateNotesEditMode();
+                deactivateNotesEditMode();
             }
         });
 

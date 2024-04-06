@@ -13,7 +13,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import prodegus.musetasks.overview.OverviewController;
 
 import static prodegus.musetasks.database.Database.*;
 
@@ -40,6 +39,7 @@ public class ContactModel {
                 contact.setSkype(rs.getString(9));
                 contact.setBirthday(rs.getString(10));
                 contact.setNotes(rs.getString(11));
+                contact.setSelected(false);
                 list.add(contact);
             }
         } catch (SQLException e) {
@@ -93,6 +93,16 @@ public class ContactModel {
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteContact(Contact contact) {
+        String sql = "DELETE FROM " + CONTACT_TABLE + " WHERE id = '" + contact.getId() + "'";
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

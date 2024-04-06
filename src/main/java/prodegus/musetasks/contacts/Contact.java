@@ -1,10 +1,24 @@
 package prodegus.musetasks.contacts;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Contact {
+
+    private SimpleStringProperty id = new SimpleStringProperty();
+    private SimpleStringProperty lastname = new SimpleStringProperty();
+    private SimpleStringProperty firstname = new SimpleStringProperty();
+    private SimpleStringProperty category = new SimpleStringProperty();
+    private SimpleStringProperty location = new SimpleStringProperty();
+    private SimpleStringProperty phone = new SimpleStringProperty();
+    private SimpleStringProperty email = new SimpleStringProperty();
+    private SimpleStringProperty zoom = new SimpleStringProperty();
+    private SimpleStringProperty skype = new SimpleStringProperty();
+    private SimpleStringProperty birthday = new SimpleStringProperty();
+    private SimpleStringProperty notes = new SimpleStringProperty();
+    private BooleanProperty selected = new SimpleBooleanProperty();
 
     public String getId() {
         return id.get();
@@ -138,17 +152,18 @@ public class Contact {
         this.notes.set(notes);
     }
 
-    private SimpleStringProperty id = new SimpleStringProperty();
-    private SimpleStringProperty lastname = new SimpleStringProperty();
-    private SimpleStringProperty firstname = new SimpleStringProperty();
-    private SimpleStringProperty category = new SimpleStringProperty();
-    private SimpleStringProperty location = new SimpleStringProperty();
-    private SimpleStringProperty phone = new SimpleStringProperty();
-    private SimpleStringProperty email = new SimpleStringProperty();
-    private SimpleStringProperty zoom = new SimpleStringProperty();
-    private SimpleStringProperty skype = new SimpleStringProperty();
-    private SimpleStringProperty birthday = new SimpleStringProperty();
-    private SimpleStringProperty notes = new SimpleStringProperty();
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected.set(selected);
+    }
 
 
 }

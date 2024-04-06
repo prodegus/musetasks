@@ -9,11 +9,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.ui.PopupWindow;
 
 import java.net.URL;
+import java.security.Key;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.database.Database.*;
@@ -90,7 +92,7 @@ public class LoginController implements Initializable {
             PopupWindow.display("Login fehlgeschlagen. Bitte Benutzername und Passwort erneut eingeben!");
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/overview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace.fxml"));
         Stage stage = newStage(APP_NAME, loader);
         stage.show();
         stageOf(event).close();
@@ -107,24 +109,21 @@ public class LoginController implements Initializable {
         stage.showAndWait();
     }
 
-    private boolean loginSuccess(String user, String pw) {
-        if (isEmptyTable(USER_TABLE)) {
-            PopupWindow.display("Bitte zuerst einen Benutzer anlegen!");
-            return false;
-        }
-        return loginValid(user, pw);
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("connected: " + connected());
         System.out.println("DB_PATH: " + DB_PATH);
+
         if (!connected()) {
             selectDB();
+            return;
         }
+
         if (!tableExists(USER_TABLE)) {
             PopupWindow.display("Datenbank-Fehler! Bitte andere Datenbank auswählen oder neu anlegen!");
             selectDB();
         }
+
+
     }
 }

@@ -1,8 +1,6 @@
-package prodegus.musetasks.overview;
+package prodegus.musetasks.workspace;
 
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.util.Callback;
 import prodegus.musetasks.contacts.Contact;
 
 public class ContactListCell extends ListCell<Contact> {
