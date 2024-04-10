@@ -75,18 +75,102 @@ public class Database {
 
     public static void createContactTable(String dbPath) {
         String sql =
-                "CREATE TABLE IF NOT EXISTS " + CONTACT_TABLE + " (" +
-                ContactColumns.ID        + " INTEGER PRIMARY KEY ASC AUTOINCREMENT, " +
-                ContactColumns.LASTNAME  + " TEXT, " +
-                ContactColumns.FIRSTNAME + " TEXT, " +
-                ContactColumns.CATEGORY  + " TEXT, " +
-                ContactColumns.LOCATION  + " TEXT, " +
-                ContactColumns.PHONE     + " TEXT, " +
-                ContactColumns.EMAIL     + " TEXT, " +
-                ContactColumns.ZOOM      + " TEXT, " +
-                ContactColumns.SKYPE     + " TEXT, " +
-                ContactColumns.BIRTHDAY  + " TEXT, " +
-                ContactColumns.NOTES     + " TEXT " +
+                "CREATE TABLE mtcontacts (" +
+                "    contactid  INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    lastname   TEXT," +
+                "    firstname  TEXT," +
+                "    category   TEXT," +
+                "    location   TEXT," +
+                "    street     TEXT," +
+                "    postalcode INTEGER," +
+                "    city       TEXT," +
+                "    phone      TEXT," +
+                "    email      TEXT," +
+                "    zoom       TEXT," +
+                "    skype      TEXT," +
+                "    birthday   TEXT," +
+                "    notes      TEXT" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createStudentTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtstudents (" +
+                "    contactid   INTEGER PRIMARY KEY" +
+                "                        REFERENCES mtcontacts (contactid)," +
+                "    instrument1 TEXT," +
+                "    instrument2 TEXT," +
+                "    instrument3 TEXT," +
+                "    prospective INTEGER," +
+                "    status      TEXT," +
+                "    statusfrom  TEXT," +
+                "    statusto    TEXT," +
+                "    parentid1   INTEGER REFERENCES mtcontacts (contactid)," +
+                "    parentid2   INTEGER REFERENCES mtcontacts (contactid)" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createTeacherTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtteachers (" +
+                "    contactid   INTEGER PRIMARY KEY" +
+                "                        REFERENCES mtcontacts (contactid)," +
+                "    instrument1 TEXT," +
+                "    instrument2 TEXT," +
+                "    instrument3 TEXT," +
+                "    instrument4 TEXT," +
+                "    instrument5 TEXT," +
+                "    activesince TEXT" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createParentTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtparents (" +
+                "    contactid INTEGER PRIMARY KEY" +
+                "                      REFERENCES mtcontacts (contactid)," +
+                "    childid1  INTEGER REFERENCES mtcontacts (contactid)," +
+                "    childid2  INTEGER REFERENCES mtcontacts (contactid)," +
+                "    childid3  INTEGER REFERENCES mtcontacts (contactid)," +
+                "    childid4  INTEGER REFERENCES mtcontacts (contactid)," +
+                "    childid5  INTEGER REFERENCES mtcontacts (contactid)" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createOtherTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtothers (" +
+                "    contactid   INTEGER PRIMARY KEY" +
+                "                        REFERENCES mtcontacts (contactid)," +
+                "    description TEXT" +
                 ")";
 
         try (Connection conn = connectTo(dbPath);
@@ -99,25 +183,64 @@ public class Database {
 
     public static void createLessonTable(String dbPath) {
         String sql =
-                "CREATE TABLE IF NOT EXISTS " + LESSON_TABLE + " (" +
-                "id         INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "lessonname TEXT," +
-                "teacherid  INTEGER REFERENCES mtcontacts (id)," +
-                "location   TEXT," +
-                "frequency  TEXT," +
-                "weekday    TEXT," +
-                "time       TEXT," +
-                "duration   INTEGER," +
-                "pupilid1   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid2   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid3   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid4   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid5   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid6   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid7   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid8   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid9   INTEGER REFERENCES mtcontacts (id)," +
-                "pupilid10  INTEGER REFERENCES mtcontacts (id) " +
+                "CREATE TABLE mtlessons (" +
+                "    lessonid    INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    instrument  TEXT," +
+                "    lessonname  TEXT," +
+                "    teacherid   INTEGER REFERENCES mtcontacts (id)," +
+                "    location    TEXT," +
+                "    frequency   TEXT," +
+                "    weekday     TEXT," +
+                "    time        TEXT," +
+                "    duration    INTEGER," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid1  INTEGER REFERENCES mtcontacts (id)," +
+                "    studentid10 INTEGER REFERENCES mtcontacts (id)," +
+                "    startdate   TEXT," +
+                "    enddate     TEXT" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createAppointmentTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtappointments (" +
+                "    appointmentid INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    date          TEXT," +
+                "    time          TEXT," +
+                "    lessonid      INTEGER REFERENCES mtlessons (lessonid)," +
+                "    description   TEXT" +
+                ")";
+
+        try (Connection conn = connectTo(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createTaskTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mttasks (" +
+                "    taskid      INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    description TEXT," +
+                "    deadline    TEXT," +
+                "    comment     TEXT," +
+                "    status      TEXT" +
                 ")";
 
         try (Connection conn = connectTo(dbPath);
