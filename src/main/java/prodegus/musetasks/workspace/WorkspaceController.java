@@ -25,6 +25,7 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.contacts.ContactModel.*;
+import static prodegus.musetasks.database.Database.CONTACT_TABLE;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 
 public class WorkspaceController implements Initializable {
@@ -73,7 +74,7 @@ public class WorkspaceController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLS-Datei", "*.xls"));
         xlsFile = fileChooser.showOpenDialog(stageOf(event));
-        addContactsFromXLS(xlsFile);
+        addContactsFromXLS(xlsFile, CONTACT_TABLE);
         refreshContactList(contacts);
     }
 
@@ -111,10 +112,8 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        String id = selectedContact.getId();
-
         if (notesEditMode) {
-            saveEditedNotes(id, notesTextArea.getText());
+            saveEditedNotes(selectedContact, notesTextArea.getText());
             refreshContacts();
             deactivateNotesEditMode();
             return;
@@ -134,7 +133,7 @@ public class WorkspaceController implements Initializable {
         sb.append(timestamp).append("\n").append(newNoteTextField.getText());
         newNote = sb.toString();
 
-        addNote(id, newNote);
+        addNote(selectedContact, newNote);
         refreshContacts();
         newNoteTextField.clear();
         deactivateNotesEditMode();
@@ -196,7 +195,7 @@ public class WorkspaceController implements Initializable {
         if (selectedContact == null) return;
         int index = 0;
         for (Contact contact : contactTableView.getItems()) {
-            if (contact.getId().equals(selectedContact.getId())) {
+            if (contact.id().equals(selectedContact.id())) {
                 break;
             }
             index++;

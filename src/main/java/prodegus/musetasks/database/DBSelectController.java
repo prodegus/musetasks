@@ -43,8 +43,14 @@ public class DBSelectController {
                 if (dbFile == null) return;
                 dbPath = dbFile.getAbsolutePath() + ".db";
                 createUserTable(dbPath);
-                createContactTable(dbPath);
+                createStudentTable(dbPath);
+                createTeacherTable(dbPath);
+                createParentTable(dbPath);
+                createOtherTable(dbPath);
                 createLessonTable(dbPath);
+                createAppointmentTable(dbPath);
+                createTaskTable(dbPath);
+                addConstraintsStudentTable(dbPath);
                 break;
         }
         saveDbPath(dbPath);
