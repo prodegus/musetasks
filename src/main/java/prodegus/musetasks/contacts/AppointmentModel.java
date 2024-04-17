@@ -36,7 +36,7 @@ public class AppointmentModel {
         }
     }
 
-    public static Appointment getAppointment(String id) {
+    public static Appointment getAppointment(int id) {
         String sql = "SELECT * FROM " + APPOINTMENT_TABLE + " WHERE id = " + id;
         Appointment appointment = new Appointment();
 

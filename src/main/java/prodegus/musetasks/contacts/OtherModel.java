@@ -13,7 +13,7 @@ import static prodegus.musetasks.database.Database.connect;
 
 public class OtherModel {
 
-    public static ObservableList<Other> getOtherList() {
+    public static ObservableList<Other> getOtherListFromDB() {
         ObservableList<Other> others = FXCollections.observableArrayList();
         refreshOtherList(others);
         return others;
@@ -36,7 +36,7 @@ public class OtherModel {
         }
     }
 
-    public static Other getOther(String id) {
+    public static Other getOther(int id) {
         String sql = "SELECT * FROM " + OTHER_TABLE + " WHERE id = " + id;
         Other other = new Other();
 

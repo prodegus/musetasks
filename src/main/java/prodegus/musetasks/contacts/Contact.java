@@ -6,7 +6,10 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 
+import static prodegus.musetasks.contacts.ContactModel.DATE_FORMATTER;
 import static prodegus.musetasks.database.Database.*;
 
 public class Contact {
@@ -17,13 +20,13 @@ public class Contact {
     private SimpleStringProperty  category   = new SimpleStringProperty();
     private SimpleStringProperty  location   = new SimpleStringProperty();
     private SimpleStringProperty  street     = new SimpleStringProperty();
-    private SimpleIntegerProperty postalcode = new SimpleIntegerProperty();
+    private SimpleIntegerProperty postalCode = new SimpleIntegerProperty();
     private SimpleStringProperty  city       = new SimpleStringProperty();
     private SimpleStringProperty  phone      = new SimpleStringProperty();
     private SimpleStringProperty  email      = new SimpleStringProperty();
     private SimpleStringProperty  zoom       = new SimpleStringProperty();
     private SimpleStringProperty  skype      = new SimpleStringProperty();
-    private SimpleStringProperty  birthday   = new SimpleStringProperty();
+    private SimpleStringProperty  birthDate  = new SimpleStringProperty();
     private SimpleStringProperty  notes      = new SimpleStringProperty();
     private SimpleBooleanProperty selected   = new SimpleBooleanProperty();
 
@@ -99,16 +102,16 @@ public class Contact {
         this.street.set(street);
     }
 
-    public int getPostalcode() {
-        return postalcode.get();
+    public int getPostalCode() {
+        return postalCode.get();
     }
 
-    public SimpleIntegerProperty postalcodeProperty() {
-        return postalcode;
+    public SimpleIntegerProperty postalCodeProperty() {
+        return postalCode;
     }
 
-    public void setPostalcode(int postalcode) {
-        this.postalcode.set(postalcode);
+    public void setPostalCode(int postalCode) {
+        this.postalCode.set(postalCode);
     }
 
     public String getCity() {
@@ -171,16 +174,16 @@ public class Contact {
         this.skype.set(skype);
     }
 
-    public String getBirthday() {
-        return birthday.get();
+    public String getBirthDate() {
+        return birthDate.get();
     }
 
-    public SimpleStringProperty birthdayProperty() {
-        return birthday;
+    public SimpleStringProperty birthDateProperty() {
+        return birthDate;
     }
 
-    public void setBirthday(String birthday) {
-        this.birthday.set(birthday);
+    public void setBirthDate(String birthDate) {
+        this.birthDate.set(birthDate);
     }
 
     public String getNotes() {
@@ -218,8 +221,17 @@ public class Contact {
         return tableName;
     }
 
+    public int age() {
+        LocalDate birthDate = LocalDate.parse(getBirthDate(), DATE_FORMATTER);
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
     public String id() {
         return String.valueOf(this.getId());
+    }
+
+    public String name() {
+        return this.getFirstname() + " " + this.getLastname();
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
@@ -229,20 +241,20 @@ public class Contact {
         this.setCategory(rs.getString(4));
         this.setLocation(rs.getString(5));
         this.setStreet(rs.getString(6));
-        this.setPostalcode(rs.getInt(7));
+        this.setPostalCode(rs.getInt(7));
         this.setCity(rs.getString(8));
         this.setPhone(rs.getString(9));
         this.setEmail(rs.getString(10));
         this.setZoom(rs.getString(11));
         this.setSkype(rs.getString(12));
-        this.setBirthday(rs.getString(13));
+        this.setBirthDate(rs.getString(13));
         this.setNotes(rs.getString(14));
         this.setSelected(false);
     }
 
     public String valuesToSQLString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("'NULL', '");
+        sb.append("null, '");
         sb.append(this.getLastname());
         sb.append("', '");
         sb.append(this.getFirstname());
@@ -253,7 +265,7 @@ public class Contact {
         sb.append("', '");
         sb.append(this.getStreet());
         sb.append("', '");
-        sb.append(this.getPostalcode());
+        sb.append(this.getPostalCode());
         sb.append("', '");
         sb.append(this.getCity());
         sb.append("', '");
@@ -265,7 +277,7 @@ public class Contact {
         sb.append("', '");
         sb.append(this.getSkype());
         sb.append("', '");
-        sb.append(this.getBirthday());
+        sb.append(this.getBirthDate());
         sb.append("', '");
         sb.append(this.getNotes());
         sb.append("'");

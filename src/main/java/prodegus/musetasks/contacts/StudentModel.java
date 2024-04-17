@@ -2,19 +2,33 @@ package prodegus.musetasks.contacts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
+
 import java.sql.*;
 
 import static prodegus.musetasks.database.Database.*;
 
 public class StudentModel {
 
-    public static ObservableList<Student> getStudentList() {
+    public static StringConverter<Student> studentStringConverter = new StringConverter<Student>() {
+        @Override
+        public String toString(Student student) {
+            return student.getLastname() + ", " + student.getFirstname();
+        }
+
+        @Override
+        public Student fromString(String string) {
+            return null;
+        }
+    };
+
+    public static ObservableList<Student> getStudentListFromDB() {
         ObservableList<Student> students = FXCollections.observableArrayList();
-        refreshStudentList(students);
+        refreshStudentListFromDB(students);
         return students;
     }
 
-    public static void refreshStudentList(ObservableList<Student> students) {
+    public static void refreshStudentListFromDB(ObservableList<Student> students) {
         String sql = "SELECT * FROM " + STUDENT_TABLE;
 
         students.clear();
@@ -31,7 +45,7 @@ public class StudentModel {
         }
     }
 
-    public static Student getStudent(String id) {
+    public static Student getStudentFromDB(int id) {
         String sql = "SELECT * FROM " + STUDENT_TABLE + " WHERE id = " + id;
         Student student = new Student();
 

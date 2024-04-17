@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.contacts.AddStudentController">
+   <children>
+      <StackPane>
+         <children>
+            <GridPane fx:id="studentDataForm" maxWidth="450.0" visible="false">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="80.0" valignment="TOP" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Vorname" />
+                        <TextField fx:id="firstNameTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="2">
+                     <children>
+                        <Label text="Nachname" />
+                        <TextField fx:id="lastNameTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="7">
+                     <children>
+                        <Label text="Standort" />
+                        <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="136.0" promptText="auswählen" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="3">
+                     <children>
+                        <Label text="Straße, Hausnr." />
+                        <TextField fx:id="streetTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <HBox spacing="20.0" GridPane.rowIndex="4">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="PLZ" />
+                              <TextField fx:id="postalCodeTextField" minWidth="-Infinity" prefHeight="30.0" prefWidth="80.0" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Ort" />
+                              <TextField fx:id="cityTextField" prefHeight="30.0" prefWidth="376.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox GridPane.rowIndex="5">
+                     <children>
+                        <Label text="Geburtstag" />
+                        <DatePicker fx:id="birthDatePicker" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <HBox spacing="20.0" GridPane.rowIndex="9">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Instrument" />
+                              <ComboBox fx:id="instrument1ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="2. Instrument" />
+                              <ComboBox fx:id="instrument2ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="3. Instrument" />
+                              <ComboBox fx:id="instrument3ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Schülerdaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <CheckBox fx:id="prospectiveCheckBox" mnemonicParsing="false" text="Interessent" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="10">
+                     <children>
+                        <HBox spacing="20.0">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label text="Lehrer" />
+                                    <ComboBox fx:id="teacher1ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="2. Lehrer" />
+                                    <ComboBox fx:id="teacher2ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="3. Lehrer" />
+                                    <ComboBox fx:id="teacher3ComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="11">
+                     <children>
+                        <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+            <GridPane fx:id="communicationForm" maxWidth="450.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="80.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <VBox GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Telefonnummer Schüler (falls vorhanden)" />
+                        <TextField fx:id="phoneTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="2">
+                     <children>
+                        <Label text="E-Mail-Adresse Schüler (falls vorhanden)" />
+                        <TextField fx:id="emailTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="6">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <VBox prefWidth="200.0">
+                                       <children>
+                                          <Label text="Elternteil 1">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ComboBox fx:id="parent1ComboBox" prefHeight="30.0" prefWidth="200.0" promptText="auswählen" />
+                                          <Label fx:id="parent1Label" alignment="CENTER" prefHeight="17.0" prefWidth="200.0" text="oder" textAlignment="CENTER" />
+                                          <Button fx:id="newParent1Button" mnemonicParsing="false" onAction="#newParent1ButtonClicked" prefHeight="30.0" prefWidth="200.0" text="neu anlegen" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets right="20.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                    <VBox fx:id="parent2VBox" prefWidth="200.0">
+                                       <children>
+                                          <Label text="Elternteil 2">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ComboBox fx:id="parent2ComboBox" prefHeight="30.0" prefWidth="200.0" promptText="auswählen" />
+                                          <Label alignment="CENTER" prefHeight="17.0" prefWidth="200.0" text="oder" textAlignment="CENTER" />
+                                          <Button fx:id="newParent2Button" mnemonicParsing="false" onAction="#newParent2ButtonClicked" prefHeight="30.0" prefWidth="200.0" text="neu anlegen" />
+                                       </children>
+                                    </VBox>
+                                    <VBox />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Kontaktdaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToStudentForm" text="Zurück zu Personendaten" />
+                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addStudent" text="Bestätigen" />
+                        <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
+                     <children>
+                        <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
+                        <ComboBox fx:id="zoomComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="4">
+                     <children>
+                        <CheckBox fx:id="skypeCheckBox" mnemonicParsing="false" onMouseClicked="#skypeCheckBoxClicked" text="Skype" />
+                        <ComboBox fx:id="skypeComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
+                     </children>
+                  </HBox>
+                  <VBox GridPane.rowIndex="8" GridPane.rowSpan="2">
+                     <children>
+                        <Label text="Notizen" />
+                        <TextArea fx:id="notesTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                     </children>
+                  </VBox>
+               </children>
+            </GridPane>
+         </children>
+      </StackPane>
+   </children>
+</VBox>

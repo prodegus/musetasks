@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
+
 public class Parent extends Contact {
 
     private SimpleIntegerProperty childId1 = new SimpleIntegerProperty();
@@ -71,6 +73,51 @@ public class Parent extends Contact {
 
     public void setChildId5(int childId5) {
         this.childId5.set(childId5);
+    }
+
+    public Student child1() {
+        return getStudentFromDB(getChildId1());
+    }
+
+    public String child1name() {
+        if (this.getChildId1() == 0) return "";
+        return this.child1().name();
+    }
+
+    public Student child2() {
+        return getStudentFromDB(getChildId2());
+    }
+
+    public String child2name() {
+        if (this.getChildId2() == 0) return "";
+        return this.child2().name();
+    }
+
+    public Student child3() {
+        return getStudentFromDB(getChildId3());
+    }
+
+    public String child3name() {
+        if (this.getChildId3() == 0) return "";
+        return this.child3().name();
+    }
+
+    public Student child4() {
+        return getStudentFromDB(getChildId4());
+    }
+
+    public String child4name() {
+        if (this.getChildId4() == 0) return "";
+        return this.child4().name();
+    }
+
+    public Student child5() {
+        return getStudentFromDB(getChildId5());
+    }
+
+    public String child5name() {
+        if (this.getChildId5() == 0) return "";
+        return this.child5().name();
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {

@@ -36,7 +36,7 @@ public class TaskModel {
         }
     }
 
-    public static Task getTask(String id) {
+    public static Task getTask(int id) {
         String sql = "SELECT * FROM " + TASK_TABLE + " WHERE id = " + id;
         Task task = new Task();
 

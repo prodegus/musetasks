@@ -36,7 +36,7 @@ public class LessonModel {
         }
     }
 
-    public static Lesson getLesson(String id) {
+    public static Lesson getLessonFromDB(int id) {
         String sql = "SELECT * FROM " + LESSON_TABLE + " WHERE id = " + id;
         Lesson lesson = new Lesson();
 

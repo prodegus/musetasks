@@ -7,110 +7,94 @@ import java.sql.SQLException;
 
 public class Teacher extends Contact {
 
-    private SimpleStringProperty instrument1 = new SimpleStringProperty();
-    private SimpleStringProperty instrument2 = new SimpleStringProperty();
-    private SimpleStringProperty instrument3 = new SimpleStringProperty();
-    private SimpleStringProperty instrument4 = new SimpleStringProperty();
-    private SimpleStringProperty instrument5 = new SimpleStringProperty();
-    private SimpleStringProperty activeSince = new SimpleStringProperty();
+    private SimpleStringProperty instruments = new SimpleStringProperty();
+    private SimpleStringProperty activeDays  = new SimpleStringProperty();
+    private SimpleStringProperty status      = new SimpleStringProperty();
+    private SimpleStringProperty statusFrom  = new SimpleStringProperty();
+    private SimpleStringProperty statusTo    = new SimpleStringProperty();
 
-    public String getInstrument1() {
-        return instrument1.get();
+    public String getInstruments() {
+        return instruments.get();
     }
 
-    public SimpleStringProperty instrument1Property() {
-        return instrument1;
+    public SimpleStringProperty instrumentsProperty() {
+        return instruments;
     }
 
-    public void setInstrument1(String instrument1) {
-        this.instrument1.set(instrument1);
+    public void setInstruments(String instruments) {
+        this.instruments.set(instruments);
     }
 
-    public String getInstrument2() {
-        return instrument2.get();
+    public String getActiveDays() {
+        return activeDays.get();
     }
 
-    public SimpleStringProperty instrument2Property() {
-        return instrument2;
+    public SimpleStringProperty activeDaysProperty() {
+        return activeDays;
     }
 
-    public void setInstrument2(String instrument2) {
-        this.instrument2.set(instrument2);
+    public void setActiveDays(String activeDays) {
+        this.activeDays.set(activeDays);
     }
 
-    public String getInstrument3() {
-        return instrument3.get();
+    public String getStatus() {
+        return status.get();
     }
 
-    public SimpleStringProperty instrument3Property() {
-        return instrument3;
+    public SimpleStringProperty statusProperty() {
+        return status;
     }
 
-    public void setInstrument3(String instrument3) {
-        this.instrument3.set(instrument3);
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 
-    public String getInstrument4() {
-        return instrument4.get();
+    public String getStatusFrom() {
+        return statusFrom.get();
     }
 
-    public SimpleStringProperty instrument4Property() {
-        return instrument4;
+    public SimpleStringProperty statusFromProperty() {
+        return statusFrom;
     }
 
-    public void setInstrument4(String instrument4) {
-        this.instrument4.set(instrument4);
+    public void setStatusFrom(String statusFrom) {
+        this.statusFrom.set(statusFrom);
     }
 
-    public String getInstrument5() {
-        return instrument5.get();
+    public String getStatusTo() {
+        return statusTo.get();
     }
 
-    public SimpleStringProperty instrument5Property() {
-        return instrument5;
+    public SimpleStringProperty statusToProperty() {
+        return statusTo;
     }
 
-    public void setInstrument5(String instrument5) {
-        this.instrument5.set(instrument5);
-    }
-
-    public String getActiveSince() {
-        return activeSince.get();
-    }
-
-    public SimpleStringProperty activeSinceProperty() {
-        return activeSince;
-    }
-
-    public void setActiveSince(String activeSince) {
-        this.activeSince.set(activeSince);
+    public void setStatusTo(String statusTo) {
+        this.statusTo.set(statusTo);
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
-        this.setInstrument1(rs.getString(15));
-        this.setInstrument2(rs.getString(16));
-        this.setInstrument3(rs.getString(17));
-        this.setInstrument4(rs.getString(18));
-        this.setInstrument5(rs.getString(19));
-        this.setActiveSince(rs.getString(20));
+        this.setInstruments(rs.getString(15));
+        this.setActiveDays(rs.getString(16));
+        this.setStatus(rs.getString(17));
+        this.setStatusFrom(rs.getString(18));
+        this.setStatusTo(rs.getString(19));
     }
 
     public String valuesToSQLString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.valuesToSQLString());
         sb.append(", '");
-        sb.append(this.getInstrument1());
+        sb.append(this.getInstruments());
         sb.append("', '");
-        sb.append(this.getInstrument2());
+        sb.append(this.getActiveDays());
         sb.append("', '");
-        sb.append(this.getInstrument3());
+        sb.append(this.getStatus());
         sb.append("', '");
-        sb.append(this.getInstrument4());
+        sb.append(this.getStatusFrom());
         sb.append("', '");
-        sb.append(this.getInstrument5());
-        sb.append("', '");
-        sb.append(this.getActiveSince());
+        sb.append(this.getStatusTo());
         sb.append("'");
         return sb.toString();
     }

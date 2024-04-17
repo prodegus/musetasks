@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -17,6 +18,13 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import static prodegus.musetasks.database.Database.*;
 
 public class ContactModel {
+
+    public static final String CATEGORY_STUDENT = "Schüler";
+    public static final String CATEGORY_TEACHER = "Lehrer";
+    public static final String CATEGORY_PARENT = "Eltern";
+    public static final String CATEGORY_OTHER = "Sonstige";
+    public static final String STATUS_PROSPECTIVE = "Interessent";
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public static ObservableList<Contact> getContactList() {
         ObservableList<Contact> contacts = FXCollections.observableArrayList();
@@ -49,46 +57,21 @@ public class ContactModel {
     }
 
     public static void addContact(Contact contact) {
-        String sql = "INSERT INTO ? VALUES (?)";
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, contact.table());
-            ps.setString(2, contact.valuesToSQLString());
-            ps.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Contact getContact(String table, String id) {
-        String sql = "SELECT * FROM " + table + " WHERE id = " + id;
-        Contact contact = new Student();
-
+        String sql = "INSERT INTO " + contact.table() + " VALUES (" + contact.valuesToSQLString() + ")";
+        System.out.println(sql);
         try (Connection connection = connect();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                contact.setAttributes(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return contact;
-    }
-
-    public static void deleteContact(Contact contact) {
-        String sql = "DELETE FROM ? WHERE id = ?";
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, contact.table());
-            ps.setString(2, contact.id());
-            ps.execute();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void addContactsFromXLS(File file, String tableName) {
+    public static void deleteContactFromDB(Contact contact) {
+        deleteFromDB(contact.table(), contact.id());
+    }
+
+    public static void addContactsFromXLSToDB(File file, String tableName) {
         try (POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
              HSSFWorkbook wb = new HSSFWorkbook(fs);
              Connection conn = connect();
@@ -137,31 +120,23 @@ public class ContactModel {
         }
     }
 
-    public static void addNote(Contact contact, String newNote) {
-        update(contact, "notes", "notes || " + newNote);
-    }
-
-    public static void saveEditedNotes(Contact contact, String editedNotes) {
-        update(contact, "notes", editedNotes);
-    }
-
-    public static void update(Contact contact, String column, String newValue) {
-        update(contact.table(), contact.id(), column, newValue);
-    }
-
-    public static void update(String table, String id, String column, String newValue) {
-        String sql = "UPDATE ? SET ? = ? WHERE id = ?";
+    public static void addNoteInDB(Contact contact, String newNote) {
+        String sql = "UPDATE " + contact.table() + " SET notes = notes || '" + newNote + "' WHERE id = " + contact.id();
 
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, table);
-            ps.setString(2, column);
-            ps.setString(3, newValue);
-            ps.setString(4, id);
-            ps.execute();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
         } catch (SQLException e) {
             throw new RuntimeException();
         }
+    }
+
+    public static void updateContactInDB(Contact contact, String column, String newValue) {
+        updateDB(contact.table(), contact.id(), column, newValue);
+    }
+
+    public static void updateContactInDB(Contact contact, String column, int newValue) {
+        updateDB(contact.table(), contact.id(), column, newValue);
     }
 
 }

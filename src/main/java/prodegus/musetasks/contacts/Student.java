@@ -3,9 +3,16 @@ package prodegus.musetasks.contacts;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.database.Filter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static prodegus.musetasks.contacts.ContactModel.updateContactInDB;
+import static prodegus.musetasks.contacts.LessonModel.getLessonFromDB;
+import static prodegus.musetasks.contacts.ParentModel.findParentId;
+import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
+import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 
 public class Student extends Contact {
 
@@ -205,6 +212,38 @@ public class Student extends Contact {
         this.lessonId3.set(lessonId3);
     }
 
+    public Parent parent1() {
+        return getParentFromDB(getParentId1());
+    }
+
+    public Parent parent2() {
+        return getParentFromDB(getParentId2());
+    }
+
+    public Teacher teacher1() {
+        return getTeacherFromDB(getTeacherId1());
+    }
+
+    public Teacher teacher2() {
+        return getTeacherFromDB(getTeacherId2());
+    }
+
+    public Teacher teacher3() {
+        return getTeacherFromDB(getTeacherId3());
+    }
+
+    public Lesson lesson1() {
+        return getLessonFromDB(getLessonId1());
+    }
+
+    public Lesson lesson2() {
+        return getLessonFromDB(getLessonId2());
+    }
+
+    public Lesson lesson3() {
+        return getLessonFromDB(getLessonId3());
+    }
+
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
         this.setInstrument1(rs.getString(15));
@@ -234,7 +273,7 @@ public class Student extends Contact {
         sb.append("', '");
         sb.append(this.getInstrument3());
         sb.append("', '");
-        sb.append(this.getProspective());
+        sb.append(this.getProspective() ? "1" : "0");
         sb.append("', '");
         sb.append(this.getStatus());
         sb.append("', '");
@@ -254,9 +293,164 @@ public class Student extends Contact {
         sb.append("', '");
         sb.append(this.getLessonId1());
         sb.append("', '");
+        sb.append(this.getLessonId2());
+        sb.append("', '");
         sb.append(this.getLessonId3());
         sb.append("'");
         return sb.toString();
     }
 
+    public String ageAndBirthday() {
+        if (this.getBirthDate().isEmpty()) return "";
+        return this.age() + " (geb. " + this.getBirthDate() + ")";
+    }
+
+    public String instruments() {
+        StringBuilder instruments = new StringBuilder();
+        if (this.getInstrument1().isEmpty()) return "";
+        instruments.append(this.getInstrument1());
+        if (!this.getInstrument2().isEmpty()) {
+            instruments.append(", ").append(this.getInstrument2());
+        }
+        if (!this.getInstrument3().isEmpty()) {
+            instruments.append(", ").append(this.getInstrument3());
+        }
+        return instruments.toString();
+    }
+
+    public String lesson1Name() {
+        if (this.getLessonId1() == 0) return "";
+        return this.lesson1().getLessonName();
+    }
+
+    public String lesson1Time() {
+        if (this.getLessonId1() == 0) return "";
+        return this.lesson1().getTime();
+    }
+
+    public String lesson1Weekday() {
+        if (this.getLessonId1() == 0) return "";
+        return this.lesson1().getWeekday();
+    }
+
+    public String lesson2Name() {
+        if (this.getLessonId2() == 0) return "";
+        return this.lesson2().getLessonName();
+    }
+
+    public String lesson2Time() {
+        if (this.getLessonId2() == 0) return "";
+        return this.lesson2().getTime();
+    }
+
+    public String lesson2Weekday() {
+        if (this.getLessonId2() == 0) return "";
+        return this.lesson2().getWeekday();
+    }
+
+    public String lesson3Name() {
+        if (this.getLessonId3() == 0) return "";
+        return this.lesson3().getLessonName();
+    }
+
+    public String lesson3Time() {
+        if (this.getLessonId3() == 0) return "";
+        return this.lesson3().getTime();
+    }
+
+    public String lesson3Weekday() {
+        if (this.getLessonId3() == 0) return "";
+        return this.lesson3().getWeekday();
+    }
+
+    public String parentsNames() {
+        if (this.getParentId1() == 0) return "";
+        StringBuilder parents = new StringBuilder();
+        parents.append(parent1().name());
+        if (this.getParentId2() == 0) return parents.toString();
+        parents.append(", ");
+        parents.append(parent2().name());
+        return parents.toString();
+    }
+
+    public String status() {
+        StringBuilder status = new StringBuilder();
+        if (this.getStatus().isEmpty()) return "";
+        status.append(this.getStatus());
+        if (!this.getStatusFrom().isEmpty()) {
+            status.append(" ab ");
+            status.append(this.getStatusFrom());
+        }
+        if (!this.getStatusTo().isEmpty()) {
+            status.append(" bis ");
+            status.append(this.getStatusTo());
+        }
+
+        return status.toString();
+    }
+
+    public String teacher1Name() {
+        if (this.getTeacherId1() == 0) return "";
+        return this.teacher1().name();
+    }
+
+    public String teacher2Name() {
+        if (this.getTeacherId2() == 0) return "";
+        return this.teacher2().name();
+    }
+
+    public String teacher3Name() {
+        if (this.getTeacherId3() == 0) return "";
+        return this.teacher3().name();
+    }
+
+    @Override
+    public String toString() {
+        return "Student [" +
+                "id: " + this.getId() + ", " +
+                "lastname: " + this.getLastname() + ", " +
+                "firstname: " + this.getFirstname() + ", " +
+                "category: " + this.getCategory() + ", " +
+                "location: " + this.getLocation() + ", " +
+                "street: " + this.getStreet() + ", " +
+                "postalCode: " + this.getPostalCode() + ", " +
+                "city: " + this.getCity() + ", " +
+                "phone: " + this.getPhone() + ", " +
+                "email: " + this.getEmail() + ", " +
+                "zoom: " + this.getZoom() + ", " +
+                "skype: " + this.getSkype() + ", " +
+                "birthDate: " + this.getBirthDate() + ", " +
+                "notes: " + this.getNotes() + ", " +
+                "selected: " + this.isSelected() + ", " +
+                "instrument1: " + this.getInstrument1() + ", " +
+                "instrument2: " + this.getInstrument2() + ", " +
+                "instrument3: " + this.getInstrument3() + ", " +
+                "prospective: " + this.getProspective() + ", " +
+                "status: " + this.getStatus() + ", " +
+                "statusFrom: " + this.getStatusFrom() + ", " +
+                "statusTo: " + this.getStatusTo() + ", " +
+                "parentId1: " + this.getParentId1() + ", " +
+                "parentId2: " + this.getParentId2() + ", " +
+                "teacherId1: " + this.getTeacherId1() + ", " +
+                "teacherId2: " + this.getTeacherId2() + ", " +
+                "teacherId3: " + this.getTeacherId3() + ", " +
+                "lessonId1: " + this.getLessonId1() + ", " +
+                "lessonId2: " + this.getLessonId2() + ", " +
+                "lessonId3: " + this.getLessonId3() + "]";
+    }
+
+    public boolean addParent(Parent newParent) {
+        int newParentId = findParentId(newParent.getLastname(), newParent.getFirstname(), this.getId());
+        if (newParentId == 0) return false;
+
+        if (this.getParentId1() == 0) {
+            updateContactInDB(this, "parentid1", newParentId);
+            return true;
+        }
+        if (this.getParentId2() == 0) {
+            updateContactInDB(this, "parentid2", newParentId);
+            return true;
+        }
+        return false;
+    }
 }
