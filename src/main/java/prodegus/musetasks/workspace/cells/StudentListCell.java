@@ -1,4 +1,4 @@
-package prodegus.musetasks.workspace;
+package prodegus.musetasks.workspace.cells;
 
 import javafx.scene.control.ListCell;
 import prodegus.musetasks.contacts.Student;
@@ -11,7 +11,7 @@ public class StudentListCell extends ListCell<Student> {
         if (item == null) {
             setText("Schüler auswählen");
         } else {
-            setText(item.getLastname() + ", " + item.getFirstname());
+            setText(item.getLastName() + ", " + item.getFirstName());
         }
 
     }

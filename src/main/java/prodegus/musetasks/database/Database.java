@@ -2,6 +2,7 @@ package prodegus.musetasks.database;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 
@@ -21,7 +22,8 @@ public class Database {
             "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
             "    lastname    TEXT," +
             "    firstname   TEXT," +
-            "    category    TEXT," +
+            "    category    INTEGER," +
+            "    customerid  INTEGER," +
             "    location    TEXT," +
             "    street      TEXT," +
             "    postalcode  INTEGER," +
@@ -183,14 +185,22 @@ public class Database {
         String sql =
                 "CREATE TABLE mtlessons (" +
                 "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
-                "    instrument  TEXT," +
                 "    lessonname  TEXT," +
+                "    category    INTEGER," +
+                "    instrument  TEXT," +
                 "    teacherid   INTEGER REFERENCES mtteachers (id)," +
                 "    location    TEXT," +
-                "    frequency   TEXT," +
+                "    repeat      INTEGER," +
+                "    repeattimes INTEGER," +
+                "    repeatend   TEXT," +
                 "    weekday     TEXT," +
                 "    time        TEXT," +
                 "    duration    INTEGER," +
+                "    startdate   TEXT," +
+                "    enddate     TEXT," +
+                "    status      INTEGER," +
+                "    statusfrom  TEXT," +
+                "    statusto    TEXT," +
                 "    studentid1  INTEGER REFERENCES mtstudents (id)," +
                 "    studentid2  INTEGER REFERENCES mtstudents (id)," +
                 "    studentid3  INTEGER REFERENCES mtstudents (id)," +
@@ -200,9 +210,7 @@ public class Database {
                 "    studentid7  INTEGER REFERENCES mtstudents (id)," +
                 "    studentid8  INTEGER REFERENCES mtstudents (id)," +
                 "    studentid9  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid10 INTEGER REFERENCES mtstudents (id)," +
-                "    startdate   TEXT," +
-                "    enddate     TEXT" +
+                "    studentid10 INTEGER REFERENCES mtstudents (id)" +
                 ")";
 
         try (Connection conn = connectTo(dbPath);
@@ -313,33 +321,40 @@ public class Database {
         }
     }
 
+    public static void updateMultipleDB(String table, int id, String columnsValues) {
+        String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE id = " + id;
+        System.out.println(sql);
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
     public static void deleteFromDB(String table, String id) {
-        String sql = "DELETE FROM ? WHERE id = ?";
+        String sql = "DELETE FROM " + table + " WHERE id = " + id;
 
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, table);
-            ps.setString(2, id);
-            ps.execute();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ResultSet query(String table, Filter ... filters) {
-        return query(table, "*", filters);
-    }
-
-    public static ResultSet query(String table, String columns, Filter ... filters) {
+    public static List<String> queryString(String column, String table, Filter ... filters) {
         StringBuilder sql = new StringBuilder();
-        int i = 1;
+        List<String> result = new ArrayList<>();
 
         sql.append("SELECT ");
-        sql.append(columns);
+        sql.append(column);
         sql.append(" FROM ");
         sql.append(table);
         sql.append(" WHERE ");
 
+        int i = 1;
         for (Filter filter : filters) {
             sql.append(filter.toSQLString());
             if (i < filters.length) sql.append(" AND ");
@@ -349,10 +364,42 @@ public class Database {
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql.toString())) {
-            return rs;
+            while (rs.next()) {
+                result.add(rs.getString(1));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return result;
+    }
+
+    public static List<Integer> queryInteger(String column, String table, Filter ... filters) {
+        StringBuilder sql = new StringBuilder();
+        List<Integer> result = new ArrayList<>();
+
+        sql.append("SELECT ");
+        sql.append(column);
+        sql.append(" FROM ");
+        sql.append(table);
+        sql.append(" WHERE ");
+
+        int i = 1;
+        for (Filter filter : filters) {
+            sql.append(filter.toSQLString());
+            if (i < filters.length) sql.append(" AND ");
+            i++;
+        }
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql.toString())) {
+            while (rs.next()) {
+                result.add(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
 }

@@ -1,4 +1,4 @@
-package prodegus.musetasks.workspace;
+package prodegus.musetasks.workspace.cells;
 
 import javafx.scene.control.ListCell;
 import prodegus.musetasks.contacts.Contact;
@@ -11,7 +11,7 @@ public class ContactListCell extends ListCell<Contact> {
         if (item == null) {
             setText(null);
         } else {
-            setText(item.getLastname() + ", " + item.getFirstname());
+            setText(item.getLastName() + ", " + item.getFirstName());
         }
 
     }

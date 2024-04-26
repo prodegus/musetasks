@@ -1,118 +1,42 @@
 package prodegus.musetasks.test;
 
-
-import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import prodegus.musetasks.contacts.Contact;
+import prodegus.musetasks.database.Filter;
 
-public class Test extends Application {
-    ObservableList<TestContact> contacts = FXCollections.observableArrayList();
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+import static prodegus.musetasks.database.Database.CONTACT_TABLE;
+import static prodegus.musetasks.database.Database.connect;
 
-    }
-
-    ObservableList<TestContact> getNewList() {
-        ObservableList<TestContact> newList = FXCollections.observableArrayList();
-        newList.add(new TestContact("1", "ASDdasdr", "Haasdasns"));
-        newList.add(new TestContact("2", "Masdasr", "Fasdasdz"));
-        newList.add(new TestContact("3", "Masdz", "Joasdasdim"));
-        return newList;
-    }
-
-
-//    INSERT INTO mtstudents VALUES (
-//                    'NULL',
-//                    'Gans',
-//                    'Gustav',
-//                    'Schüler',
-//                    'Lohmar',
-//                    'Blümchenstr. 18',
-//                    '50679',
-//                    'Ost-Hammerheim',
-//                    '0176/509849535',
-//                    'gustavgans@gmx.net',
-//                    'null',
-//                    'null',
-//                    '1962-08-22',
-//                    'null',
-//                    'null',
-//                    'null',
-//                    'null',
-//                    '0',
-//                    'Interessent',
-//                    '13.04.2024',
-//                    'NULL',
-//                    '0',
-//                    '0',
-//                    '0',
-//                    '0',
-//                    '0',
-//                    '0',
-//                    '0',
-//                    '0')
-//
-//
-//
-//    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +   'NULL',
-//    lastname    TEXT," +                                    'Gans',
-//    firstname   TEXT," +                                    'Gustav',
-//    category    TEXT," +                                    'Schüler',
-//    location    TEXT," +                                    'Lohmar',
-//    street      TEXT," +                                    'Blümchenstr. 18',
-//    postalcode  INTEGER," +                                 '50679',
-//    city        TEXT," +                                    'Ost-Hammerheim',
-//    phone       TEXT," +                                    '0176/509849535',
-//    email       TEXT," +                                    'gustavgans@gmx.net',
-//    zoom        TEXT," +                                    'null',
-//    skype       TEXT," +                                    'null',
-//    birthday    TEXT," +                                    '1962-08-22',
-//    notes       TEXT" +                                     'null',
-//    instrument1 TEXT," +                                    'null',
-//    instrument2 TEXT," +                                    'null',
-//    instrument3 TEXT," +                                    'null',
-//    prospective INTEGER," +                                 '0',
-//    status      TEXT," +                                    'Interessent',
-//    statusfrom  TEXT," +                                    '13.04.2024',
-//    statusto    TEXT," +                                    'NULL',
-//    parentid1   INTEGER REFERENCES mtparents (id)," +       '0',
-//    parentid2   INTEGER REFERENCES mtparents (id)" +        '0',
-//    teacherid1  INTEGER REFERENCES mtteachers (id)," +      '0',
-//    teacherid2  INTEGER REFERENCES mtteachers (id)," +      '0',
-//    teacherid3  INTEGER REFERENCES mtteachers (id)," +      '0',
-//    lessonid1   INTEGER REFERENCES mtlessons (id)," +       '0',
-//    lessonid2   INTEGER REFERENCES mtlessons (id)," +       '0',
-//    lessonid3   INTEGER REFERENCES mtlessons (id)," +       '0')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+public class Test {
 
     public static void main(String[] args) {
-        launch(args);
+        Filter filter1 = new Filter("location", "Lohmar");
+        Filter filter2 = new Filter("instrument", "Gitarre");
+        ObservableList<Contact> contacts = getFilteredContactListFromDB(filter1, filter2);
+
+    }
+
+    public static ObservableList<Contact> getFilteredContactListFromDB(Filter filter1, Filter... filters) {
+        ObservableList<Contact> contacts = FXCollections.observableArrayList();
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + CONTACT_TABLE + " WHERE ");
+
+        sql.append(filter1.toSQLString());
+        if (filters.length > 0) sql.append(" AND ");
+
+        int i = 1;
+        for (Filter filter : filters) {
+            sql.append(filter.toSQLString());
+            if (i < filters.length) sql.append(" AND ");
+            i++;
+        }
+        System.out.println(sql);
+        return contacts;
     }
 }
 

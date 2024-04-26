@@ -4,8 +4,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import static prodegus.musetasks.contacts.ParentModel.findParentId;
+import static prodegus.musetasks.contacts.StudentModel.findStudentId;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
+import static prodegus.musetasks.datastructures.Collections.mostCommon;
 
 public class Parent extends Contact {
 
@@ -76,6 +81,7 @@ public class Parent extends Contact {
     }
 
     public Student child1() {
+        if (this.getChildId1() == 0) return null;
         return getStudentFromDB(getChildId1());
     }
 
@@ -84,7 +90,18 @@ public class Parent extends Contact {
         return this.child1().name();
     }
 
+    public List<Student> children() {
+        List<Student> children = new ArrayList<>();
+        if (this.child1() != null) children.add(this.child1());
+        if (this.child2() != null) children.add(this.child2());
+        if (this.child3() != null) children.add(this.child3());
+        if (this.child4() != null) children.add(this.child4());
+        if (this.child5() != null) children.add(this.child5());
+        return children;
+    }
+
     public Student child2() {
+        if (this.getChildId2() == 0) return null;
         return getStudentFromDB(getChildId2());
     }
 
@@ -94,6 +111,7 @@ public class Parent extends Contact {
     }
 
     public Student child3() {
+        if (this.getChildId3() == 0) return null;
         return getStudentFromDB(getChildId3());
     }
 
@@ -103,6 +121,7 @@ public class Parent extends Contact {
     }
 
     public Student child4() {
+        if (this.getChildId4() == 0) return null;
         return getStudentFromDB(getChildId4());
     }
 
@@ -112,6 +131,7 @@ public class Parent extends Contact {
     }
 
     public Student child5() {
+        if (this.getChildId5() == 0) return null;
         return getStudentFromDB(getChildId5());
     }
 
@@ -122,11 +142,11 @@ public class Parent extends Contact {
 
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
-        this.setChildId1(rs.getInt(15));
-        this.setChildId2(rs.getInt(16));
-        this.setChildId3(rs.getInt(17));
-        this.setChildId4(rs.getInt(18));
-        this.setChildId5(rs.getInt(19));
+        this.setChildId1(rs.getInt("childid1"));
+        this.setChildId2(rs.getInt("childid2"));
+        this.setChildId3(rs.getInt("childid3"));
+        this.setChildId4(rs.getInt("childid4"));
+        this.setChildId5(rs.getInt("childid5"));
     }
 
     public String valuesToSQLString() {
@@ -146,4 +166,47 @@ public class Parent extends Contact {
         return sb.toString();
     }
 
+    public Teacher mainTeacher() {
+        List<Student> children = this.children();
+        List<Teacher> teachers = new ArrayList<>();
+
+        for (Student child : children) {
+            if (child.teacher1() != null) teachers.add(child.teacher1());
+            if (child.teacher2() != null) teachers.add(child.teacher2());
+            if (child.teacher3() != null) teachers.add(child.teacher3());
+        }
+
+        return mostCommon(teachers);
+    }
+
+    public String status() {
+        return "";
+    }
+
+    public boolean addChildInDB(Student newStudent) {
+        int newStudentId = findStudentId(newStudent.getLastName(), newStudent.getFirstName(), this.getId());
+        if (newStudentId == 0) return false;
+
+        if (this.getChildId1() == 0) {
+            ContactModel.updateContactIntInDB(this, "childid1", newStudentId);
+            return true;
+        }
+        if (this.getChildId2() == 0) {
+            ContactModel.updateContactIntInDB(this, "childid2", newStudentId);
+            return true;
+        }
+        if (this.getChildId3() == 0) {
+            ContactModel.updateContactIntInDB(this, "childid3", newStudentId);
+            return true;
+        }
+        if (this.getChildId4() == 0) {
+            ContactModel.updateContactIntInDB(this, "childid4", newStudentId);
+            return true;
+        }
+        if (this.getChildId5() == 0) {
+            ContactModel.updateContactIntInDB(this, "childid5", newStudentId);
+            return true;
+        }
+        return false;
+    }
 }

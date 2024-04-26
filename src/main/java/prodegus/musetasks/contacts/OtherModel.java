@@ -15,11 +15,11 @@ public class OtherModel {
 
     public static ObservableList<Other> getOtherListFromDB() {
         ObservableList<Other> others = FXCollections.observableArrayList();
-        refreshOtherList(others);
+        refreshOtherListFromDB(others);
         return others;
     }
 
-    public static void refreshOtherList(ObservableList<Other> others) {
+    public static void refreshOtherListFromDB(ObservableList<Other> others) {
         String sql = "SELECT * FROM " + OTHER_TABLE;
 
         others.clear();
@@ -36,7 +36,7 @@ public class OtherModel {
         }
     }
 
-    public static Other getOther(int id) {
+    public static Other getOtherFromDB(int id) {
         String sql = "SELECT * FROM " + OTHER_TABLE + " WHERE id = " + id;
         Other other = new Other();
 

@@ -3,12 +3,10 @@ package prodegus.musetasks.contacts;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import prodegus.musetasks.database.Filter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static prodegus.musetasks.contacts.ContactModel.updateContactInDB;
 import static prodegus.musetasks.contacts.LessonModel.getLessonFromDB;
 import static prodegus.musetasks.contacts.ParentModel.findParentId;
 import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
@@ -221,15 +219,15 @@ public class Student extends Contact {
     }
 
     public Teacher teacher1() {
-        return getTeacherFromDB(getTeacherId1());
+        return this.getTeacherId1() == 0 ? null : getTeacherFromDB(getTeacherId1());
     }
 
     public Teacher teacher2() {
-        return getTeacherFromDB(getTeacherId2());
+        return this.getTeacherId2() == 0 ? null : getTeacherFromDB(getTeacherId2());
     }
 
     public Teacher teacher3() {
-        return getTeacherFromDB(getTeacherId3());
+        return this.getTeacherId3() == 0 ? null : getTeacherFromDB(getTeacherId3());
     }
 
     public Lesson lesson1() {
@@ -246,57 +244,60 @@ public class Student extends Contact {
 
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
-        this.setInstrument1(rs.getString(15));
-        this.setInstrument2(rs.getString(16));
-        this.setInstrument3(rs.getString(17));
-        this.setProspective(rs.getInt(18) == 1);
-        this.setStatus(rs.getString(19));
-        this.setStatusFrom(rs.getString(20));
-        this.setStatusTo(rs.getString(21));
-        this.setParentId1(rs.getInt(22));
-        this.setParentId2(rs.getInt(23));
-        this.setTeacherId1(rs.getInt(24));
-        this.setTeacherId2(rs.getInt(25));
-        this.setTeacherId3(rs.getInt(26));
-        this.setLessonId1(rs.getInt(27));
-        this.setLessonId2(rs.getInt(28));
-        this.setLessonId3(rs.getInt(29));
+        this.setInstrument1(rs.getString("instrument1"));
+        this.setInstrument2(rs.getString("instrument2"));
+        this.setInstrument3(rs.getString("instrument3"));
+        this.setProspective(rs.getInt("prospective") == 1);
+        this.setStatus(rs.getString("status"));
+        this.setStatusFrom(rs.getString("statusfrom"));
+        this.setStatusTo(rs.getString("statusto"));
+        this.setParentId1(rs.getInt("parentid1"));
+        this.setParentId2(rs.getInt("parentid2"));
+        this.setTeacherId1(rs.getInt("teacherid1"));
+        this.setTeacherId2(rs.getInt("teacherid2"));
+        this.setTeacherId3(rs.getInt("teacherid3"));
+        this.setLessonId1(rs.getInt("lessonid1"));
+        this.setLessonId2(rs.getInt("lessonid2"));
+        this.setLessonId3(rs.getInt("lessonid3"));
     }
 
     public String valuesToSQLString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.valuesToSQLString());
-        sb.append(", '");
-        sb.append(this.getInstrument1());
-        sb.append("', '");
-        sb.append(this.getInstrument2());
-        sb.append("', '");
-        sb.append(this.getInstrument3());
-        sb.append("', '");
-        sb.append(this.getProspective() ? "1" : "0");
-        sb.append("', '");
-        sb.append(this.getStatus());
-        sb.append("', '");
-        sb.append(this.getStatusFrom());
-        sb.append("', '");
-        sb.append(this.getStatusTo());
-        sb.append("', '");
-        sb.append(this.getParentId1());
-        sb.append("', '");
-        sb.append(this.getParentId2());
-        sb.append("', '");
-        sb.append(this.getTeacherId1());
-        sb.append("', '");
-        sb.append(this.getTeacherId2());
-        sb.append("', '");
-        sb.append(this.getTeacherId3());
-        sb.append("', '");
-        sb.append(this.getLessonId1());
-        sb.append("', '");
-        sb.append(this.getLessonId2());
-        sb.append("', '");
-        sb.append(this.getLessonId3());
-        sb.append("'");
+        StringBuilder sb = new StringBuilder(super.valuesToSQLString()).append(", '");
+        sb.append(this.getInstrument1()).append("', '");
+        sb.append(this.getInstrument2()).append("', '");
+        sb.append(this.getInstrument3()).append("', '");
+        sb.append(this.getProspective() ? "1" : "0").append("', '");
+        sb.append(this.getStatus()).append("', '");
+        sb.append(this.getStatusFrom()).append("', '");
+        sb.append(this.getStatusTo()).append("', '");
+        sb.append(this.getParentId1()).append("', '");
+        sb.append(this.getParentId2()).append("', '");
+        sb.append(this.getTeacherId1()).append("', '");
+        sb.append(this.getTeacherId2()).append("', '");
+        sb.append(this.getTeacherId3()).append("', '");
+        sb.append(this.getLessonId1()).append("', '");
+        sb.append(this.getLessonId2()).append("', '");
+        sb.append(this.getLessonId3()).append("'");
+        return sb.toString();
+    }
+
+    public String valuesToSQLUpdateString() {
+        StringBuilder sb = new StringBuilder(super.valuesToSQLUpdateString()).append(", ");
+        sb.append("instrument1 = '").append(this.getInstrument1()).append("', ");
+        sb.append("instrument2 = '").append(this.getInstrument2()).append("', ");
+        sb.append("instrument3 = '").append(this.getInstrument3()).append("', ");
+        sb.append("prospective = ").append(this.getProspective() ? "1" : "0").append(", ");
+        sb.append("status      = '").append(this.getStatus()).append("', ");
+        sb.append("statusfrom  = '").append(this.getStatusFrom()).append("', ");
+        sb.append("statusto    = '").append(this.getStatusTo()).append("', ");
+        sb.append("parentid1   = ").append(this.getParentId1()).append(", ");
+        sb.append("parentid2   = ").append(this.getParentId2()).append(", ");
+        sb.append("teacherid1  = ").append(this.getTeacherId1()).append(", ");
+        sb.append("teacherid2  = ").append(this.getTeacherId2()).append(", ");
+        sb.append("teacherid3  = ").append(this.getTeacherId3()).append(", ");
+        sb.append("lessonid1   = ").append(this.getLessonId1()).append(", ");
+        sb.append("lessonid2   = ").append(this.getLessonId2()).append(", ");
+        sb.append("lessonid3   = ").append(this.getLessonId3());
         return sb.toString();
     }
 
@@ -408,9 +409,10 @@ public class Student extends Contact {
     public String toString() {
         return "Student [" +
                 "id: " + this.getId() + ", " +
-                "lastname: " + this.getLastname() + ", " +
-                "firstname: " + this.getFirstname() + ", " +
+                "lastname: " + this.getLastName() + ", " +
+                "firstname: " + this.getFirstName() + ", " +
                 "category: " + this.getCategory() + ", " +
+                "customer: " + this.getCustomerId() + ", " +
                 "location: " + this.getLocation() + ", " +
                 "street: " + this.getStreet() + ", " +
                 "postalCode: " + this.getPostalCode() + ", " +
@@ -439,18 +441,24 @@ public class Student extends Contact {
                 "lessonId3: " + this.getLessonId3() + "]";
     }
 
-    public boolean addParent(Parent newParent) {
-        int newParentId = findParentId(newParent.getLastname(), newParent.getFirstname(), this.getId());
+    public boolean addParentInDB(Parent newParent) {
+        int newParentId = findParentId(newParent.getLastName(), newParent.getFirstName(), this.getId());
         if (newParentId == 0) return false;
 
         if (this.getParentId1() == 0) {
-            updateContactInDB(this, "parentid1", newParentId);
+            ContactModel.updateContactIntInDB(this, "parentid1", newParentId);
             return true;
         }
         if (this.getParentId2() == 0) {
-            updateContactInDB(this, "parentid2", newParentId);
+            ContactModel.updateContactIntInDB(this, "parentid2", newParentId);
             return true;
         }
         return false;
+    }
+
+    public boolean hasTeacher(Teacher teacher) {
+        return this.getTeacherId1() == teacher.getId() ||
+                this.getTeacherId2() == teacher.getId() ||
+                this.getTeacherId3() == teacher.getId();
     }
 }

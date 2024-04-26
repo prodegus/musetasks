@@ -9,15 +9,20 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 
-import static prodegus.musetasks.contacts.ContactModel.DATE_FORMATTER;
+import static prodegus.musetasks.contacts.ContactModel.*;
+import static prodegus.musetasks.contacts.OtherModel.getOtherFromDB;
+import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
+import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
+import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 import static prodegus.musetasks.database.Database.*;
 
 public class Contact {
 
     private SimpleIntegerProperty id         = new SimpleIntegerProperty();
-    private SimpleStringProperty  lastname   = new SimpleStringProperty();
-    private SimpleStringProperty  firstname  = new SimpleStringProperty();
-    private SimpleStringProperty  category   = new SimpleStringProperty();
+    private SimpleStringProperty  lastName   = new SimpleStringProperty();
+    private SimpleStringProperty  firstName  = new SimpleStringProperty();
+    private SimpleIntegerProperty category   = new SimpleIntegerProperty();
+    private SimpleIntegerProperty customerId = new SimpleIntegerProperty();
     private SimpleStringProperty  location   = new SimpleStringProperty();
     private SimpleStringProperty  street     = new SimpleStringProperty();
     private SimpleIntegerProperty postalCode = new SimpleIntegerProperty();
@@ -42,40 +47,52 @@ public class Contact {
         this.id.set(id);
     }
 
-    public String getLastname() {
-        return lastname.get();
+    public String getLastName() {
+        return lastName.get();
     }
 
-    public SimpleStringProperty lastnameProperty() {
-        return lastname;
+    public SimpleStringProperty lastNameProperty() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname.set(lastname);
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
     }
 
-    public String getFirstname() {
-        return firstname.get();
+    public String getFirstName() {
+        return firstName.get();
     }
 
-    public SimpleStringProperty firstnameProperty() {
-        return firstname;
+    public SimpleStringProperty firstNameProperty() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname.set(firstname);
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category.get();
     }
 
-    public SimpleStringProperty categoryProperty() {
+    public SimpleIntegerProperty categoryProperty() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         this.category.set(category);
+    }
+
+    public int getCustomerId() {
+        return customerId.get();
+    }
+
+    public SimpleIntegerProperty customerIdProperty() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId.set(customerId);
     }
 
     public String getLocation() {
@@ -210,13 +227,25 @@ public class Contact {
         this.selected.set(selected);
     }
 
+    public String category() {
+        return switch (this.getCategory()) {
+            case CATEGORY_STUDENT -> "Schüler";
+            case CATEGORY_PROSPECTIVE_STUDENT -> "Schüler (I)";
+            case CATEGORY_PARENT -> "Eltern";
+            case CATEGORY_PROSPECTIVE_PARENT -> "Eltern (I)";
+            case CATEGORY_TEACHER -> "Lehrer";
+            case CATEGORY_OTHER -> "Sonstige";
+            default -> null;
+        };
+    }
+
     public String table() {
         String tableName = switch (this.getCategory()) {
-            case "Schüler" -> STUDENT_TABLE;
-            case "Lehrer" -> TEACHER_TABLE;
-            case "Eltern" -> PARENT_TABLE;
-            case "Sonstige" -> OTHER_TABLE;
-            default -> "";
+            case CATEGORY_STUDENT, CATEGORY_PROSPECTIVE_STUDENT -> STUDENT_TABLE;
+            case CATEGORY_TEACHER -> TEACHER_TABLE;
+            case CATEGORY_PARENT, CATEGORY_PROSPECTIVE_PARENT -> PARENT_TABLE;
+            case CATEGORY_OTHER -> OTHER_TABLE;
+            default -> null;
         };
         return tableName;
     }
@@ -231,56 +260,137 @@ public class Contact {
     }
 
     public String name() {
-        return this.getFirstname() + " " + this.getLastname();
+        return this.getFirstName() + " " + this.getLastName();
+    }
+
+    public String formalName() { return this.getLastName() + ", " + this.getFirstName(); }
+
+    public String shortName() {
+        return this.getFirstName() + " " + this.getLastName().charAt(0);
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
-        this.setId(rs.getInt(1));
-        this.setLastname(rs.getString(2));
-        this.setFirstname(rs.getString(3));
-        this.setCategory(rs.getString(4));
-        this.setLocation(rs.getString(5));
-        this.setStreet(rs.getString(6));
-        this.setPostalCode(rs.getInt(7));
-        this.setCity(rs.getString(8));
-        this.setPhone(rs.getString(9));
-        this.setEmail(rs.getString(10));
-        this.setZoom(rs.getString(11));
-        this.setSkype(rs.getString(12));
-        this.setBirthDate(rs.getString(13));
-        this.setNotes(rs.getString(14));
+        this.setId(rs.getInt("id"));
+        this.setLastName(rs.getString("lastname"));
+        this.setFirstName(rs.getString("firstname"));
+        this.setCategory(rs.getInt("category"));
+        this.setCustomerId(rs.getInt("customerid"));
+        this.setLocation(rs.getString("location"));
+        this.setStreet(rs.getString("street"));
+        this.setPostalCode(rs.getInt("postalcode"));
+        this.setCity(rs.getString("city"));
+        this.setPhone(rs.getString("phone"));
+        this.setEmail(rs.getString("email"));
+        this.setZoom(rs.getString("zoom"));
+        this.setSkype(rs.getString("skype"));
+        this.setBirthDate(rs.getString("birthday"));
+        this.setNotes(rs.getString("notes"));
         this.setSelected(false);
     }
 
     public String valuesToSQLString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("null, '");
-        sb.append(this.getLastname());
-        sb.append("', '");
-        sb.append(this.getFirstname());
-        sb.append("', '");
-        sb.append(this.getCategory());
-        sb.append("', '");
-        sb.append(this.getLocation());
-        sb.append("', '");
-        sb.append(this.getStreet());
-        sb.append("', '");
-        sb.append(this.getPostalCode());
-        sb.append("', '");
-        sb.append(this.getCity());
-        sb.append("', '");
-        sb.append(this.getPhone());
-        sb.append("', '");
-        sb.append(this.getEmail());
-        sb.append("', '");
-        sb.append(this.getZoom());
-        sb.append("', '");
-        sb.append(this.getSkype());
-        sb.append("', '");
-        sb.append(this.getBirthDate());
-        sb.append("', '");
-        sb.append(this.getNotes());
-        sb.append("'");
+        StringBuilder sb = new StringBuilder("null, '");
+        sb.append(this.getLastName()).append("', '");
+        sb.append(this.getFirstName()).append("', '");
+        sb.append(this.getCategory()).append("', '");
+        sb.append(this.getCustomerId()).append("', '");
+        sb.append(this.getLocation()).append("', '");
+        sb.append(this.getStreet()).append("', '");
+        sb.append(this.getPostalCode()).append("', '");
+        sb.append(this.getCity()).append("', '");
+        sb.append(this.getPhone()).append("', '");
+        sb.append(this.getEmail()).append("', '");
+        sb.append(this.getZoom()).append("', '");
+        sb.append(this.getSkype()).append("', '");
+        sb.append(this.getBirthDate()).append("', '");
+        sb.append(this.getNotes()).append("'");
         return sb.toString();
+    }
+
+    public String valuesToSQLUpdateString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("lastname   = '").append(this.getLastName()).append("', ");
+        sb.append("firstname  = '").append(this.getFirstName()).append("', ");
+        sb.append("category   = ").append(this.getCategory()).append(", ");
+        sb.append("customerid = ").append(this.getCustomerId()).append(", ");
+        sb.append("location   = '").append(this.getLocation()).append("', ");
+        sb.append("street     = '").append(this.getStreet()).append("', ");
+        sb.append("postalcode = ").append(this.getPostalCode()).append(", ");
+        sb.append("city       = '").append(this.getCity()).append("', ");
+        sb.append("phone      = '").append(this.getPhone()).append("', ");
+        sb.append("email      = '").append(this.getEmail()).append("', ");
+        sb.append("zoom       = '").append(this.getZoom()).append("', ");
+        sb.append("skype      = '").append(this.getSkype()).append("', ");
+        sb.append("birthday   = '").append(this.getBirthDate()).append("', ");
+        sb.append("notes      = '").append(this.getNotes()).append("'");
+        return sb.toString();
+    }
+
+    public boolean hasInstrument(String instrument) {
+        if (this.isStudent()) {
+            return this.toStudent().instruments().contains(instrument);
+        }
+        if (this.isParent()) {
+            for (Student student : this.toParent().children()) {
+                if (student.instruments().contains(instrument)) return true;
+            }
+        }
+        if (this.isTeacher()) {
+            return this.toTeacher().getInstruments().contains(instrument);
+        }
+        return false;
+    }
+
+    public boolean isStudent() {
+        return this.getCategory() == CATEGORY_STUDENT || this.getCategory() == CATEGORY_PROSPECTIVE_STUDENT;
+    }
+
+    public boolean isParent() {
+        return this.getCategory() == CATEGORY_PARENT || this.getCategory() == CATEGORY_PROSPECTIVE_PARENT;
+    }
+
+    public boolean isTeacher() {
+        return this.getCategory() == CATEGORY_TEACHER;
+    }
+
+    public boolean isOther() {
+        return this.getCategory() == CATEGORY_OTHER;
+    }
+
+    public boolean isProspective() {
+        return this.getCategory() == CATEGORY_PROSPECTIVE_STUDENT ||
+                this.getCategory() == CATEGORY_PROSPECTIVE_PARENT;
+    }
+
+    public boolean isCustomer() {
+        if (this.customerIdProperty() == null) return false;
+        return this.getCustomerId() > 0;
+    }
+
+    public Student toStudent() {
+        return this.isStudent() ? getStudentFromDB(this.getId()) : null;
+    }
+
+    public Parent toParent() {
+        return this.isParent() ? getParentFromDB(this.getId()) : null;
+    }
+
+    public Teacher toTeacher() {
+        return this.isTeacher() ? getTeacherFromDB(this.getId()) : null;
+    }
+
+    public Other toOther() {
+        return this.isOther() ? getOtherFromDB(this.getId()) : null;
+    }
+
+    public boolean hasTeacher(Teacher teacher) {
+        if (this.isStudent())
+            return this.toStudent().hasTeacher(teacher);
+        if (this.isParent()) {
+            for (Student child : this.toParent().children()) {
+                if (child.hasTeacher(teacher)) return true;
+            }
+        }
+        return false;
     }
 }

@@ -5,6 +5,7 @@ module prodegus.musetasks {
     requires java.prefs;
     requires org.apache.poi.poi;
     requires org.apache.commons.lang3;
+    requires jakarta.mail;
 
 
     opens prodegus.musetasks.login to javafx.fxml;
@@ -21,4 +22,6 @@ module prodegus.musetasks {
 
     opens prodegus.musetasks.test to javafx.fxml;
     exports prodegus.musetasks.test;
+    exports prodegus.musetasks.workspace.cells;
+    opens prodegus.musetasks.workspace.cells to javafx.fxml;
 }

@@ -13,16 +13,15 @@ import static prodegus.musetasks.database.Database.connect;
 
 public class LessonModel {
 
-    public static ObservableList<Lesson> getLessonList() {
-        ObservableList<Lesson> lessons = FXCollections.observableArrayList();
-        refreshLessonList(lessons);
-        return lessons;
-    }
+    public static final int CATEGORY_SINGLE = 1;
+    public static final int CATEGORY_GROUP = 2;
+    public static final int CATEGORY_COURSE = 3;
+    public static final int CATEGORY_WORKGROUP = 4;
 
-    public static void refreshLessonList(ObservableList<Lesson> lessons) {
+    public static ObservableList<Lesson> getLessonListFromDB() {
+        ObservableList<Lesson> lessons = FXCollections.observableArrayList();
         String sql = "SELECT * FROM " + LESSON_TABLE;
 
-        lessons.clear();
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery(sql)) {
@@ -34,6 +33,7 @@ public class LessonModel {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return lessons;
     }
 
     public static Lesson getLessonFromDB(int id) {

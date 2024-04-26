@@ -7,17 +7,28 @@ import javafx.beans.property.SimpleStringProperty;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static prodegus.musetasks.contacts.LessonModel.*;
+import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
+
 public class Lesson {
 
     private SimpleIntegerProperty id          = new SimpleIntegerProperty();
-    private SimpleStringProperty  instrument  = new SimpleStringProperty();
     private SimpleStringProperty  lessonName  = new SimpleStringProperty();
+    private SimpleIntegerProperty category    = new SimpleIntegerProperty();
+    private SimpleStringProperty  instrument  = new SimpleStringProperty();
     private SimpleIntegerProperty teacherId   = new SimpleIntegerProperty();
     private SimpleStringProperty  location    = new SimpleStringProperty();
-    private SimpleStringProperty  frequency   = new SimpleStringProperty();
+    private SimpleBooleanProperty repeat      = new SimpleBooleanProperty();
+    private SimpleIntegerProperty repeatTimes = new SimpleIntegerProperty();
+    private SimpleStringProperty  repeatEnd   = new SimpleStringProperty();
     private SimpleStringProperty  weekday     = new SimpleStringProperty();
     private SimpleStringProperty  time        = new SimpleStringProperty();
     private SimpleIntegerProperty duration    = new SimpleIntegerProperty();
+    private SimpleStringProperty  startDate   = new SimpleStringProperty();
+    private SimpleStringProperty  endDate     = new SimpleStringProperty();
+    private SimpleIntegerProperty status      = new SimpleIntegerProperty();
+    private SimpleStringProperty  statusFrom  = new SimpleStringProperty();
+    private SimpleStringProperty  statusTo    = new SimpleStringProperty();
     private SimpleIntegerProperty studentId1  = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId2  = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId3  = new SimpleIntegerProperty();
@@ -28,9 +39,6 @@ public class Lesson {
     private SimpleIntegerProperty studentId8  = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId9  = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId10 = new SimpleIntegerProperty();
-    private SimpleStringProperty  startDate   = new SimpleStringProperty();
-    private SimpleStringProperty  endDate     = new SimpleStringProperty();
-
     private SimpleBooleanProperty selected    = new SimpleBooleanProperty();
 
     public int getId() {
@@ -45,18 +53,6 @@ public class Lesson {
         this.id.set(id);
     }
 
-    public String getInstrument() {
-        return instrument.get();
-    }
-
-    public SimpleStringProperty instrumentProperty() {
-        return instrument;
-    }
-
-    public void setInstrument(String instrument) {
-        this.instrument.set(instrument);
-    }
-
     public String getLessonName() {
         return lessonName.get();
     }
@@ -67,6 +63,30 @@ public class Lesson {
 
     public void setLessonName(String lessonName) {
         this.lessonName.set(lessonName);
+    }
+
+    public int getCategory() {
+        return category.get();
+    }
+
+    public SimpleIntegerProperty categoryProperty() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category.set(category);
+    }
+
+    public String getInstrument() {
+        return instrument.get();
+    }
+
+    public SimpleStringProperty instrumentProperty() {
+        return instrument;
+    }
+
+    public void setInstrument(String instrument) {
+        this.instrument.set(instrument);
     }
 
     public int getTeacherId() {
@@ -93,16 +113,40 @@ public class Lesson {
         this.location.set(location);
     }
 
-    public String getFrequency() {
-        return frequency.get();
+    public boolean isRepeat() {
+        return repeat.get();
     }
 
-    public SimpleStringProperty frequencyProperty() {
-        return frequency;
+    public SimpleBooleanProperty repeatProperty() {
+        return repeat;
     }
 
-    public void setFrequency(String frequency) {
-        this.frequency.set(frequency);
+    public void setRepeat(boolean repeat) {
+        this.repeat.set(repeat);
+    }
+
+    public int getRepeatTimes() {
+        return repeatTimes.get();
+    }
+
+    public SimpleIntegerProperty repeatTimesProperty() {
+        return repeatTimes;
+    }
+
+    public void setRepeatTimes(int repeatTimes) {
+        this.repeatTimes.set(repeatTimes);
+    }
+
+    public String getRepeatEnd() {
+        return repeatEnd.get();
+    }
+
+    public SimpleStringProperty repeatEndProperty() {
+        return repeatEnd;
+    }
+
+    public void setRepeatEnd(String repeatEnd) {
+        this.repeatEnd.set(repeatEnd);
     }
 
     public String getWeekday() {
@@ -139,6 +183,66 @@ public class Lesson {
 
     public void setDuration(int duration) {
         this.duration.set(duration);
+    }
+
+    public String getStartDate() {
+        return startDate.get();
+    }
+
+    public SimpleStringProperty startDateProperty() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate.set(startDate);
+    }
+
+    public String getEndDate() {
+        return endDate.get();
+    }
+
+    public SimpleStringProperty endDateProperty() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate.set(endDate);
+    }
+
+    public int getStatus() {
+        return status.get();
+    }
+
+    public SimpleIntegerProperty statusProperty() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status.set(status);
+    }
+
+    public String getStatusFrom() {
+        return statusFrom.get();
+    }
+
+    public SimpleStringProperty statusFromProperty() {
+        return statusFrom;
+    }
+
+    public void setStatusFrom(String statusFrom) {
+        this.statusFrom.set(statusFrom);
+    }
+
+    public String getStatusTo() {
+        return statusTo.get();
+    }
+
+    public SimpleStringProperty statusToProperty() {
+        return statusTo;
+    }
+
+    public void setStatusTo(String statusTo) {
+        this.statusTo.set(statusTo);
     }
 
     public int getStudentId1() {
@@ -261,30 +365,6 @@ public class Lesson {
         this.studentId10.set(studentId10);
     }
 
-    public String getStartDate() {
-        return startDate.get();
-    }
-
-    public SimpleStringProperty startDateProperty() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate.set(startDate);
-    }
-
-    public String getEndDate() {
-        return endDate.get();
-    }
-
-    public SimpleStringProperty endDateProperty() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate.set(endDate);
-    }
-
     public boolean isSelected() {
         return selected.get();
     }
@@ -301,74 +381,84 @@ public class Lesson {
         return String.valueOf(this.getId());
     }
 
+    public Teacher teacher() {
+        return getTeacherFromDB(getTeacherId());
+    }
+
+    public String category() {
+        return switch (this.getCategory()) {
+            case CATEGORY_SINGLE -> "Einzelunterricht";
+            case CATEGORY_GROUP -> "Gruppenunterricht";
+            case CATEGORY_COURSE -> "Kurs/Workshop";
+            case CATEGORY_WORKGROUP -> "AG";
+            default -> null;
+        };
+    }
+
+    public String teacherName() {
+        if (this.getTeacherId() == 0) return "";
+        return this.teacher().getFirstName() + " " + this.teacher().getLastName().charAt(0) + ".";
+    }
+
     public void setAttributes(ResultSet rs) throws SQLException {
-        this.setId(rs.getInt(1));
-        this.setInstrument(rs.getString(2));
-        this.setLessonName(rs.getString(3));
-        this.setTeacherId(rs.getInt(4));
-        this.setLocation(rs.getString(5));
-        this.setFrequency(rs.getString(6));
-        this.setWeekday(rs.getString(7));
-        this.setTime(rs.getString(8));
-        this.setDuration(rs.getInt(9));
-        this.setStudentId1(rs.getInt(10));
-        this.setStudentId2(rs.getInt(11));
-        this.setStudentId3(rs.getInt(12));
-        this.setStudentId4(rs.getInt(13));
-        this.setStudentId5(rs.getInt(14));
-        this.setStudentId6(rs.getInt(15));
-        this.setStudentId7(rs.getInt(16));
-        this.setStudentId8(rs.getInt(17));
-        this.setStudentId9(rs.getInt(18));
-        this.setStudentId10(rs.getInt(19));
-        this.setStartDate(rs.getString(20));
-        this.setEndDate(rs.getString(21));
+        this.setId(rs.getInt("id"));
+        this.setLessonName(rs.getString("lessonname"));
+        this.setCategory(rs.getInt("category"));
+        this.setInstrument(rs.getString("instrument"));
+        this.setTeacherId(rs.getInt("teacherid"));
+        this.setLocation(rs.getString("location"));
+        this.setRepeat(rs.getInt("repeat") == 1);
+        this.setRepeatTimes(rs.getInt("repeattimes"));
+        this.setRepeatEnd(rs.getString("repeatend  "));
+        this.setWeekday(rs.getString("weekday"));
+        this.setTime(rs.getString("time"));
+        this.setDuration(rs.getInt("duration"));
+        this.setStartDate(rs.getString("startdate"));
+        this.setEndDate(rs.getString("enddate"));
+        this.setStatus(rs.getInt("status"));
+        this.setStatusFrom(rs.getString("statusfrom"));
+        this.setStatusTo(rs.getString("statusto"));
+        this.setStudentId1(rs.getInt("studentid1"));
+        this.setStudentId2(rs.getInt("studentid2"));
+        this.setStudentId3(rs.getInt("studentid3"));
+        this.setStudentId4(rs.getInt("studentid4"));
+        this.setStudentId5(rs.getInt("studentid5"));
+        this.setStudentId6(rs.getInt("studentid6"));
+        this.setStudentId7(rs.getInt("studentid7"));
+        this.setStudentId8(rs.getInt("studentid8"));
+        this.setStudentId9(rs.getInt("studentid9"));
+        this.setStudentId10(rs.getInt("studentid10"));
         this.setSelected(false);
     }
 
     public String valuesToSQLString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("'NULL', '");
-        sb.append(this.getInstrument());
-        sb.append("', '");
-        sb.append(this.getLessonName());
-        sb.append("', '");
-        sb.append(this.getTeacherId());
-        sb.append("', '");
-        sb.append(this.getLocation());
-        sb.append("', '");
-        sb.append(this.getFrequency());
-        sb.append("', '");
-        sb.append(this.getWeekday());
-        sb.append("', '");
-        sb.append(this.getTime());
-        sb.append("', '");
-        sb.append(this.getDuration());
-        sb.append("', '");
-        sb.append(this.getStudentId1());
-        sb.append("', '");
-        sb.append(this.getStudentId2());
-        sb.append("', '");
-        sb.append(this.getStudentId3());
-        sb.append("', '");
-        sb.append(this.getStudentId4());
-        sb.append("', '");
-        sb.append(this.getStudentId5());
-        sb.append("', '");
-        sb.append(this.getStudentId6());
-        sb.append("', '");
-        sb.append(this.getStudentId7());
-        sb.append("', '");
-        sb.append(this.getStudentId8());
-        sb.append("', '");
-        sb.append(this.getStudentId9());
-        sb.append("', '");
-        sb.append(this.getStudentId10());
-        sb.append("', '");
-        sb.append(this.getStartDate());
-        sb.append("', '");
-        sb.append(this.getEndDate());
-        sb.append("'");
+        StringBuilder sb = new StringBuilder("null, '");
+        sb.append(this.getLessonName()).append("', '");
+        sb.append(this.getCategory()).append("', '");
+        sb.append(this.getInstrument()).append("', '");
+        sb.append(this.getTeacherId()).append("', '");
+        sb.append(this.getLocation()).append("', '");
+        sb.append(this.isRepeat() ? "1" : "0").append("', '");
+        sb.append(this.getRepeatTimes()).append("', '");
+        sb.append(this.getRepeatEnd()).append("', '");
+        sb.append(this.getWeekday()).append("', '");
+        sb.append(this.getTime()).append("', '");
+        sb.append(this.getDuration()).append("', '");
+        sb.append(this.getStartDate()).append("', '");
+        sb.append(this.getEndDate()).append("', '");
+        sb.append(this.getStatus()).append("', '");
+        sb.append(this.getStatusFrom()).append("', '");
+        sb.append(this.getStatusTo()).append("', '");
+        sb.append(this.getStudentId1()).append("', '");
+        sb.append(this.getStudentId2()).append("', '");
+        sb.append(this.getStudentId3()).append("', '");
+        sb.append(this.getStudentId4()).append("', '");
+        sb.append(this.getStudentId5()).append("', '");
+        sb.append(this.getStudentId6()).append("', '");
+        sb.append(this.getStudentId7()).append("', '");
+        sb.append(this.getStudentId8()).append("', '");
+        sb.append(this.getStudentId9()).append("', '");
+        sb.append(this.getStudentId10()).append("'");
         return sb.toString();
     }
 

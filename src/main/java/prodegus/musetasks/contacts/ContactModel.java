@@ -14,30 +14,27 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import prodegus.musetasks.database.Filter;
 
 import static prodegus.musetasks.database.Database.*;
 
 public class ContactModel {
 
-    public static final String CATEGORY_STUDENT = "Schüler";
-    public static final String CATEGORY_TEACHER = "Lehrer";
-    public static final String CATEGORY_PARENT = "Eltern";
-    public static final String CATEGORY_OTHER = "Sonstige";
-    public static final String STATUS_PROSPECTIVE = "Interessent";
+    public static final int CATEGORY_STUDENT = 1;
+    public static final int CATEGORY_PROSPECTIVE_STUDENT = 11;
+    public static final int CATEGORY_PARENT = 2;
+    public static final int CATEGORY_PROSPECTIVE_PARENT = 22;
+    public static final int CATEGORY_TEACHER = 3;
+    public static final int CATEGORY_OTHER = 4;
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public static ObservableList<Contact> getContactList() {
+    public static ObservableList<Contact> getContactListFromDB() {
         ObservableList<Contact> contacts = FXCollections.observableArrayList();
-        refreshContactList(contacts);
-        return contacts;
-    }
-
-    public static void refreshContactList(ObservableList<Contact> contacts) {
-        contacts.clear();
         addContactsFromTable(STUDENT_TABLE, contacts);
         addContactsFromTable(TEACHER_TABLE, contacts);
         addContactsFromTable(PARENT_TABLE, contacts);
         addContactsFromTable(OTHER_TABLE, contacts);
+        return contacts;
     }
 
     public static void addContactsFromTable(String table, ObservableList<Contact> contacts) {
@@ -56,7 +53,36 @@ public class ContactModel {
         }
     }
 
-    public static void addContact(Contact contact) {
+    public static ObservableList<Contact> getFilteredContactListFromDB(Filter filter1, Filter... filters) {
+        ObservableList<Contact> contacts = FXCollections.observableArrayList();
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + CONTACT_TABLE + " WHERE ");
+
+        sql.append(filter1.toSQLString());
+        if (filters.length > 0) sql.append(" AND ");
+
+        int i = 1;
+        for (Filter filter : filters) {
+            sql.append(filter.toSQLString());
+            if (i < filters.length) sql.append(" AND ");
+            i++;
+        }
+
+        contacts.clear();
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql.toString())) {
+            while (rs.next()) {
+                Contact contact = new Contact();
+                contact.setAttributes(rs);
+                contacts.add(contact);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return contacts;
+    }
+
+    public static void addContactToDB(Contact contact) {
         String sql = "INSERT INTO " + contact.table() + " VALUES (" + contact.valuesToSQLString() + ")";
         System.out.println(sql);
         try (Connection connection = connect();
@@ -131,11 +157,15 @@ public class ContactModel {
         }
     }
 
-    public static void updateContactInDB(Contact contact, String column, String newValue) {
+    public static void updateContactInDB(Contact contact, int id) {
+        updateMultipleDB(contact.table(), id, contact.valuesToSQLUpdateString());
+    }
+
+    public static void updateContactStringInDB(Contact contact, String column, String newValue) {
         updateDB(contact.table(), contact.id(), column, newValue);
     }
 
-    public static void updateContactInDB(Contact contact, String column, int newValue) {
+    public static void updateContactIntInDB(Contact contact, String column, int newValue) {
         updateDB(contact.table(), contact.id(), column, newValue);
     }
 

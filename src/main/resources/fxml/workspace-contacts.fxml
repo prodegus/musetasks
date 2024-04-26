@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.workspace.ContactsController">
+   <children>
+      <SplitPane dividerPositions="0.55" HBox.hgrow="ALWAYS">
+         <items>
+            <HBox>
+               <children>
+                  <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
+                     <children>
+                        <ToggleButton fx:id="contactToggleAll" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllContacts" prefHeight="45.0" prefWidth="180.0" selected="true" text="#  Alle">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="contactCategoryToggle" />
+                           </toggleGroup>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleStudents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllStudents" prefHeight="45.0" prefWidth="180.0" text="#  Schüler" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleParents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllParents" prefHeight="45.0" prefWidth="180.0" text="#  Eltern" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleTeachers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllTeachers" prefHeight="45.0" prefWidth="180.0" text="#  Lehrer" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleOthers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllOthers" prefHeight="45.0" prefWidth="180.0" text="#  Sonstige" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleProspectives" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllProspectives" prefHeight="45.0" prefWidth="180.0" text="#  Interessenten" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="contactToggleCustomers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllCustomers" prefHeight="45.0" prefWidth="180.0" text="#  Kunden" toggleGroup="$contactCategoryToggle">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ToggleButton>
+                        <TitledPane fx:id="filterPane" animated="false" expanded="false" prefWidth="180.0" text=" Filter auswählen">
+                           <content>
+                              <ScrollPane hbarPolicy="NEVER">
+                                 <content>
+                                    <VBox minWidth="178.0">
+                                       <padding>
+                                          <Insets bottom="0" left="0" right="0" top="0" />
+                                       </padding>
+                                       <children>
+                                          <TitledPane animated="false" expanded="false" text="Kategorie">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="5.0">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <CheckBox fx:id="filterCategoryStudent" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Schüler" />
+                                                      <CheckBox fx:id="filterCategoryParent" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Eltern" />
+                                                      <CheckBox fx:id="filterCategoryTeacher" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Lehrer" />
+                                                      <CheckBox fx:id="filterCategoryOther" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Sonstige" />
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" expanded="false" text="Standort">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="5.0">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <CheckBox fx:id="filterLocation1" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Standort 1" />
+                                                      <CheckBox fx:id="filterLocation2" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Standort 2" />
+                                                      <CheckBox fx:id="filterLocation3" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Standort 3" />
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" expanded="false" text="Lehrer">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="5.0">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterTeacher1" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterTeacher1ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterTeacher2" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterTeacher2ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterTeacher3" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterTeacher3ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" expanded="false" text="Instrument">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="5.0">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterInstrument1" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterInstrument1ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterInstrument2" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterInstrument2ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                         <children>
+                                                            <CheckBox fx:id="filterInstrument3" disable="true" mnemonicParsing="false" onAction="#viewFilteredContacts" />
+                                                            <ComboBox fx:id="filterInstrument3ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" expanded="false" text="Status">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="5.0">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <CheckBox fx:id="filterProspectives" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Interessent" />
+                                                      <CheckBox fx:id="filterCustomers" mnemonicParsing="false" onAction="#viewFilteredContacts" text="Kunde" />
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </ScrollPane>
+                           </content>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TitledPane>
+                        <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="800.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox>
+                           <children>
+                              <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Neuer Kontakt" textAlignment="CENTER" wrapText="true">
+                                 <items>
+                                    <MenuItem fx:id="addStudentMenuItem" mnemonicParsing="false" onAction="#showAddStudentWindow" text="Schüler" />
+                                    <MenuItem fx:id="addParentMenuItem" mnemonicParsing="false" onAction="#showAddParentWindow" text="Elternteil" />
+                                    <MenuItem fx:id="addTeacherMenuItem" mnemonicParsing="false" onAction="#showAddTeacherWindow" text="Lehrer" />
+                                    <MenuItem fx:id="addOtherMenuItem" mnemonicParsing="false" onAction="#showAddOtherWindow" text="Sonstige" />
+                                 </items>
+                              </MenuButton>
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#loadFromXls" prefHeight="70.0" prefWidth="90.0" text="Kontakte importieren" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refresh" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteContacts" prefHeight="70.0" prefWidth="90.0" text="Kontakt(e) löschen" textAlignment="CENTER" wrapText="true" />
+                              <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </HBox>
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="E-Mail an ..." textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Kontakt(e) weiterleiten" textAlignment="CENTER" wrapText="true" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" text="Alle auswählen" />
+                              <TextField fx:id="contactSearchBar" onKeyTyped="#searchBarKeyTyped" prefHeight="25.0" prefWidth="208.0" promptText="Kontakte durchsuchen" />
+                           </children>
+                        </HBox>
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <children>
+                              <TableView fx:id="contactTableView" editable="true" maxHeight="1.7976931348623157E308">
+                                 <columns>
+                                    <TableColumn fx:id="selectColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" sortable="false" />
+                                    <TableColumn fx:id="nameColumn" prefWidth="112.0" text="Name" />
+                                    <TableColumn fx:id="categoryColumn" maxWidth="1.7976931348623157E308" prefWidth="79.0" text="Kategorie" />
+                                    <TableColumn fx:id="locationColumn" minWidth="0.0" prefWidth="89.0" text="Standort" />
+                                    <TableColumn fx:id="phoneColumn" prefWidth="73.0" text="Telefon" />
+                                    <TableColumn fx:id="emailColumn" text="E-Mail" />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="studentTableView" editable="true" maxHeight="1.7976931348623157E308" visible="false">
+                                 <columns>
+                                    <TableColumn fx:id="studentSelectColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" sortable="false" />
+                                    <TableColumn fx:id="studentNameColumn" prefWidth="112.0" text="Name" />
+                                    <TableColumn fx:id="studentInstrumentColumn" maxWidth="1.7976931348623157E308" prefWidth="79.0" text="Instrument" />
+                                    <TableColumn fx:id="studentLocationColumn" minWidth="0.0" prefWidth="89.0" text="Standort" />
+                                    <TableColumn fx:id="studentTeacherColumn" prefWidth="73.0" text="Lehrer" />
+                                    <TableColumn fx:id="studentStatusColumn" text="Status" />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="parentTableView" editable="true" maxHeight="1.7976931348623157E308" visible="false">
+                                 <columns>
+                                    <TableColumn fx:id="parentSelectColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" sortable="false" />
+                                    <TableColumn fx:id="parentNameColumn" prefWidth="112.0" text="Name" />
+                                    <TableColumn fx:id="parentLocationColumn" minWidth="0.0" prefWidth="110.0" text="Standort" />
+                                    <TableColumn fx:id="parentTeacherColumn" prefWidth="88.0" text="Lehrer" />
+                                    <TableColumn fx:id="parentStatusColumn" prefWidth="107.0" text="Kunde seit" />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="teacherTableView" editable="true" maxHeight="1.7976931348623157E308" visible="false">
+                                 <columns>
+                                    <TableColumn fx:id="teacherSelectColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" sortable="false" />
+                                    <TableColumn fx:id="teacherNameColumn" prefWidth="112.0" text="Name" />
+                                    <TableColumn fx:id="teacherLocationColumn" minWidth="0.0" prefWidth="155.0" text="Standorte" />
+                                    <TableColumn fx:id="teacherInstrumentsColumn" maxWidth="1.7976931348623157E308" prefWidth="177.0" text="Instrumente" />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="otherTableView" editable="true" maxHeight="1.7976931348623157E308" visible="false">
+                                 <columns>
+                                    <TableColumn fx:id="otherSelectColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" sortable="false" />
+                                    <TableColumn fx:id="otherNameColumn" prefWidth="102.0" text="Name" />
+                                    <TableColumn fx:id="otherDescriptionColumn" minWidth="0.0" prefWidth="128.0" text="Beschreibung" />
+                                    <TableColumn fx:id="otherPhoneColumn" prefWidth="101.0" text="Telefon" />
+                                    <TableColumn fx:id="otherEmailColumn" prefWidth="142.0" text="E-Mail" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </StackPane>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="800.0" prefWidth="500.0">
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="631.0">
+                     <children>
+                        <Label fx:id="contactName" alignment="BOTTOM_LEFT" text="Michael Mustermann">
+                           <font>
+                              <Font size="34.0" />
+                           </font>
+                        </Label>
+                        <VBox AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <Label fx:id="contactStreet" text="Hülsenbuscher Str. 18">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="contactCity" text="50679 Beerenstadt">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+                  <Label fx:id="contactCategory" text="Schüler" VBox.vgrow="NEVER">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
+                  </Label>
+                  <StackPane VBox.vgrow="NEVER">
+                     <children>
+                        <HBox fx:id="teacherInfo" spacing="10.0" visible="false">
+                           <children>
+                              <GridPane prefHeight="175.0" prefWidth="298.0" HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+                                    <ColumnConstraints />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label fx:id="teacherStatus" text="Status:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Standort:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Anzahl Schüler:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherStatusDate" text="14.11.2019" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocation" text="Lohmar, Gummersbach, Meckenheim" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherNumberOfStudents" text="19" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Instrumente:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherInstruments" text="Klavier, Schlagzeug" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kurse:" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <children>
+                                          <Label fx:id="teacherCourses" alignment="TOP_LEFT" text="Improvisation (LOH)" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </GridPane>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" prefWidth="150.0" />
+                                    <ColumnConstraints />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="25.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="20.0" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Unterrichtstage:" GridPane.columnSpan="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="12.0" text="Montag" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="12.0" text="Dienstag" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="12.0" text="Mittwoch" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="12.0" text="Donnerstag" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="12.0" text="Freitag" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="33.0" text="Samstag" GridPane.rowIndex="6" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationMonday" layoutX="10.0" layoutY="12.0" text="Lohmar" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationTuesday" layoutX="10.0" layoutY="12.0" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationWednesday" layoutX="10.0" layoutY="12.0" text="Gummersbach" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationThursday" layoutX="10.0" layoutY="12.0" text="-" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationFriday" layoutX="10.0" layoutY="12.0" text="-" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teacherLocationSaturday" layoutX="10.0" layoutY="33.0" text="-" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="studentInfo" spacing="20.0">
+                           <children>
+                              <GridPane minWidth="300.0" HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Alter:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Instrument:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Standort:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Status:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kontaktpersonen:" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="studentAge" text="17" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentInstruments" text="Gitarre, Schlagzeug" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLocation" text="Lohmar" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentStatusDate" text="Probemonat 01.04.2023-01.05.2023" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentParents" alignment="TOP_LEFT" text="Maria Hegemann, Alexander Hegemann" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                              <GridPane layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" prefWidth="300.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Lehrer:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Unterrichtstermine:" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson1Weekday" text="Donnerstag" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentTeacher1" text="Mustafa Schleckenstein" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentTeacher2" text="Björndahl Hammerschmidt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson1Time" layoutX="155.0" layoutY="77.0" text="20:30" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson1Name" layoutX="92.0" layoutY="107.0" text="Improvisation (30 Min, Einzel)" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson2Weekday" layoutX="10.0" layoutY="84.0" text="Donnerstag" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson2Time" layoutX="89.0" layoutY="84.0" text="20:30" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson2Name" layoutX="123.0" layoutY="84.0" text="Schlagzeug (30 Min, Einzel)" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson3Weekday" text="Donnerstag" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson3Time" text="20:30" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentLesson3Name" text="Unterricht 3" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="studentTeacher3" text="Björndahl Hammerschmidt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="parentInfo" layoutX="10.0" layoutY="10.0" spacing="10.0" visible="false">
+                           <children>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" maxWidth="180.0" minWidth="-Infinity" prefWidth="110.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" maxWidth="400.0" minWidth="-Infinity" prefWidth="120.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Geburtsdatum:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Standort:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Kunden-Nr.:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="parentStatus" text="Kunde seit:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Partner:" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="parentBirthday" text="17.04.1969" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="parentLocation" text="Lohmar" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="parentCustomerId" text="00475" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="parentStatusSince" text="01.05.2019" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="parentSpouse" alignment="TOP_LEFT" text="Magdalena Schweppenburg" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                              <ScrollPane prefWidth="390.0">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <content>
+                                    <GridPane fx:id="parentChildrenInfo">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="ALWAYS" maxWidth="180.0" minWidth="-Infinity" prefWidth="160.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" maxWidth="120.0" minWidth="-Infinity" prefWidth="110.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" maxWidth="120.0" minWidth="79.0" prefWidth="110.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Kind" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="Unterricht" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="Lehrer" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="otherInfo" spacing="20.0" visible="false">
+                           <children>
+                              <GridPane HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" maxWidth="180.0" minWidth="-Infinity" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" maxWidth="400.0" minWidth="-Infinity" prefWidth="140.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Geburtsdatum:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Standort:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Beschreibung:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="otherBirthday" text="17.04.1969" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="otherLocation" text="Lohmar" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="otherDescription" text="00475" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
+                  <Separator>
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <HBox>
+                     <children>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="E-Mail">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="contactEmail" text="mustermail@mail.com">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Telefon">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="contactPhone" text="0157/62015288">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Zoom">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="contactZoom" text="mustermail@mail.com">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Separator>
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <VBox spacing="10.0">
+                     <children>
+                        <AnchorPane>
+                           <children>
+                              <Label text="Aktionen" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" layoutX="631.0" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#sendMailToContact" prefWidth="122.0" text="E-Mail senden" />
+                                    <Button mnemonicParsing="false" onAction="#forwardContact" prefWidth="122.0" text="Kontakt weiterleiten" />
+                                    <Button mnemonicParsing="false" onAction="#editContact" prefWidth="122.0" text="Kontakt bearbeiten" />
+                                    <Button mnemonicParsing="false" onAction="#deleteContact" prefWidth="122.0" text="Kontakt löschen" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                        <Separator />
+                        <Label text="Notizen">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="notesTextArea" editable="false" minHeight="150.0" prefHeight="500.0" wrapText="true" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                        <TextArea fx:id="newNoteTextField" minHeight="150.0" promptText="Neue Notiz erstellen" wrapText="true" VBox.vgrow="NEVER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                        <HBox alignment="CENTER" prefHeight="100.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="saveNotesButton" mnemonicParsing="false" onAction="#saveNotes" prefHeight="25.0" prefWidth="200.0" text="Speichern">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="editCancelNotesButton" mnemonicParsing="false" onAction="#editCancelNotesButtonClicked" prefHeight="25.0" prefWidth="200.0" text="Notizen bearbeiten">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+               </padding>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</HBox>

@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import prodegus.musetasks.ui.PopupWindow;
-import prodegus.musetasks.workspace.StudentListCell;
+import prodegus.musetasks.workspace.cells.StudentListCell;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -20,8 +20,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
-import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
 import static prodegus.musetasks.contacts.StudentModel.*;
+import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 
@@ -149,7 +149,8 @@ public class AddParentController implements Initializable {
 
         String lastname = lastNameTextField.getText();
         String firstname = firstNameTextField.getText();
-        String category = CATEGORY_PARENT;
+        int category = CATEGORY_PARENT;
+        int customerId = 0;
         String location = locationComboBox.getSelectionModel().isEmpty() ? "" : locationComboBox.getValue();
         String street = streetTextField.getText();
         String postalCode = postalCodeTextField.getText();
@@ -171,17 +172,18 @@ public class AddParentController implements Initializable {
             invalidData = true;
             errorMessage.append("- Bitte Nachname eingeben\n");
         } else {
-            newParent.setLastname(lastname);
+            newParent.setLastName(lastname);
         }
 
         if (firstname.isBlank()) {
             invalidData = true;
             errorMessage.append("- Bitte Vorname eingeben\n");
         } else {
-            newParent.setFirstname(firstname);
+            newParent.setFirstName(firstname);
         }
 
         newParent.setCategory(category);
+        newParent.setCustomerId(customerId);
         newParent.setLocation(location);
         newParent.setStreet(street);
 
@@ -206,11 +208,14 @@ public class AddParentController implements Initializable {
         }
 
         newParent.setNotes(notes);
-        if (child1 == null) {
-            invalidData = true;
-            errorMessage.append("- Bitte mindestens ein Kind auswählen oder anlegen\n");
-        } else {
-            newParent.setChildId1(child1.getId());
+
+        if (!child1ComboBox.isDisable()) {
+            if (child1 == null) {
+                invalidData = true;
+                errorMessage.append("- Bitte mindestens ein Kind auswählen oder anlegen\n");
+            } else {
+                newParent.setChildId1(child1.getId());
+            }
         }
         if (child2 != null) newParent.setChildId2(child2.getId());
         if (child3 != null) newParent.setChildId3(child3.getId());
@@ -221,12 +226,12 @@ public class AddParentController implements Initializable {
             PopupWindow.display("Elternteil konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
-        addContact(newParent);
-        child1.addParent(newParent);
-        if (child2 != null) child2.addParent(newParent);
-        if (child3 != null) child3.addParent(newParent);
-        if (child4 != null) child4.addParent(newParent);
-        if (child5 != null) child5.addParent(newParent);
+        addContactToDB(newParent);
+        if (!child1ComboBox.isDisable()) child1.addParentInDB(newParent);
+        if (child2 != null) child2.addParentInDB(newParent);
+        if (child3 != null) child3.addParentInDB(newParent);
+        if (child4 != null) child4.addParentInDB(newParent);
+        if (child5 != null) child5.addParentInDB(newParent);
         stageOf(event).close();
     }
 
@@ -277,33 +282,38 @@ public class AddParentController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addstudent-view.fxml"));
         Stage stage = newStage("Schüler anlegen", loader);
         AddStudentController controller = loader.getController();
-        controller.initParent1Name(lastNameTextField.getText() + ", " + firstNameTextField.getText());
+        controller.initFromParentData(
+                lastNameTextField.getText() + ", " + firstNameTextField.getText(),
+                streetTextField.getText(),
+                postalCodeTextField.getText(),
+                cityTextField.getText());
         stage.showAndWait();
         selectNewChild();
     }
 
     private void selectNewChild() {
-        child1ComboBox.setItems(getStudentListFromDB());
-        child2ComboBox.setItems(getStudentListFromDB());
-        child3ComboBox.setItems(getStudentListFromDB());
-        child4ComboBox.setItems(getStudentListFromDB());
-        child5ComboBox.setItems(getStudentListFromDB());
+        ObservableList<Student> students = getStudentListFromDB();
         if (child1ComboBox.getSelectionModel().isEmpty()) {
+            child1ComboBox.setItems(students);
             child1ComboBox.getSelectionModel().selectLast();
             return;
         }
         if (child2ComboBox.getSelectionModel().isEmpty()) {
+            child2ComboBox.setItems(students);
             child2ComboBox.getSelectionModel().selectLast();
             return;
         }
         if (child3ComboBox.getSelectionModel().isEmpty()) {
+            child3ComboBox.setItems(students);
             child3ComboBox.getSelectionModel().selectLast();
             return;
         }
         if (child4ComboBox.getSelectionModel().isEmpty()) {
+            child4ComboBox.setItems(students);
             child4ComboBox.getSelectionModel().selectLast();
             return;
         }
+        child5ComboBox.setItems(students);
         child5ComboBox.getSelectionModel().selectLast();
     }
 
@@ -346,6 +356,8 @@ public class AddParentController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<Student> students = getStudentListFromDB();
+
+        locationComboBox.setItems(SCHOOL_LOCATIONS);
 
         child1ComboBox.setItems(students);
         child1ComboBox.setButtonCell(new StudentListCell());
@@ -418,5 +430,15 @@ public class AddParentController implements Initializable {
 
         parentDataForm.setVisible(true);
         communicationForm.setVisible(false);
+    }
+
+    public void initFromChildData(String childName, String street, String postalCode, String city) {
+        streetTextField.setText(street);
+        postalCodeTextField.setText(postalCode);
+        cityTextField.setText(city);
+        child1ComboBox.setPromptText(childName);
+        child1ComboBox.setDisable(true);
+        newChildLabel.setVisible(false);
+        newChildButton.setVisible(false);
     }
 }

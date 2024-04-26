@@ -1,17 +1,17 @@
-package prodegus.musetasks.workspace;
+package prodegus.musetasks.workspace.cells;
 
 import javafx.scene.control.ListCell;
 import prodegus.musetasks.contacts.Teacher;
 
-public class TeacherListCell extends ListCell<Teacher> {
-    public TeacherListCell() {}
+public class TeacherListCellFormal extends ListCell<Teacher> {
+    public TeacherListCellFormal() {}
 
     @Override protected void updateItem(Teacher item, boolean empty) {
         super.updateItem(item, empty);
         if (item == null) {
-            setText(null);
+            setText("auswählen");
         } else {
-            setText(item.getLastname() + ", " + item.getFirstname());
+            setText(item.getLastName() + ", " + item.getFirstName());
         }
 
     }

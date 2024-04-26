@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -16,45 +15,51 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.contacts.AddTeacherController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.contacts.AddOtherController">
    <children>
       <StackPane>
          <children>
-            <GridPane fx:id="teacherDataForm" maxWidth="450.0">
+            <GridPane fx:id="otherDataForm" maxWidth="450.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="70.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="180.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <VBox GridPane.rowIndex="1">
+                  <VBox GridPane.rowIndex="3">
                      <children>
-                        <Label text="Vorname" />
-                        <TextField fx:id="firstNameTextField" prefHeight="30.0" />
+                        <VBox>
+                           <children>
+                              <Label text="Vorname" />
+                              <TextField fx:id="firstNameTextField" prefHeight="30.0" />
+                           </children>
+                        </VBox>
                      </children>
                   </VBox>
-                  <VBox GridPane.rowIndex="2">
+                  <VBox GridPane.rowIndex="4">
                      <children>
                         <Label text="Nachname" />
                         <TextField fx:id="lastNameTextField" prefHeight="30.0" />
                      </children>
                   </VBox>
-                  <VBox GridPane.rowIndex="3">
+                  <VBox GridPane.rowIndex="5">
                      <children>
                         <Label text="Straße, Hausnr." />
                         <TextField fx:id="streetTextField" prefHeight="30.0" />
                      </children>
                   </VBox>
-                  <HBox spacing="20.0" GridPane.rowIndex="4">
+                  <HBox spacing="20.0" GridPane.rowIndex="6">
                      <children>
                         <VBox>
                            <children>
@@ -70,7 +75,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox GridPane.rowIndex="5">
+                  <VBox GridPane.rowIndex="7">
                      <children>
                         <Label text="Geburtstag" />
                         <DatePicker fx:id="birthDatePicker" prefHeight="30.0" />
@@ -80,12 +85,12 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
+                              <Label prefHeight="35.0" prefWidth="221.0" text="Kontakt anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Lehrerdaten">
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Personendaten">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
@@ -94,49 +99,30 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="8">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
                      <children>
                         <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
                         <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
                   </HBox>
-                  <HBox spacing="20.0" GridPane.rowIndex="7">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="1">
                      <children>
-                        <VBox>
-                           <children>
-                              <Label text="Instrument(e)" />
-                              <ComboBox fx:id="instrumentComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox4" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox5" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <Label text="Standort(e)" />
-                              <ComboBox fx:id="locationComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="locationComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="locationComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="150.0">
-                           <children>
-                              <Label text="Verfügbare Tage">
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <CheckBox fx:id="mondayCheckBox" mnemonicParsing="false" text="Montag" />
-                              <CheckBox fx:id="tuesdayCheckBox" mnemonicParsing="false" text="Dienstag" />
-                              <CheckBox fx:id="wednesdayCheckBox" mnemonicParsing="false" text="Mittwoch" />
-                              <CheckBox fx:id="thursdayCheckBox" mnemonicParsing="false" text="Donnerstag" />
-                              <CheckBox fx:id="fridayCheckBox" mnemonicParsing="false" text="Freitag" />
-                              <CheckBox fx:id="saturdayCheckBox" mnemonicParsing="false" text="Samstag" />
-                           </children>
-                        </VBox>
+                        <Label prefHeight="27.0" prefWidth="244.0" text="Beschreibung:" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="descriptionTextField" prefHeight="30.0" prefWidth="450.0" HBox.hgrow="SOMETIMES" />
                      </children>
                   </HBox>
+                  <VBox GridPane.rowIndex="9">
+                     <children>
+                        <Label text="Standort(e)" />
+                        <ComboBox fx:id="locationComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                        <ComboBox fx:id="locationComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                        <ComboBox fx:id="locationComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                     </children>
+                  </VBox>
                </children>
             </GridPane>
             <GridPane fx:id="communicationForm" maxWidth="450.0" visible="false">
@@ -173,7 +159,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
+                              <Label prefHeight="35.0" prefWidth="221.0" text="Kontakt anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
@@ -189,8 +175,8 @@
                   </VBox>
                   <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
                      <children>
-                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToTeacherForm" text="Zurück zu Personendaten" />
-                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addTeacher" text="Bestätigen" />
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToOtherForm" text="Zurück zu Personendaten" />
+                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addOther" text="Bestätigen" />
                         <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
                   </HBox>

@@ -13,10 +13,22 @@ import static prodegus.musetasks.database.Database.*;
 
 public class TeacherModel {
 
-    public static StringConverter<Teacher> teacherStringConverter = new StringConverter<Teacher>() {
+    public static StringConverter<Teacher> teacherStringConverterFormal = new StringConverter<Teacher>() {
         @Override
         public String toString(Teacher teacher) {
-            return teacher.getLastname() + ", " + teacher.getFirstname();
+            return teacher.getLastName() + ", " + teacher.getFirstName();
+        }
+
+        @Override
+        public Teacher fromString(String string) {
+            return null;
+        }
+    };
+
+    public static StringConverter<Teacher> teacherStringConverterShort = new StringConverter<Teacher>() {
+        @Override
+        public String toString(Teacher teacher) {
+            return teacher.getFirstName() + " " + teacher.getLastName().charAt(0);
         }
 
         @Override

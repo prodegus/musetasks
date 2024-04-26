@@ -1,9 +1,15 @@
 package prodegus.musetasks.contacts;
 
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.database.Filter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import static prodegus.musetasks.database.Database.*;
 
 public class Teacher extends Contact {
 
@@ -75,11 +81,11 @@ public class Teacher extends Contact {
 
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
-        this.setInstruments(rs.getString(15));
-        this.setActiveDays(rs.getString(16));
-        this.setStatus(rs.getString(17));
-        this.setStatusFrom(rs.getString(18));
-        this.setStatusTo(rs.getString(19));
+        this.setInstruments(rs.getString("instruments"));
+        this.setActiveDays(rs.getString("activedays"));
+        this.setStatus(rs.getString("status"));
+        this.setStatusFrom(rs.getString("statusfrom"));
+        this.setStatusTo(rs.getString("statusto"));
     }
 
     public String valuesToSQLString() {
@@ -99,4 +105,56 @@ public class Teacher extends Contact {
         return sb.toString();
     }
 
+    public String status() {
+        StringBuilder status = new StringBuilder();
+        if (this.getStatus().isEmpty()) return "";
+        status.append(this.getStatus());
+        if (!this.getStatusFrom().isEmpty()) {
+            status.append(" ab ");
+            status.append(this.getStatusFrom());
+        }
+        if (!this.getStatusTo().isEmpty()) {
+            status.append(" bis ");
+            status.append(this.getStatusTo());
+        }
+
+        return status.toString();
+    }
+
+    public String courses() {
+        StringBuilder courses = new StringBuilder();
+        Filter courseFilter = new Filter("category", "'Kurs'");
+        Filter teacherFilter = new Filter("teacherid", this.id());
+        List<String> results = queryString("lessonname", LESSON_TABLE, courseFilter, teacherFilter);
+        int i = 1;
+        for (String string : results) {
+            courses.append(string);
+            if (i < results.size()) courses.append(", ");
+            i++;
+        }
+        return courses.toString();
+    }
+
+    public String weekdayLocation(String weekday) {
+        StringBuilder locations = new StringBuilder();
+        Filter teacherFilter = new Filter("teacherid", this.id());
+        Filter weekdayFilter = new Filter("weekday", "'" + weekday +"'");
+        HashSet<String> results = new LinkedHashSet<>(
+                queryString("location", LESSON_TABLE, teacherFilter, weekdayFilter));
+        if (results.size() == 0) return "-";
+        int i = 1;
+        for (String string : results) {
+            locations.append(string);
+            if (i < results.size()) locations.append(", ");
+            i++;
+        }
+        return locations.toString();
+    }
+
+    public int numberOfStudents() {
+        Filter categoryFilter = new Filter("category", "'Einzelunterricht'");
+        Filter teacherFilter = new Filter("teacherid", this.id());
+        List<Integer> results = queryInteger("id", LESSON_TABLE, categoryFilter, teacherFilter);
+        return results.size();
+    }
 }

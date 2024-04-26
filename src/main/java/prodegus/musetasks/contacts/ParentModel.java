@@ -2,6 +2,7 @@ package prodegus.musetasks.contacts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,6 +13,30 @@ import static prodegus.musetasks.database.Database.PARENT_TABLE;
 import static prodegus.musetasks.database.Database.connect;
 
 public class ParentModel {
+
+    public static StringConverter<Parent> parentStringConverterFormal = new StringConverter<Parent>() {
+        @Override
+        public String toString(Parent parent) {
+            return parent.getLastName() + ", " + parent.getFirstName();
+        }
+
+        @Override
+        public Parent fromString(String string) {
+            return null;
+        }
+    };
+
+    public static StringConverter<Parent> parentStringConverterShort = new StringConverter<Parent>() {
+        @Override
+        public String toString(Parent parent) {
+            return parent.getFirstName() + " " + parent.getLastName().charAt(0);
+        }
+
+        @Override
+        public Parent fromString(String string) {
+            return null;
+        }
+    };
 
     public static ObservableList<Parent> getParentListFromDB() {
         ObservableList<Parent> parents = FXCollections.observableArrayList();

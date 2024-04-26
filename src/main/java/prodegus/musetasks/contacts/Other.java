@@ -22,7 +22,7 @@ public class Other extends Contact {
 
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
-        this.setDescription(rs.getString(15));
+        this.setDescription(rs.getString("description"));
     }
 
     public String valuesToSQLString() {

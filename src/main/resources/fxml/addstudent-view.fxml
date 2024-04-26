@@ -111,7 +111,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
@@ -234,7 +234,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
@@ -251,7 +251,7 @@
                   <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
                      <children>
                         <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToStudentForm" text="Zurück zu Personendaten" />
-                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addStudent" text="Bestätigen" />
+                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#submitStudentData" text="Bestätigen" />
                         <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
                   </HBox>
