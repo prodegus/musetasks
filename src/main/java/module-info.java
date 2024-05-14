@@ -20,8 +20,17 @@ module prodegus.musetasks {
     opens prodegus.musetasks.contacts to javafx.fxml;
     exports prodegus.musetasks.contacts;
 
+    opens prodegus.musetasks.mail to javafx.fxml;
+    exports prodegus.musetasks.mail;
+
     opens prodegus.musetasks.test to javafx.fxml;
     exports prodegus.musetasks.test;
-    exports prodegus.musetasks.workspace.cells;
+
     opens prodegus.musetasks.workspace.cells to javafx.fxml;
+    exports prodegus.musetasks.workspace.cells;
+
+    opens prodegus.musetasks.popup to javafx.fxml;
+    exports prodegus.musetasks.popup;
+    exports prodegus.musetasks.lessons;
+    opens prodegus.musetasks.lessons to javafx.fxml;
 }

@@ -20,7 +20,7 @@
    <children>
       <StackPane>
          <children>
-            <GridPane fx:id="studentDataForm" maxWidth="450.0" visible="false">
+            <GridPane fx:id="studentDataForm" maxWidth="450.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
               </columnConstraints>
@@ -160,7 +160,7 @@
                   </HBox>
                </children>
             </GridPane>
-            <GridPane fx:id="communicationForm" maxWidth="450.0">
+            <GridPane fx:id="communicationForm" maxWidth="450.0" visible="false">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
                </columnConstraints>

@@ -3,11 +3,10 @@ package prodegus.musetasks.database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
+import static prodegus.musetasks.login.Settings.prefs;
 
 
 public class Database {
-    public static final Preferences prefs = Preferences.userNodeForPackage(Database.class);
     public static final String DB_PATH = prefs.get("DB_PATH", "Path not found");
     public static final String USER_TABLE = "mtusers";
     public static final String CONTACT_TABLE = "mtcontacts";
@@ -35,6 +34,24 @@ public class Database {
             "    birthday    TEXT," +
             "    notes       TEXT";
 
+    public static void checkForeignKey() {
+        String sql1 = "PRAGMA foreign_keys";
+        String sql2 = "PRAGMA foreign_keys = ON";
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            ResultSet rs1 = stmt.executeQuery(sql1);
+            rs1.next();
+            System.out.println("result of [PRAGMA foreign_keys]: " + rs1.getInt(1));
+//            stmt.execute(sql2);
+//            System.out.println("Executed [" + sql2 + "]");
+//            ResultSet rs2 = stmt.executeQuery(sql1);
+//            System.out.println("result of [PRAGMA foreign_keys]: " + rs2.getInt(1));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static boolean connected() {
         try (Connection conn = connect()) {
             return conn != null;
@@ -51,10 +68,10 @@ public class Database {
         String sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = '" + name + "'";
 
         try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
                 return rs.next();
-            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -75,10 +92,9 @@ public class Database {
         String sql = "SELECT * FROM " + USER_TABLE + " WHERE user = '" + user + "' AND password = '" + pw + "'";
 
         try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
-                return rs.next();
-            }
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            return rs.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +103,7 @@ public class Database {
     public static void createUserTable(String dbPath) {
         String sql = "CREATE TABLE IF NOT EXISTS " + USER_TABLE + " (user TEXT, password TEXT)";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -99,7 +115,7 @@ public class Database {
         String sql =
                 "CREATE TABLE mtcontacts (" + CONTACT_COLUMNS + ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -120,7 +136,7 @@ public class Database {
                 "    statusto    TEXT" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -139,7 +155,7 @@ public class Database {
                 "    statusto    TEXT" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -151,14 +167,14 @@ public class Database {
         String sql =
                 "CREATE TABLE mtparents (" +
                 CONTACT_COLUMNS + ", " +
-                "    childid1   INTEGER REFERENCES mtstudents (id)," +
-                "    childid2   INTEGER REFERENCES mtstudents (id)," +
-                "    childid3   INTEGER REFERENCES mtstudents (id)," +
-                "    childid4   INTEGER REFERENCES mtstudents (id)," +
-                "    childid5   INTEGER REFERENCES mtstudents (id)" +
+                "    childid1   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    childid2   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    childid3   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    childid4   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    childid5   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -173,7 +189,7 @@ public class Database {
                 "    description TEXT" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -188,8 +204,9 @@ public class Database {
                 "    lessonname  TEXT," +
                 "    category    INTEGER," +
                 "    instrument  TEXT," +
-                "    teacherid   INTEGER REFERENCES mtteachers (id)," +
+                "    teacherid   INTEGER REFERENCES mtteachers (id) ON DELETE SET NULL," +
                 "    location    TEXT," +
+                "    room        TEXT," +
                 "    repeat      INTEGER," +
                 "    repeattimes INTEGER," +
                 "    repeatend   TEXT," +
@@ -201,19 +218,19 @@ public class Database {
                 "    status      INTEGER," +
                 "    statusfrom  TEXT," +
                 "    statusto    TEXT," +
-                "    studentid1  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid2  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid3  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid4  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid5  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid6  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid7  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid8  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid9  INTEGER REFERENCES mtstudents (id)," +
-                "    studentid10 INTEGER REFERENCES mtstudents (id)" +
+                "    studentid1  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid2  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid3  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid4  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid5  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid6  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid7  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid8  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid9  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid10 INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -227,11 +244,11 @@ public class Database {
                 "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
                 "    date        TEXT," +
                 "    time        TEXT," +
-                "    lessonid    INTEGER REFERENCES mtlessons (id)," +
+                "    lessonid    INTEGER REFERENCES mtlessons (id) ON DELETE SET NULL," +
                 "    description TEXT" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -249,7 +266,7 @@ public class Database {
                 "    status      TEXT" +
                 ")";
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -259,16 +276,16 @@ public class Database {
 
     public static void addConstraintsStudentTable(String dbPath) {
         ArrayList<String> sqlStrings = new ArrayList<>();
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid1  INTEGER REFERENCES mtparents(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid2  INTEGER REFERENCES mtparents(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid1 INTEGER REFERENCES mtteachers(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid2 INTEGER REFERENCES mtteachers(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid3 INTEGER REFERENCES mtteachers(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid1  INTEGER REFERENCES mtlessons(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid2  INTEGER REFERENCES mtlessons(id)");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid3  INTEGER REFERENCES mtlessons(id)");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid1  INTEGER REFERENCES mtparents(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid2  INTEGER REFERENCES mtparents(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid1 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid2 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid3 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid1  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid2  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
+        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid3  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
 
-        try (Connection conn = connectTo(dbPath);
+        try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
             for (String sql: sqlStrings) {
                 stmt.execute(sql);
@@ -292,14 +309,18 @@ public class Database {
     }
 
     public static Connection connect() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
+        return connect(DB_PATH);
     }
 
-    private static Connection connectTo(String path) throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + path);
+    private static Connection connect(String path) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+        Statement stmt = connection.createStatement();
+        stmt.execute("PRAGMA foreign_keys = ON");
+        stmt.close();
+        return connection;
     }
 
-    public static void updateDB(String table, String id, String column, String newValue) {
+    public static void update(String table, String id, String column, String newValue) {
         String sql = "UPDATE " + table + " SET " + column + " = '" + newValue + "' WHERE id = " + id;
 
         try (Connection connection = connect();
@@ -310,9 +331,9 @@ public class Database {
         }
     }
 
-    public static void updateDB(String table, String id, String column, int newValue) {
+    public static void update(String table, String id, String column, int newValue) {
         String sql = "UPDATE " + table + " SET " + column + " = " + newValue + " WHERE id = " + id;
-
+        System.out.println(sql);
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -321,7 +342,7 @@ public class Database {
         }
     }
 
-    public static void updateMultipleDB(String table, int id, String columnsValues) {
+    public static void updateMultiple(String table, int id, String columnsValues) {
         String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE id = " + id;
         System.out.println(sql);
 
@@ -333,7 +354,7 @@ public class Database {
         }
     }
 
-    public static void deleteFromDB(String table, String id) {
+    public static void delete(String table, String id) {
         String sql = "DELETE FROM " + table + " WHERE id = " + id;
 
         try (Connection conn = connect();
@@ -341,6 +362,17 @@ public class Database {
             stmt.execute(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void insert(String table, String columns, String values) {
+        String sql = String.join(" ", "INSERT INTO", table, "(", columns, ") VALUES (", values, ")");
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException();
         }
     }
 

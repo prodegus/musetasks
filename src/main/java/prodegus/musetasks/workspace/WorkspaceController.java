@@ -12,10 +12,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
-import static prodegus.musetasks.ui.StageFactories.newStage;
-import static prodegus.musetasks.ui.StageFactories.stageOf;
 
 public class WorkspaceController implements Initializable {
 
@@ -51,6 +50,7 @@ public class WorkspaceController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         // Initialize instruments
         SCHOOL_INSTRUMENTS.add("Gesang");
         SCHOOL_INSTRUMENTS.add("Klavier");

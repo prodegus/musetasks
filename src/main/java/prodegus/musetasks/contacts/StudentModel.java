@@ -91,25 +91,4 @@ public class StudentModel {
         return student;
     }
 
-    public static int findStudentId(String lastName, String firstName, int parentId) {
-        int studentId = 0;
-        String sql = "SELECT id FROM " + STUDENT_TABLE +
-                " WHERE lastname = '" + lastName + "'" +
-                " AND firstname = '" + firstName + "'" +
-                " AND (parentid1 = " + parentId +
-                "      OR parentid2 = " + parentId + ")";
-
-        try (Connection connection = connect();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                studentId = rs.getInt("id");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return studentId;
-    }
-
 }

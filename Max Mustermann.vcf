@@ -1,0 +1,6 @@
+BEGIN:VCARD
+VERSION:4.0
+N:Mustermann;Max;;;
+FN:Max Mustermann
+EMAIL;TYPE=E-Mail:daniel.hanelt@gmail.com
+END:VCARD

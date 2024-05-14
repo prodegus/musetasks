@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import prodegus.musetasks.database.Database;
 import prodegus.musetasks.database.Filter;
 
 import static prodegus.musetasks.database.Database.*;
@@ -82,19 +83,12 @@ public class ContactModel {
         return contacts;
     }
 
-    public static void addContactToDB(Contact contact) {
-        String sql = "INSERT INTO " + contact.table() + " VALUES (" + contact.valuesToSQLString() + ")";
-        System.out.println(sql);
-        try (Connection connection = connect();
-             Statement statement = connection.createStatement()) {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public static void insertContact(Contact contact) {
+        insert(contact.table(), contact.sqlColumns(), contact.sqlValues());
     }
 
-    public static void deleteContactFromDB(Contact contact) {
-        deleteFromDB(contact.table(), contact.id());
+    public static void deleteContact(Contact contact) {
+        delete(contact.table(), contact.id());
     }
 
     public static void addContactsFromXLSToDB(File file, String tableName) {
@@ -157,16 +151,33 @@ public class ContactModel {
         }
     }
 
-    public static void updateContactInDB(Contact contact, int id) {
-        updateMultipleDB(contact.table(), id, contact.valuesToSQLUpdateString());
+    public static void updateContact(Contact contact, int id) {
+        updateMultiple(contact.table(), id, contact.valuesToSQLUpdateString());
     }
 
-    public static void updateContactStringInDB(Contact contact, String column, String newValue) {
-        updateDB(contact.table(), contact.id(), column, newValue);
+    public static void updateContact(Contact contact, String column, String newValue) {
+        update(contact.table(), contact.id(), column, newValue);
     }
 
-    public static void updateContactIntInDB(Contact contact, String column, int newValue) {
-        updateDB(contact.table(), contact.id(), column, newValue);
+    public static void updateContact(Contact contact, String column, int newValue) {
+        update(contact.table(), contact.id(), column, newValue);
     }
 
+    public static int findContactID(Contact contact) {
+        int id = 0;
+        String sql = "SELECT MAX (id) FROM " + contact.table();
+        System.out.println(sql);
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            while (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return id;
+    }
 }

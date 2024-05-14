@@ -8,7 +8,7 @@ public class StringListCell extends ListCell<String> {
 
     @Override protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        if (item == null) {
+        if (empty || item == null || item.isBlank()) {
             setText("auswählen");
         } else {
             setText(item);

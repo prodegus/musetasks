@@ -1,4 +1,4 @@
-package prodegus.musetasks.contacts;
+package prodegus.musetasks.lessons;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

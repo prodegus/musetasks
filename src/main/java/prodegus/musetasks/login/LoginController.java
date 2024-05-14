@@ -9,16 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.ui.PopupWindow;
 
 import java.net.URL;
-import java.security.Key;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.ui.StageFactories.*;
 
 public class LoginController implements Initializable {
@@ -85,13 +84,20 @@ public class LoginController implements Initializable {
         pwTextfield.clear();
 
         if (isEmptyTable(USER_TABLE)) {
-            PopupWindow.display("Bitte zuerst einen Benutzer anlegen!");
+            PopupWindow.displayInformation("Bitte zuerst einen Benutzer anlegen!");
             return;
         }
         if (!loginValid(user, pw)) {
-            PopupWindow.display("Login fehlgeschlagen. Bitte Benutzername und Passwort erneut eingeben!");
+            PopupWindow.displayInformation("Login fehlgeschlagen. Bitte Benutzername und Passwort erneut eingeben!");
             return;
         }
+
+        if (getMailUser() == null && PopupWindow.displayYesNo("Kein E-Mail-Konto gefunden. Jetzt verknüpfen?")) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mailsettings-view.fxml"));
+                Stage stage = newStage("E-Mail-Konto hinzufügen", loader);
+                stage.showAndWait();
+        }
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace.fxml"));
         Stage stage = newStage(APP_NAME, loader);
         stage.show();
@@ -113,6 +119,9 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("connected: " + connected());
         System.out.println("DB_PATH: " + DB_PATH);
+        System.out.println("mail_user: " + getMailUser());
+        System.out.println("mail_password: " + getMailPassword());
+        System.out.println("mail_sender: " + getMailSender());
 
         if (!connected()) {
             selectDB();
@@ -120,7 +129,7 @@ public class LoginController implements Initializable {
         }
 
         if (!tableExists(USER_TABLE)) {
-            PopupWindow.display("Datenbank-Fehler! Bitte andere Datenbank auswählen oder neu anlegen!");
+            PopupWindow.displayInformation("Datenbank-Fehler! Bitte andere Datenbank auswählen oder neu anlegen!");
             selectDB();
         }
 

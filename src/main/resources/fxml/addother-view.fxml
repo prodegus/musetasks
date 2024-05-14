@@ -85,7 +85,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Kontakt anlegen">
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="279.0" text="Kontakt anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
@@ -159,7 +159,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="35.0" prefWidth="221.0" text="Kontakt anlegen">
+                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="279.0" text="Kontakt anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>

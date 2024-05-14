@@ -38,22 +38,22 @@ public class CreateUserController {
         String pwConfirm = pwConfirmTextfield.getText();
 
         if (!pw.equals(pwConfirm)) {
-            PopupWindow.display("Passwort und bestätigtes Passwort stimmen nicht überein!");
+            PopupWindow.displayInformation("Passwort und bestätigtes Passwort stimmen nicht überein!");
             return;
         }
 
         if (user.trim().isEmpty() || pw.trim().isEmpty()) {
-            PopupWindow.display("Bitte alle Felder ausfüllen!");
+            PopupWindow.displayInformation("Bitte alle Felder ausfüllen!");
             return;
         }
 
         if (pw.length() < 6) {
-            PopupWindow.display("Das Passwort muss mindestens sechs Zeichen lang sein!");
+            PopupWindow.displayInformation("Das Passwort muss mindestens sechs Zeichen lang sein!");
             return;
         }
 
         createUser(user, pw);
-        PopupWindow.display("Benutzer " + user + " wurde erfolgreich angelegt. Bitte loggen Sie sich ein.");
+        PopupWindow.displayInformation("Benutzer " + user + " wurde erfolgreich angelegt. Bitte loggen Sie sich ein.");
         stageOf(event).close();
     }
 

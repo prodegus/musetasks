@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import prodegus.musetasks.ui.PopupWindow;
 import prodegus.musetasks.workspace.cells.ParentListCellFormal;
+import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 
 import java.net.URL;
@@ -29,12 +30,14 @@ import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.Strings.string;
 
 public class AddStudentController implements Initializable {
 
     @FXML private Label titleTextField;
     @FXML private Label titleTextField2;
 
+    @FXML private GridPane studentDataForm;
     @FXML private CheckBox prospectiveCheckBox;
     @FXML private TextField firstNameTextField;
     @FXML private TextField lastNameTextField;
@@ -49,6 +52,8 @@ public class AddStudentController implements Initializable {
     @FXML private ComboBox<Teacher> teacher1ComboBox;
     @FXML private ComboBox<Teacher> teacher2ComboBox;
     @FXML private ComboBox<Teacher> teacher3ComboBox;
+
+    @FXML private GridPane communicationForm;
     @FXML private TextField phoneTextField;
     @FXML private TextField emailTextField;
     @FXML private CheckBox zoomCheckBox;
@@ -56,9 +61,6 @@ public class AddStudentController implements Initializable {
     @FXML private CheckBox skypeCheckBox;
     @FXML private ComboBox<String> skypeComboBox;
     @FXML private TextArea notesTextArea;
-
-    @FXML private GridPane studentDataForm;
-    @FXML private GridPane communicationForm;
     @FXML private VBox parent2VBox;
     @FXML private ComboBox<Parent> parent1ComboBox;
     @FXML private ComboBox<Parent> parent2ComboBox;
@@ -70,8 +72,9 @@ public class AddStudentController implements Initializable {
     @FXML private Button newParent1Button;
     @FXML private Button newParent2Button;
     @FXML private Button toContactFormButton;
+
     private boolean editMode;
-    private int editId;
+    private int id;
 
     @FXML
     void submitStudentData(ActionEvent event) {
@@ -171,16 +174,17 @@ public class AddStudentController implements Initializable {
         if (teacher3 != null) newStudent.setTeacherId3(teacher3.getId());
 
         if (invalidData) {
-            PopupWindow.display("Schüler konnte nicht angelegt werden: \n\n" + errorMessage);
+            PopupWindow.displayInformation("Schüler konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
         if (!editMode) {
-            addContactToDB(newStudent);
-            if (parent1 != null) parent1.addChildInDB(newStudent);
-            if (parent2 != null) parent2.addChildInDB(newStudent);
+            insertContact(newStudent);
+            id = findContactID(newStudent);
         } else {
-            updateContactInDB(newStudent, editId);
+            updateContact(newStudent, id);
         }
+        if (parent1 != null) parent1.addChildInDB(id);
+        if (parent2 != null) parent2.addChildInDB(id);
         stageOf(event).close();
     }
 
@@ -217,6 +221,7 @@ public class AddStudentController implements Initializable {
         Stage stage = newStage("Elternteil anlegen", loader);
         AddParentController controller = loader.getController();
         controller.initFromChildData(
+                lastNameTextField.getText(),
                 lastNameTextField.getText() + ", " + firstNameTextField.getText(),
                 streetTextField.getText(),
                 postalCodeTextField.getText(),
@@ -231,6 +236,7 @@ public class AddStudentController implements Initializable {
         Stage stage = newStage("Elternteil anlegen", loader);
         AddParentController controller = loader.getController();
         controller.initFromChildData(
+                lastNameTextField.getText(),
                 lastNameTextField.getText() + ", " + firstNameTextField.getText(),
                 streetTextField.getText(),
                 postalCodeTextField.getText(),
@@ -288,31 +294,31 @@ public class AddStudentController implements Initializable {
 
     public void initStudent(Student student) {
         editMode = true;
-        editId = student.getId();
+        id = student.getId();
         titleTextField.setText("Schüler bearbeiten");
         titleTextField2.setText("Schüler bearbeiten");
         prospectiveCheckBox.setSelected(student.getProspective());
         firstNameTextField.setText(student.getFirstName());
         lastNameTextField.setText(student.getLastName());
         streetTextField.setText(student.getStreet());
-        postalCodeTextField.setText(String.valueOf(student.getPostalCode()));
+        postalCodeTextField.setText(string(student.getPostalCode()));
         cityTextField.setText(student.getCity());
         birthDatePicker.getEditor().setText(student.getBirthDate());
-        locationComboBox.setValue(student.getLocation());
-        instrument1ComboBox.setValue(student.getInstrument1());
-        instrument2ComboBox.setValue(student.getInstrument2());
-        instrument3ComboBox.setValue(student.getInstrument3());
-        teacher1ComboBox.setValue(student.teacher1());
-        teacher2ComboBox.setValue(student.teacher2());
-        teacher3ComboBox.setValue(student.teacher3());
+        if (!student.getLocation().isBlank()) locationComboBox.setValue(student.getLocation());
+        if (!student.getInstrument1().isBlank()) instrument1ComboBox.setValue(student.getInstrument1());
+        if (!student.getInstrument2().isBlank()) instrument2ComboBox.setValue(student.getInstrument2());
+        if (!student.getInstrument3().isBlank()) instrument3ComboBox.setValue(student.getInstrument3());
+        if (student.getTeacherId1() != 0) teacher1ComboBox.setValue(student.teacher1());
+        if (student.getTeacherId2() != 0) teacher2ComboBox.setValue(student.teacher2());
+        if (student.getTeacherId3() != 0) teacher3ComboBox.setValue(student.teacher3());
         phoneTextField.setText(student.getPhone());
         emailTextField.setText(student.getEmail());
         zoomCheckBox.setSelected(!student.getZoom().isEmpty());
         zoomComboBox.setValue(student.getZoom());
         skypeCheckBox.setSelected(!student.getSkype().isEmpty());
         skypeComboBox.setValue(student.getSkype());
-        parent1ComboBox.setValue(student.parent1());
-        parent2ComboBox.setValue(student.parent2());
+        if (student.getParentId1() != 0) parent1ComboBox.setValue(student.parent1());
+        if (student.getParentId2() != 0) parent2ComboBox.setValue(student.parent2());
         notesTextArea.setText(student.getNotes());
     }
 
@@ -325,10 +331,16 @@ public class AddStudentController implements Initializable {
         communicationForm.setVisible(false);
 
         instrument1ComboBox.setItems(SCHOOL_INSTRUMENTS);
+        instrument1ComboBox.setCellFactory(string -> new StringListCell());
+
         instrument2ComboBox.setItems(SCHOOL_INSTRUMENTS);
+        instrument2ComboBox.setCellFactory(string -> new StringListCell());
+
         instrument3ComboBox.setItems(SCHOOL_INSTRUMENTS);
+        instrument3ComboBox.setCellFactory(string -> new StringListCell());
 
         locationComboBox.setItems(SCHOOL_LOCATIONS);
+        locationComboBox.setCellFactory(string -> new StringListCell());
 
         teacher1ComboBox.setItems(teachers);
         teacher1ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
@@ -343,15 +355,13 @@ public class AddStudentController implements Initializable {
         teacher3ComboBox.setConverter(teacherStringConverterFormal);
 
         parent1ComboBox.setItems(parents);
-        parent2ComboBox.setItems(parents);
-
-        parent1ComboBox.setItems(parents);
         parent1ComboBox.setCellFactory(parent -> new ParentListCellFormal());
         parent1ComboBox.setConverter(parentStringConverterFormal);
 
         parent2ComboBox.setItems(parents);
         parent2ComboBox.setCellFactory(parent -> new ParentListCellFormal());
         parent2ComboBox.setConverter(parentStringConverterFormal);
+
 
 //        contactsAllListView.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
 //            @Override

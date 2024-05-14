@@ -1,0 +1,115 @@
+package prodegus.musetasks.mail;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import prodegus.musetasks.contacts.Contact;
+
+import static prodegus.musetasks.contacts.VCard.vCard;
+import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.mail.EmailUtil.getPropertiesOutlookSMTP;
+import static prodegus.musetasks.ui.StageFactories.APP_NAME;
+
+public class TLSEmail {
+
+	public static void main(String[] args) {
+		Contact contact = new Contact();
+		contact.setFirstName("John");
+		contact.setLastName("Doe2");
+		contact.setPhone("+49 176 12345678");
+		contact.setEmail("johndoe@gmail.com");
+
+		List<File> files = Collections.singletonList(vCard(contact, "Vater von Jack Doe"));
+//		prefs.remove("mail_user");
+//		prefs.remove("mail_password");
+//		prefs.remove("mail_sender");
+
+		sendMail("daniel.hanelt@gmail.com", "", "Visitenkarte2", "Siehe Anhang!", getMailSender(), files);
+
+//		confirmMail(getMailUser());
+	}
+
+	public static boolean confirmMail(String to) {
+		LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+		String timestamp = formatter.format(now);
+
+		String mailConfirmMessage = "Ihr E-Mail-Konto wurde erfolgreich mit " + APP_NAME + " verknüpft am " + timestamp + ".";
+		return sendMail(to, "E-Mail-Konto wurde mit " + APP_NAME + " verknüpft!", mailConfirmMessage, APP_NAME);
+	}
+
+	public static boolean sendMail(String to, String subject, String messageText) {
+		return sendMail(to, subject, messageText, getMailSender());
+	}
+
+	public static boolean sendMail(String to, String subject, String messageText, String sender) {
+		return sendMail(to, "", subject, messageText, sender, null);
+	}
+
+	public static boolean sendMail(String to, String cc, String subject, String messageText, String sender, List<File> attachments) {
+		System.out.println("sendMail() invoked");
+
+		Properties props = getPropertiesOutlookSMTP();
+		Session session = Session.getInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(getMailUser(), getMailPassword());
+			}
+		});
+
+		try {
+			MimeMessage message = new MimeMessage(session);
+			BodyPart textBodyPart = new MimeBodyPart();
+			Multipart multipart = new MimeMultipart();
+
+			message.addHeader("Content-type", "text/HTML; charset=UTF-8");
+			message.addHeader("format", "flowed");
+			message.addHeader("Content-Transfer-Encoding", "8bit");
+			message.setFrom(new InternetAddress(getMailUser(), sender));
+			message.setReplyTo(InternetAddress.parse(getMailUser(), false));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+			if (!cc.isEmpty()) message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(cc, false));
+			message.setSubject(subject, "UTF-8");
+			message.setSentDate(new Date());
+
+			textBodyPart.setText(messageText);
+			multipart.addBodyPart(textBodyPart);
+
+			if (attachments != null) {
+				for (File attachment : attachments) {
+					if (attachment != null) {
+						DataSource source = new FileDataSource(attachment.getPath());
+						BodyPart attachmentBodyPart = new MimeBodyPart();
+						attachmentBodyPart.setDataHandler(new DataHandler(source));
+						attachmentBodyPart.setFileName(attachment.getPath());
+						multipart.addBodyPart(attachmentBodyPart);
+					}
+				}
+			}
+
+			message.setContent(multipart);
+
+			System.out.println("Message is ready");
+
+			Transport.send(message);
+
+			System.out.println("Email sent successfully!!");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+}

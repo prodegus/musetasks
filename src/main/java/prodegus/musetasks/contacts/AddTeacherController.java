@@ -7,121 +7,64 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.StringListCell;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.Strings.string;
 
 public class AddTeacherController implements Initializable {
 
-    @FXML
-    private Button backButton;
+    @FXML private Label titleTextField;
+    @FXML private Label titleTextField2;
 
-    @FXML
-    private DatePicker birthDatePicker;
+    @FXML private GridPane teacherDataForm;
+    @FXML private TextField firstNameTextField;
+    @FXML private TextField lastNameTextField;
+    @FXML private TextField streetTextField;
+    @FXML private TextField postalCodeTextField;
+    @FXML private TextField cityTextField;
+    @FXML private DatePicker birthDatePicker;
+    @FXML private ComboBox<String> instrumentComboBox1;
+    @FXML private ComboBox<String> instrumentComboBox2;
+    @FXML private ComboBox<String> instrumentComboBox3;
+    @FXML private ComboBox<String> instrumentComboBox4;
+    @FXML private ComboBox<String> instrumentComboBox5;
+    @FXML private ComboBox<String> locationComboBox1;
+    @FXML private ComboBox<String> locationComboBox2;
+    @FXML private ComboBox<String> locationComboBox3;
+    @FXML private CheckBox mondayCheckBox;
+    @FXML private CheckBox tuesdayCheckBox;
+    @FXML private CheckBox wednesdayCheckBox;
+    @FXML private CheckBox thursdayCheckBox;
+    @FXML private CheckBox fridayCheckBox;
+    @FXML private CheckBox saturdayCheckBox;
+    @FXML private Button toContactFormButton;
+    @FXML private Button cancelButton;
 
-    @FXML
-    private Button cancelButton;
+    @FXML private GridPane communicationForm;
+    @FXML private TextField phoneTextField;
+    @FXML private TextField emailTextField;
+    @FXML private CheckBox zoomCheckBox;
+    @FXML private ComboBox<String> zoomComboBox;
+    @FXML private CheckBox skypeCheckBox;
+    @FXML private ComboBox<String> skypeComboBox;
+    @FXML private TextArea notesTextArea;
+    @FXML private Button backButton;
+    @FXML private Button confirmButton;
+    @FXML private Button cancelButton2;
 
-    @FXML
-    private Button cancelButton2;
-
-    @FXML
-    private TextField cityTextField;
-
-    @FXML
-    private GridPane communicationForm;
-
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private TextField emailTextField;
-
-    @FXML
-    private TextField firstNameTextField;
-
-    @FXML
-    private CheckBox fridayCheckBox;
-
-    @FXML
-    private ComboBox<String> instrumentComboBox1;
-
-    @FXML
-    private ComboBox<String> instrumentComboBox2;
-
-    @FXML
-    private ComboBox<String> instrumentComboBox3;
-
-    @FXML
-    private ComboBox<String> instrumentComboBox4;
-
-    @FXML
-    private ComboBox<String> instrumentComboBox5;
-
-    @FXML
-    private TextField lastNameTextField;
-
-    @FXML
-    private ComboBox<String> locationComboBox1;
-
-    @FXML
-    private ComboBox<String> locationComboBox2;
-
-    @FXML
-    private ComboBox<String> locationComboBox3;
-
-    @FXML
-    private CheckBox mondayCheckBox;
-
-    @FXML
-    private TextArea notesTextArea;
-
-    @FXML
-    private TextField phoneTextField;
-
-    @FXML
-    private TextField postalCodeTextField;
-
-    @FXML
-    private CheckBox saturdayCheckBox;
-
-    @FXML
-    private CheckBox skypeCheckBox;
-
-    @FXML
-    private ComboBox<String> skypeComboBox;
-
-    @FXML
-    private TextField streetTextField;
-
-    @FXML
-    private GridPane teacherDataForm;
-
-    @FXML
-    private CheckBox thursdayCheckBox;
-
-    @FXML
-    private Button toContactFormButton;
-
-    @FXML
-    private CheckBox tuesdayCheckBox;
-
-    @FXML
-    private CheckBox wednesdayCheckBox;
-
-    @FXML
-    private CheckBox zoomCheckBox;
-
-    @FXML
-    private ComboBox<String> zoomComboBox;
+    private boolean editMode;
+    private int editId;
 
     @FXML
     void addTeacher(ActionEvent event) {
@@ -136,12 +79,11 @@ public class AddTeacherController implements Initializable {
         String firstname = firstNameTextField.getText();
         int category = CATEGORY_TEACHER;
         int customerId = 0;
-        String location1 = locationComboBox1.getSelectionModel().isEmpty() ? "" : locationComboBox1.getValue();
-        String location2 = locationComboBox2.getSelectionModel().isEmpty() ? "" : locationComboBox2.getValue();
-        String location3 = locationComboBox3.getSelectionModel().isEmpty() ? "" : locationComboBox3.getValue();
-        String locations = location1 +
-                (location2.isEmpty() ? "" : ", ") + location2 +
-                (location3.isEmpty() ? "" : ", ") + location3;
+        StringJoiner locationsJoiner = new StringJoiner(", ");
+        if (!locationComboBox1.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox1.getValue());
+        if (!locationComboBox2.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox2.getValue());
+        if (!locationComboBox3.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox3.getValue());
+        String locations = locationsJoiner.toString();
         String street = streetTextField.getText();
         String postalCode = postalCodeTextField.getText();
         String city = cityTextField.getText();
@@ -152,23 +94,21 @@ public class AddTeacherController implements Initializable {
         String birthDate = birthDatePicker.getEditor().getText();
         String notesInput = notesTextArea.getText();
         String notes = notesInput.isBlank() ? "" : timestamp + "\n" + notesInput;
-        String instrument1 = instrumentComboBox1.getSelectionModel().isEmpty() ? "" : instrumentComboBox1.getValue();
-        String instrument2 = instrumentComboBox2.getSelectionModel().isEmpty() ? "" : instrumentComboBox2.getValue();
-        String instrument3 = instrumentComboBox3.getSelectionModel().isEmpty() ? "" : instrumentComboBox3.getValue();
-        String instrument4 = instrumentComboBox4.getSelectionModel().isEmpty() ? "" : instrumentComboBox4.getValue();
-        String instrument5 = instrumentComboBox5.getSelectionModel().isEmpty() ? "" : instrumentComboBox5.getValue();
-        String instruments = instrument1 +
-                (instrument2.isEmpty() ? "" : ", ") + instrument2 +
-                (instrument3.isEmpty() ? "" : ", ") + instrument3 +
-                (instrument4.isEmpty() ? "" : ", ") + instrument4 +
-                (instrument5.isEmpty() ? "" : ", ") + instrument5;
-        String activeDays =
-                (mondayCheckBox.isSelected() ? "Montag " : "") +
-                (tuesdayCheckBox.isSelected() ? "Dienstag " : "") +
-                (wednesdayCheckBox.isSelected() ? "Mittwoch " : "") +
-                (thursdayCheckBox.isSelected() ? "Donnerstag " : "") +
-                (fridayCheckBox.isSelected() ? "Freitag " : "") +
-                (saturdayCheckBox.isSelected() ? "Samstag " : "");
+        StringJoiner instrumentsJoiner = new StringJoiner(", ");
+        if (!instrumentComboBox1.getSelectionModel().isEmpty()) instrumentsJoiner.add(instrumentComboBox1.getValue());
+        if (!instrumentComboBox2.getSelectionModel().isEmpty()) instrumentsJoiner.add(instrumentComboBox2.getValue());
+        if (!instrumentComboBox3.getSelectionModel().isEmpty()) instrumentsJoiner.add(instrumentComboBox3.getValue());
+        if (!instrumentComboBox4.getSelectionModel().isEmpty()) instrumentsJoiner.add(instrumentComboBox4.getValue());
+        if (!instrumentComboBox5.getSelectionModel().isEmpty()) instrumentsJoiner.add(instrumentComboBox5.getValue());
+        String instruments = instrumentsJoiner.toString();
+        StringJoiner activeDaysJoiner = new StringJoiner(", ");
+        if (mondayCheckBox.isSelected()) activeDaysJoiner.add("Montag");
+        if (tuesdayCheckBox.isSelected()) activeDaysJoiner.add("Dienstag");
+        if (wednesdayCheckBox.isSelected()) activeDaysJoiner.add("Mittwoch");
+        if (thursdayCheckBox.isSelected()) activeDaysJoiner.add("Donnerstag");
+        if (fridayCheckBox.isSelected()) activeDaysJoiner.add("Freitag");
+        if (saturdayCheckBox.isSelected()) activeDaysJoiner.add("Samstag");
+        String activeDays = activeDaysJoiner.toString();
         String status = "";
         String statusFrom = "";
         String statusTo = "";
@@ -213,7 +153,7 @@ public class AddTeacherController implements Initializable {
         }
         newTeacher.setNotes(notes);
 
-        if (instrument1.isBlank()) {
+        if (instruments.isBlank()) {
             invalidData = true;
             errorMessage.append("- Bitte mindestens ein Instrument auswählen\n");
         } else {
@@ -226,10 +166,14 @@ public class AddTeacherController implements Initializable {
         newTeacher.setStatusTo(statusTo);
 
         if (invalidData) {
-            PopupWindow.display("Lehrer konnte nicht angelegt werden: \n\n" + errorMessage);
+            PopupWindow.displayInformation("Lehrer konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
-        addContactToDB(newTeacher);
+        if (!editMode) {
+            insertContact(newTeacher);
+        } else {
+            updateContact(newTeacher, editId);
+        }
         stageOf(event).close();
     }
 
@@ -286,19 +230,73 @@ public class AddTeacherController implements Initializable {
         }
     }
 
+    public void initTeacher(Teacher teacher) {
+        String[] instruments = teacher.getInstruments().split(", ");
+        String[] locations = teacher.getLocation().split(", ");
+        editMode = true;
+        editId = teacher.getId();
+
+        titleTextField.setText("Lehrer bearbeiten");
+        titleTextField2.setText("Lehrer bearbeiten");
+
+        firstNameTextField.setText(teacher.getFirstName());
+        lastNameTextField.setText(teacher.getLastName());
+        streetTextField.setText(teacher.getStreet());
+        postalCodeTextField.setText(string(teacher.getPostalCode()));
+        cityTextField.setText(teacher.getCity());
+        birthDatePicker.getEditor().setText(teacher.getBirthDate());
+        instrumentComboBox1.setValue(instruments[0]);
+        if (instruments.length > 1) instrumentComboBox2.setValue(instruments[1]);
+        if (instruments.length > 2) instrumentComboBox3.setValue(instruments[2]);
+        if (instruments.length > 3) instrumentComboBox4.setValue(instruments[3]);
+        if (instruments.length > 4) instrumentComboBox5.setValue(instruments[4]);
+
+        if (locations.length > 0) locationComboBox1.setValue(locations[0]);
+        if (locations.length > 1) locationComboBox2.setValue(locations[1]);
+        if (locations.length > 2) locationComboBox3.setValue(locations[2]);
+        if (teacher.getActiveDays().contains("Montag")) mondayCheckBox.setSelected(true);
+        if (teacher.getActiveDays().contains("Dienstag")) tuesdayCheckBox.setSelected(true);
+        if (teacher.getActiveDays().contains("Mittwoch")) wednesdayCheckBox.setSelected(true);
+        if (teacher.getActiveDays().contains("Donnerstag")) thursdayCheckBox.setSelected(true);
+        if (teacher.getActiveDays().contains("Freitag")) fridayCheckBox.setSelected(true);
+        if (teacher.getActiveDays().contains("Samstag")) saturdayCheckBox.setSelected(true);
+        phoneTextField.setText(teacher.getPhone());
+        emailTextField.setText(teacher.getEmail());
+        zoomCheckBox.setSelected(!teacher.getZoom().isEmpty());
+        zoomComboBox.setValue(teacher.getZoom());
+        skypeCheckBox.setSelected(!teacher.getSkype().isEmpty());
+        skypeComboBox.setValue(teacher.getSkype());
+        notesTextArea.setText(teacher.getNotes());
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         teacherDataForm.setVisible(true);
         communicationForm.setVisible(false);
 
         instrumentComboBox1.setItems(SCHOOL_INSTRUMENTS);
+        instrumentComboBox1.setCellFactory(string -> new StringListCell());
+
         instrumentComboBox2.setItems(SCHOOL_INSTRUMENTS);
+        instrumentComboBox2.setCellFactory(string -> new StringListCell());
+
         instrumentComboBox3.setItems(SCHOOL_INSTRUMENTS);
+        instrumentComboBox3.setCellFactory(string -> new StringListCell());
+
         instrumentComboBox4.setItems(SCHOOL_INSTRUMENTS);
+        instrumentComboBox4.setCellFactory(string -> new StringListCell());
+
         instrumentComboBox5.setItems(SCHOOL_INSTRUMENTS);
+        instrumentComboBox5.setCellFactory(string -> new StringListCell());
+
 
         locationComboBox1.setItems(SCHOOL_LOCATIONS);
+        locationComboBox1.setCellFactory(string -> new StringListCell());
+
         locationComboBox2.setItems(SCHOOL_LOCATIONS);
+        locationComboBox2.setCellFactory(string -> new StringListCell());
+
         locationComboBox3.setItems(SCHOOL_LOCATIONS);
+        locationComboBox3.setCellFactory(string -> new StringListCell());
     }
 }

@@ -226,8 +226,8 @@
                                     <Insets />
                                  </HBox.margin>
                               </HBox>
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="E-Mail an ..." textAlignment="CENTER" wrapText="true" />
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Kontakt(e) weiterleiten" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#mailToContacts" prefHeight="70.0" prefWidth="90.0" text="E-Mail an ..." textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#forwardContacts" prefHeight="70.0" prefWidth="90.0" text="Kontakt(e) weiterleiten" textAlignment="CENTER" wrapText="true" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -235,7 +235,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Alle auswählen" />
+                              <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" text="Alle auswählen" />
                               <TextField fx:id="contactSearchBar" onKeyTyped="#searchBarKeyTyped" prefHeight="25.0" prefWidth="208.0" promptText="Kontakte durchsuchen" />
                            </children>
                         </HBox>
@@ -296,7 +296,7 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox prefHeight="800.0" prefWidth="500.0">
+            <VBox fx:id="contactDetails" prefHeight="800.0" prefWidth="500.0">
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="631.0">
                      <children>

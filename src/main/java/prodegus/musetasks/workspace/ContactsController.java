@@ -20,10 +20,13 @@ package prodegus.musetasks.workspace;
         import javafx.scene.input.MouseEvent;
         import javafx.scene.layout.GridPane;
         import javafx.scene.layout.HBox;
+        import javafx.scene.layout.VBox;
         import javafx.scene.text.Font;
         import javafx.stage.FileChooser;
         import javafx.stage.Stage;
         import prodegus.musetasks.contacts.*;
+        import prodegus.musetasks.mail.NewMailController;
+        import prodegus.musetasks.ui.PopupWindow;
         import prodegus.musetasks.workspace.cells.StringListCell;
         import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
@@ -31,8 +34,7 @@ package prodegus.musetasks.workspace;
         import java.net.URL;
         import java.time.LocalDateTime;
         import java.time.format.DateTimeFormatter;
-        import java.util.ArrayList;
-        import java.util.ResourceBundle;
+        import java.util.*;
 
         import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
         import static prodegus.musetasks.contacts.ContactModel.*;
@@ -42,6 +44,7 @@ package prodegus.musetasks.workspace;
         import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
         import static prodegus.musetasks.contacts.StudentModel.*;
         import static prodegus.musetasks.contacts.TeacherModel.*;
+        import static prodegus.musetasks.contacts.VCard.vCard;
         import static prodegus.musetasks.database.Database.*;
         import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
         import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
@@ -58,6 +61,7 @@ public class ContactsController implements Initializable {
     @FXML private MenuItem addOtherMenuItem;
 
     @FXML private Button editCancelNotesButton;
+    @FXML private CheckBox selectAllCheckBox;
     @FXML private TextField contactSearchBar;
 
     @FXML private TableView<Contact> contactTableView;
@@ -131,6 +135,7 @@ public class ContactsController implements Initializable {
     @FXML private CheckBox filterProspectives;
     @FXML private CheckBox filterCustomers;
 
+    @FXML private VBox contactDetails;
     @FXML private Label contactName;
     @FXML private Label contactCategory;
     @FXML private Label contactStreet;
@@ -324,16 +329,33 @@ public class ContactsController implements Initializable {
 
     @FXML
     void deleteContact(ActionEvent event) {
-
+        if (!PopupWindow.displayYesNo("Kontakt '" + selectedContact.name() + "' wird gelöscht. Fortfahren?")) return;
+        ContactModel.deleteContact(selectedContact);
+        contactDetails.setVisible(false);
+        refreshContacts();
     }
 
     @FXML
     void deleteContacts(ActionEvent event) {
-        for (Contact contact : contactTableView.getItems()) {
+        ArrayList<Contact> selectedContacts = new ArrayList<>();
+        StringJoiner names = new StringJoiner("\n");
+
+        for (Contact contact : selectedTableView.getItems()) {
             if (contact.isSelected()) {
-                deleteContactFromDB(contact);
+                selectedContacts.add(contact);
+                names.add(contact.name());
             }
         }
+
+        if (selectedContacts.size() == 0) {
+            PopupWindow.displayInformation("Keine Kontakte ausgewählt!");
+            return;
+        }
+
+        String message = selectedContacts.size() == 1 ? "Kontakt '" + names + "' wird gelöscht. Fortfahren?" :
+                "Folgende Kontakte werden gelöscht:\n\n" + names + "\n\nFortfahren?";
+        if (!PopupWindow.displayYesNo(message)) return;
+        for (Contact contact : selectedContacts) ContactModel.deleteContact(contact);
         refreshContacts();
     }
 
@@ -367,9 +389,9 @@ public class ContactsController implements Initializable {
     void editContact(ActionEvent event) {
         switch (selectedContact.getCategory()) {
             case CATEGORY_STUDENT, CATEGORY_PROSPECTIVE_STUDENT -> showEditStudentWindow(selectedContact);
-//            case CATEGORY_TEACHER -> showEditTeacherWindow(selectedContact);
-//            case CATEGORY_PARENT, CATEGORY_PROSPECTIVE_PARENT -> showEditParentWindow(selectedContact);
-//            case CATEGORY_OTHER -> showEditOtherWindow(selectedContact);
+            case CATEGORY_PARENT, CATEGORY_PROSPECTIVE_PARENT -> showEditParentWindow(selectedContact);
+            case CATEGORY_TEACHER -> showEditTeacherWindow(selectedContact);
+            case CATEGORY_OTHER -> showEditOtherWindow(selectedContact);
         }
     }
 
@@ -382,9 +404,84 @@ public class ContactsController implements Initializable {
         refreshStudents();
     }
 
+    private void showEditParentWindow(Contact selectedContact) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addparent-view.fxml"));
+        Stage stage = newStage("Elternteil bearbeiten", loader);
+        AddParentController controller = loader.getController();
+        controller.initParent(selectedContact.toParent());
+        stage.showAndWait();
+        refreshParents();
+    }
+
+    private void showEditTeacherWindow(Contact selectedContact) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addteacher-view.fxml"));
+        Stage stage = newStage("Lehrer bearbeiten", loader);
+        AddTeacherController controller = loader.getController();
+        controller.initTeacher(selectedContact.toTeacher());
+        stage.showAndWait();
+        refreshTeachers();
+    }
+
+    private void showEditOtherWindow(Contact selectedContact) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addother-view.fxml"));
+        Stage stage = newStage("Lehrer bearbeiten", loader);
+        AddOtherController controller = loader.getController();
+        controller.initOther(selectedContact.toOther());
+        stage.showAndWait();
+        refreshOthers();
+    }
+
     @FXML
     void forwardContact(ActionEvent event) {
+        File vCard = vCard(selectedContact, "");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Kontakt weiterleiten", loader);
+        NewMailController controller = loader.getController();
+        controller.init("Visitenkarte: " + selectedContact.name(), Collections.singletonList(vCard));
+        stage.showAndWait();
+    }
 
+    @FXML
+    void forwardContacts(ActionEvent event) {
+        List<Contact> selectedContacts = new ArrayList<>();
+        List<File> vCards = new ArrayList<>();
+        StringBuilder subject = new StringBuilder("Visitenkarte: ");
+
+        for (Contact contact : selectedTableView.getItems()) {
+            if (contact.isSelected()) {
+                selectedContacts.add(contact);
+                vCards.add(vCard(contact, ""));
+            }
+        }
+
+        if (selectedContacts.isEmpty()) {
+            PopupWindow.displayInformation("Keine Kontakte ausgewählt!");
+            return;
+        }
+
+        subject.append(selectedContacts.get(0).name());
+        if (vCards.size() > 1) subject.append(" und ").append(vCards.size() - 1).append(" weitere");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Kontakt weiterleiten", loader);
+        NewMailController controller = loader.getController();
+        controller.init(subject.toString(), vCards);
+        stage.showAndWait();
+    }
+
+    @FXML
+    void mailToContacts(ActionEvent event) {
+        StringJoiner recipients = new StringJoiner(", ");
+
+        for (Contact contact : selectedTableView.getItems()) {
+            if (contact.isSelected() && !contact.getEmail().isBlank()) recipients.add(contact.getEmail());
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Neue E-Mail", loader);
+        NewMailController controller = loader.getController();
+        controller.init(recipients.toString());
+        stage.showAndWait();
     }
 
     @FXML
@@ -422,7 +519,7 @@ public class ContactsController implements Initializable {
         }
 
         if (notesEditMode) {
-            updateContactStringInDB(selectedContact, "notes", notesTextArea.getText());
+            ContactModel.updateContact(selectedContact, "notes", notesTextArea.getText());
             refreshAll();
             deactivateNotesEditMode();
             return;
@@ -453,9 +550,14 @@ public class ContactsController implements Initializable {
         newNoteTextField.clear();
     }
 
+
     @FXML
     void sendMailToContact(ActionEvent event) {
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Neue E-Mail", loader);
+        NewMailController controller = loader.getController();
+        controller.init(selectedContact.getEmail());
+        stage.showAndWait();
     }
 
     @FXML
@@ -594,28 +696,32 @@ public class ContactsController implements Initializable {
         tableViewSelect(selectedTableView);
     }
 
-    void refreshContacts() {
+    private void refreshContacts() {
         contacts.setAll(getContactListFromDB());
         tableViewSelect(selectedTableView);
     }
 
     private void refreshStudents() {
         students.setAll(getStudentListFromDB());
+        contacts.setAll(getContactListFromDB());
         tableViewSelect(selectedTableView);
     }
 
     private void refreshTeachers() {
         teachers.setAll(getTeacherListFromDB());
+        contacts.setAll(getContactListFromDB());
         tableViewSelect(selectedTableView);
     }
 
     private void refreshParents() {
         parents.setAll(getParentListFromDB());
+        contacts.setAll(getContactListFromDB());
         tableViewSelect(selectedTableView);
     }
 
     private void refreshOthers() {
         others.setAll(getOtherListFromDB());
+        contacts.setAll(getContactListFromDB());
         tableViewSelect(selectedTableView);
     }
 
@@ -696,6 +802,7 @@ public class ContactsController implements Initializable {
                 if (tableView.getSelectionModel().isEmpty()) return;
                 selectedContact = tableView.getSelectionModel().getSelectedItem();
                 showContactInfo(selectedContact);
+                contactDetails.setVisible(true);
             }
         });
     }
@@ -712,7 +819,7 @@ public class ContactsController implements Initializable {
             default -> "";
         });
         contactStreet.setText(contact.getStreet());
-        contactCity.setText(contact.getPostalCode() + " " + contact.getCity());
+        contactCity.setText(contact.getPostalCodeCity());
         contactEmail.setText(contact.getEmail());
         contactPhone.setText(contact.getPhone());
         contactZoom.setText(contact.getZoom());
@@ -931,6 +1038,13 @@ public class ContactsController implements Initializable {
         filterTeacher3ComboBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> filterTeacher3.setDisable(newValue == null));
 
+        // Initialize SelectAllCheckBox
+        selectAllCheckBox.setOnAction(event -> {
+            for (Contact contact : selectedTableView.getItems()) {
+                contact.setSelected(selectAllCheckBox.isSelected());
+            }
+        });
+
         // Initialize SearchBar
         contactSearchBar.textProperty().addListener(new InvalidationListener() {
             @Override
@@ -941,7 +1055,7 @@ public class ContactsController implements Initializable {
                 } else {
                     filteredContacts.setPredicate(contact ->
                             containsIgnoreCase(contact.getLastName(), filter) ||
-                                    containsIgnoreCase(contact.getFirstName(), filter));
+                            containsIgnoreCase(contact.getFirstName(), filter));
                 }
             }
         });
@@ -967,7 +1081,6 @@ public class ContactsController implements Initializable {
 
         contactTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contactTableView.setItems(sortableContacts);
-        contactTableView.getSortOrder().setAll(nameColumn);
         sortableContacts.comparatorProperty().bind(contactTableView.comparatorProperty());
         enableContactSelection(contactTableView);
         contactTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
@@ -1063,6 +1176,7 @@ public class ContactsController implements Initializable {
         otherTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize displayed table view
+        contactTableView.getSortOrder().setAll(nameColumn);
         showTableView(contactTableView);
 
         // Initialize TextArea: Notes
@@ -1081,5 +1195,8 @@ public class ContactsController implements Initializable {
 
         // Initialize Button: Save notes
         saveNotesButton.setDisable(true);
+
+        // Initialize InfoArea
+        contactDetails.setVisible(false);
     }
 }

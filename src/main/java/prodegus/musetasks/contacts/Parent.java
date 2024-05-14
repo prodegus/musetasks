@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
-import static prodegus.musetasks.contacts.ParentModel.findParentId;
-import static prodegus.musetasks.contacts.StudentModel.findStudentId;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.datastructures.Collections.mostCommon;
 
@@ -149,21 +148,37 @@ public class Parent extends Contact {
         this.setChildId5(rs.getInt("childid5"));
     }
 
-    public String valuesToSQLString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.valuesToSQLString());
-        sb.append(", '");
-        sb.append(this.getChildId1());
-        sb.append("', '");
-        sb.append(this.getChildId2());
-        sb.append("', '");
-        sb.append(this.getChildId3());
-        sb.append("', '");
-        sb.append(this.getChildId4());
-        sb.append("', '");
-        sb.append(this.getChildId5());
-        sb.append("'");
+    public String valuesToSQLUpdateString() {
+        StringBuilder sb = new StringBuilder(super.valuesToSQLUpdateString()).append(", ");
+        sb.append("childid1 = ").append(this.getChildId1() == 0 ? "null" : this.getChildId1()).append(", ");
+        sb.append("childid2 = ").append(this.getChildId2() == 0 ? "null" : this.getChildId2()).append(", ");
+        sb.append("childid3 = ").append(this.getChildId3() == 0 ? "null" : this.getChildId3()).append(", ");
+        sb.append("childid4 = ").append(this.getChildId4() == 0 ? "null" : this.getChildId4()).append(", ");
+        sb.append("childid5 = ").append(this.getChildId5() == 0 ? "null" : this.getChildId5());
         return sb.toString();
+    }
+
+    public String sqlColumns() {
+        StringJoiner columns = new StringJoiner(", ");
+        columns.add(super.sqlColumns());
+        if (this.getChildId1() != 0) columns.add("childid1");
+        if (this.getChildId2() != 0) columns.add("childid2");
+        if (this.getChildId3() != 0) columns.add("childid3");
+        if (this.getChildId4() != 0) columns.add("childid4");
+        if (this.getChildId5() != 0) columns.add("childid5");
+        return columns.toString();
+    }
+
+    public String sqlValues() {
+        StringJoiner values = new StringJoiner("', '", "'", "'").setEmptyValue("");
+        StringJoiner result = new StringJoiner(", ").add(super.sqlValues());
+        if (this.getChildId1() != 0) values.add(String.valueOf(this.getChildId1()));
+        if (this.getChildId2() != 0) values.add(String.valueOf(this.getChildId2()));
+        if (this.getChildId3() != 0) values.add(String.valueOf(this.getChildId3()));
+        if (this.getChildId4() != 0) values.add(String.valueOf(this.getChildId4()));
+        if (this.getChildId5() != 0) values.add(String.valueOf(this.getChildId5()));
+        if (!values.toString().isEmpty()) result.add(values.toString());
+        return result.toString();
     }
 
     public Teacher mainTeacher() {
@@ -183,29 +198,33 @@ public class Parent extends Contact {
         return "";
     }
 
-    public boolean addChildInDB(Student newStudent) {
-        int newStudentId = findStudentId(newStudent.getLastName(), newStudent.getFirstName(), this.getId());
-        if (newStudentId == 0) return false;
+    public void addChildInDB(int childId) {
+        if (this.hasChild(childId)) return;
 
         if (this.getChildId1() == 0) {
-            ContactModel.updateContactIntInDB(this, "childid1", newStudentId);
-            return true;
+            ContactModel.updateContact(this, "childid1", childId);
+            return;
         }
         if (this.getChildId2() == 0) {
-            ContactModel.updateContactIntInDB(this, "childid2", newStudentId);
-            return true;
+            ContactModel.updateContact(this, "childid2", childId);
+            return;
         }
         if (this.getChildId3() == 0) {
-            ContactModel.updateContactIntInDB(this, "childid3", newStudentId);
-            return true;
+            ContactModel.updateContact(this, "childid3", childId);
+            return;
         }
         if (this.getChildId4() == 0) {
-            ContactModel.updateContactIntInDB(this, "childid4", newStudentId);
-            return true;
+            ContactModel.updateContact(this, "childid4", childId);
+            return;
         }
         if (this.getChildId5() == 0) {
-            ContactModel.updateContactIntInDB(this, "childid5", newStudentId);
-            return true;
+            ContactModel.updateContact(this, "childid5", childId);
+        }
+    }
+
+    public boolean hasChild(int childId) {
+        for (Student child : this.children()) {
+            if (child.getId() == childId) return true;
         }
         return false;
     }

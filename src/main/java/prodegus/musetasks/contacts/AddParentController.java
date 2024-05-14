@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.StudentListCell;
 
 import java.net.URL;
@@ -24,119 +25,54 @@ import static prodegus.musetasks.contacts.StudentModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.Strings.string;
 
 public class AddParentController implements Initializable {
 
-    @FXML
-    private Button backButton;
+    @FXML private Label titleTextField;
+    @FXML private Label titleTextField2;
 
-    @FXML
-    private DatePicker birthDatePicker;
+    @FXML private GridPane parentDataForm;
+    @FXML private TextField firstNameTextField;
+    @FXML private TextField lastNameTextField;
+    @FXML private TextField streetTextField;
+    @FXML private TextField postalCodeTextField;
+    @FXML private TextField cityTextField;
+    @FXML private DatePicker birthDatePicker;
+    @FXML private ComboBox<String> locationComboBox;
+    @FXML private ComboBox<Student> child1ComboBox;
+    @FXML private Button child1DeleteButton;
+    @FXML private ComboBox<Student> child2ComboBox;
+    @FXML private Button child2DeleteButton;
+    @FXML private HBox child2HBox;
+    @FXML private ComboBox<Student> child3ComboBox;
+    @FXML private Button child3DeleteButton;
+    @FXML private HBox child3HBox;
+    @FXML private ComboBox<Student> child4ComboBox;
+    @FXML private Button child4DeleteButton;
+    @FXML private HBox child4HBox;
+    @FXML private ComboBox<Student> child5ComboBox;
+    @FXML private Button child5DeleteButton;
+    @FXML private HBox child5HBox;
+    @FXML private Button newChildButton;
+    @FXML private Label newChildLabel;
+    @FXML private Button toContactFormButton;
+    @FXML private Button cancelButton;
 
-    @FXML
-    private Button cancelButton;
+    @FXML private GridPane communicationForm;
+    @FXML private TextField phoneTextField;
+    @FXML private TextField emailTextField;
+    @FXML private CheckBox zoomCheckBox;
+    @FXML private ComboBox<String> zoomComboBox;
+    @FXML private CheckBox skypeCheckBox;
+    @FXML private ComboBox<String> skypeComboBox;
+    @FXML private TextArea notesTextArea;
+    @FXML private Button backButton;
+    @FXML private Button cancelButton2;
+    @FXML private Button confirmButton;
 
-    @FXML
-    private Button cancelButton2;
-
-    @FXML
-    private ComboBox<Student> child1ComboBox;
-
-    @FXML
-    private Button child1DeleteButton;
-
-    @FXML
-    private ComboBox<Student> child2ComboBox;
-
-    @FXML
-    private Button child2DeleteButton;
-
-    @FXML
-    private HBox child2HBox;
-
-    @FXML
-    private ComboBox<Student> child3ComboBox;
-
-    @FXML
-    private Button child3DeleteButton;
-
-    @FXML
-    private HBox child3HBox;
-
-    @FXML
-    private ComboBox<Student> child4ComboBox;
-
-    @FXML
-    private Button child4DeleteButton;
-
-    @FXML
-    private HBox child4HBox;
-
-    @FXML
-    private ComboBox<Student> child5ComboBox;
-
-    @FXML
-    private Button child5DeleteButton;
-
-    @FXML
-    private HBox child5HBox;
-
-    @FXML
-    private TextField cityTextField;
-
-    @FXML
-    private GridPane communicationForm;
-
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private TextField emailTextField;
-
-    @FXML
-    private TextField firstNameTextField;
-
-    @FXML
-    private TextField lastNameTextField;
-
-    @FXML
-    private ComboBox<String> locationComboBox;
-
-    @FXML
-    private Button newChildButton;
-
-    @FXML
-    private Label newChildLabel;
-
-    @FXML
-    private TextArea notesTextArea;
-
-    @FXML
-    private GridPane parentDataForm;
-
-    @FXML
-    private TextField phoneTextField;
-
-    @FXML
-    private TextField postalCodeTextField;
-
-    @FXML
-    private CheckBox skypeCheckBox;
-
-    @FXML
-    private ComboBox<String> skypeComboBox;
-
-    @FXML
-    private TextField streetTextField;
-
-    @FXML
-    private Button toContactFormButton;
-
-    @FXML
-    private CheckBox zoomCheckBox;
-
-    @FXML
-    private ComboBox<String> zoomComboBox;
+    private boolean editMode;
+    private int id;
 
     @FXML
     void addParent(ActionEvent event) {
@@ -223,15 +159,21 @@ public class AddParentController implements Initializable {
         if (child5 != null) newParent.setChildId5(child5.getId());
 
         if (invalidData) {
-            PopupWindow.display("Elternteil konnte nicht angelegt werden: \n\n" + errorMessage);
+            PopupWindow.displayInformation("Elternteil konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
-        addContactToDB(newParent);
-        if (!child1ComboBox.isDisable()) child1.addParentInDB(newParent);
-        if (child2 != null) child2.addParentInDB(newParent);
-        if (child3 != null) child3.addParentInDB(newParent);
-        if (child4 != null) child4.addParentInDB(newParent);
-        if (child5 != null) child5.addParentInDB(newParent);
+
+        if (!editMode) {
+            insertContact(newParent);
+            id = findContactID(newParent);
+        }
+        else updateContact(newParent, id);
+
+        if (!child1ComboBox.isDisable()) child1.addParentInDB(id);
+        if (child2 != null) child2.addParentInDB(id);
+        if (child3 != null) child3.addParentInDB(id);
+        if (child4 != null) child4.addParentInDB(id);
+        if (child5 != null) child5.addParentInDB(id);
         stageOf(event).close();
     }
 
@@ -353,11 +295,60 @@ public class AddParentController implements Initializable {
         return Integer.parseInt(postalCode);
     }
 
+    private void selectChild(ComboBox<Student> comboBox, int childId) {
+        if (childId == 0) return;
+        int index = 0;
+        for (Student student : comboBox.getItems()) {
+            if (student.getId() == childId) break;
+            index ++;
+        }
+        comboBox.getSelectionModel().select(index);
+    }
+
+    public void initFromChildData(String lastName, String childName, String street, String postalCode, String city) {
+        lastNameTextField.setText(lastName);
+        streetTextField.setText(street);
+        postalCodeTextField.setText(postalCode);
+        cityTextField.setText(city);
+        child1ComboBox.setPromptText(childName);
+        child1ComboBox.setDisable(true);
+        newChildLabel.setVisible(false);
+        newChildButton.setVisible(false);
+    }
+
+    public void initParent(Parent parent) {
+        editMode = true;
+        id = parent.getId();
+        titleTextField.setText("Elternteil bearbeiten");
+        titleTextField2.setText("Elternteil bearbeiten");
+
+        firstNameTextField.setText(parent.getFirstName());
+        lastNameTextField.setText(parent.getLastName());
+        streetTextField.setText(parent.getStreet());
+        postalCodeTextField.setText(string(parent.getPostalCode()));
+        cityTextField.setText(parent.getCity());
+        birthDatePicker.getEditor().setText(parent.getBirthDate());
+        if (!parent.getLocation().isBlank()) locationComboBox.setValue(parent.getLocation());
+        selectChild(child1ComboBox, parent.getChildId1());
+        selectChild(child2ComboBox, parent.getChildId2());
+        selectChild(child3ComboBox, parent.getChildId3());
+        selectChild(child4ComboBox, parent.getChildId4());
+        selectChild(child5ComboBox, parent.getChildId5());
+        phoneTextField.setText(parent.getPhone());
+        emailTextField.setText(parent.getEmail());
+        zoomCheckBox.setSelected(!parent.getZoom().isEmpty());
+        zoomComboBox.setValue(parent.getZoom());
+        skypeCheckBox.setSelected(!parent.getSkype().isEmpty());
+        skypeComboBox.setValue(parent.getSkype());
+        notesTextArea.setText(parent.getNotes());
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<Student> students = getStudentListFromDB();
 
         locationComboBox.setItems(SCHOOL_LOCATIONS);
+        locationComboBox.setCellFactory(string -> new StringListCell());
 
         child1ComboBox.setItems(students);
         child1ComboBox.setButtonCell(new StudentListCell());
@@ -430,15 +421,5 @@ public class AddParentController implements Initializable {
 
         parentDataForm.setVisible(true);
         communicationForm.setVisible(false);
-    }
-
-    public void initFromChildData(String childName, String street, String postalCode, String city) {
-        streetTextField.setText(street);
-        postalCodeTextField.setText(postalCode);
-        cityTextField.setText(city);
-        child1ComboBox.setPromptText(childName);
-        child1ComboBox.setDisable(true);
-        newChildLabel.setVisible(false);
-        newChildButton.setVisible(false);
     }
 }

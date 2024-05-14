@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION:4.0
+N:Gump2;Forrest;;;
+FN:Forrest Gump2
+TITLE:Shrimp Man
+TEL;TYPE=home:+49 176 12345678
+EMAIL:forrestgump@example.com
+END:VCARD

@@ -54,7 +54,7 @@ public class DBSelectController {
                 break;
         }
         saveDbPath(dbPath);
-        PopupWindow.display("Datenbank ausgewählt! Bitte Anwendung erneut starten!");
+        PopupWindow.displayInformation("Datenbank ausgewählt! Bitte Anwendung erneut starten!");
         stageOf(event).close();
         Platform.exit();
     }

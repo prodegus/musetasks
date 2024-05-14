@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.OtherModel.getOtherFromDB;
@@ -15,6 +16,7 @@ import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.utils.Strings.string;
 
 public class Contact {
 
@@ -275,36 +277,59 @@ public class Contact {
         this.setFirstName(rs.getString("firstname"));
         this.setCategory(rs.getInt("category"));
         this.setCustomerId(rs.getInt("customerid"));
-        this.setLocation(rs.getString("location"));
-        this.setStreet(rs.getString("street"));
+        this.setLocation(string(rs.getString("location")));
+        this.setStreet(string(rs.getString("street")));
         this.setPostalCode(rs.getInt("postalcode"));
-        this.setCity(rs.getString("city"));
-        this.setPhone(rs.getString("phone"));
-        this.setEmail(rs.getString("email"));
-        this.setZoom(rs.getString("zoom"));
-        this.setSkype(rs.getString("skype"));
-        this.setBirthDate(rs.getString("birthday"));
-        this.setNotes(rs.getString("notes"));
+        this.setCity(string(rs.getString("city")));
+        this.setPhone(string(rs.getString("phone")));
+        this.setEmail(string(rs.getString("email")));
+        this.setZoom(string(rs.getString("zoom")));
+        this.setSkype(string(rs.getString("skype")));
+        this.setBirthDate(string(rs.getString("birthday")));
+        this.setNotes(string(rs.getString("notes")));
         this.setSelected(false);
     }
 
-    public String valuesToSQLString() {
-        StringBuilder sb = new StringBuilder("null, '");
-        sb.append(this.getLastName()).append("', '");
-        sb.append(this.getFirstName()).append("', '");
-        sb.append(this.getCategory()).append("', '");
-        sb.append(this.getCustomerId()).append("', '");
-        sb.append(this.getLocation()).append("', '");
-        sb.append(this.getStreet()).append("', '");
-        sb.append(this.getPostalCode()).append("', '");
-        sb.append(this.getCity()).append("', '");
-        sb.append(this.getPhone()).append("', '");
-        sb.append(this.getEmail()).append("', '");
-        sb.append(this.getZoom()).append("', '");
-        sb.append(this.getSkype()).append("', '");
-        sb.append(this.getBirthDate()).append("', '");
-        sb.append(this.getNotes()).append("'");
-        return sb.toString();
+    public String sqlColumns() {
+        StringJoiner columns = new StringJoiner(", ");
+
+        columns.add("lastname");
+        columns.add("firstname");
+        columns.add("category");
+        if (this.getCustomerId() != 0) columns.add("customerid");
+        if (!this.getLocation().isBlank()) columns.add("location");
+        if (!this.getStreet().isBlank()) columns.add("street");
+        if (this.getPostalCode() != 0) columns.add("postalcode");
+        if (!this.getCity().isBlank()) columns.add("city");
+        if (!this.getPhone().isBlank()) columns.add("phone");
+        if (!this.getEmail().isBlank()) columns.add("email");
+        if (!this.getZoom().isBlank()) columns.add("zoom");
+        if (!this.getSkype().isBlank()) columns.add("skype");
+        if (!this.getBirthDate().isBlank()) columns.add("birthday");
+        if (!this.getNotes().isBlank()) columns.add("notes");
+        
+        return columns.toString();
+    }
+    
+    public String sqlValues() {
+        StringJoiner values = new StringJoiner("', '", "'", "'");
+
+        values.add(this.getLastName());
+        values.add(this.getFirstName());
+        values.add(String.valueOf(this.getCategory()));
+        if (this.getCustomerId() != 0) values.add(String.valueOf(this.getCustomerId()));
+        if (!this.getLocation().isBlank()) values.add(this.getLocation());
+        if (!this.getStreet().isBlank()) values.add(this.getStreet());
+        if (this.getPostalCode() != 0) values.add(String.valueOf(this.getPostalCode()));
+        if (!this.getCity().isBlank()) values.add(this.getCity());
+        if (!this.getPhone().isBlank()) values.add(this.getPhone());
+        if (!this.getEmail().isBlank()) values.add(this.getEmail());
+        if (!this.getZoom().isBlank()) values.add(this.getZoom());
+        if (!this.getSkype().isBlank()) values.add(this.getSkype());
+        if (!this.getBirthDate().isBlank()) values.add(this.getBirthDate());
+        if (!this.getNotes().isBlank()) values.add(this.getNotes());
+        
+        return values.toString();
     }
 
     public String valuesToSQLUpdateString() {
@@ -392,5 +417,9 @@ public class Contact {
             }
         }
         return false;
+    }
+
+    public String getPostalCodeCity() {
+        return (getPostalCode() == 0 ? "" : getPostalCode() + " ") + getCity();
     }
 }

@@ -7,15 +7,19 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import prodegus.musetasks.contacts.Lesson;
+import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.contacts.Teacher;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static prodegus.musetasks.ui.StageFactories.newStage;
 
-public class LessonsController {
+public class LessonsController implements Initializable {
 
     // Fields: Lessons -------------------------------------------------------------------------------------------------
 
@@ -119,6 +123,11 @@ public class LessonsController {
 
     @FXML
     void viewLessonsToday(ActionEvent event) {
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
     }
 }
