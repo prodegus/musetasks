@@ -360,7 +360,7 @@ public class Student extends Contact {
 
     public String lesson1Weekday() {
         if (this.getLessonId1() == 0) return "";
-        return this.lesson1().getWeekday();
+        return this.lesson1().weekdayToString();
     }
 
     public String lesson2Name() {
@@ -375,7 +375,7 @@ public class Student extends Contact {
 
     public String lesson2Weekday() {
         if (this.getLessonId2() == 0) return "";
-        return this.lesson2().getWeekday();
+        return this.lesson2().weekdayToString();
     }
 
     public String lesson3Name() {
@@ -390,7 +390,7 @@ public class Student extends Contact {
 
     public String lesson3Weekday() {
         if (this.getLessonId3() == 0) return "";
-        return this.lesson3().getWeekday();
+        return this.lesson3().weekdayToString();
     }
 
     public String parentsNames() {

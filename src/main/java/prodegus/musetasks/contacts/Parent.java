@@ -114,29 +114,14 @@ public class Parent extends Contact {
         return getStudentFromDB(getChildId3());
     }
 
-    public String child3name() {
-        if (this.getChildId3() == 0) return "";
-        return this.child3().name();
-    }
-
     public Student child4() {
         if (this.getChildId4() == 0) return null;
         return getStudentFromDB(getChildId4());
     }
 
-    public String child4name() {
-        if (this.getChildId4() == 0) return "";
-        return this.child4().name();
-    }
-
     public Student child5() {
         if (this.getChildId5() == 0) return null;
         return getStudentFromDB(getChildId5());
-    }
-
-    public String child5name() {
-        if (this.getChildId5() == 0) return "";
-        return this.child5().name();
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {

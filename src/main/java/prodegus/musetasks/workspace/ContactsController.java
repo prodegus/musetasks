@@ -897,7 +897,7 @@ public class ContactsController implements Initializable {
             if (child == null) continue;
             Label name = new Label(child.name());
             Label lesson1 = new Label(child.lesson1().getLessonName());
-            Label lesson1Teacher = new Label(child.lesson1().teacherName());
+            Label lesson1Teacher = new Label(child.lesson1().teacher().name());
             name.setFont(new Font(14));
             lesson1.setFont(new Font(14));
             lesson1Teacher.setFont(new Font(14));
@@ -915,7 +915,7 @@ public class ContactsController implements Initializable {
 
             if (child.getLessonId2() == 0) continue;
             Label lesson2 = new Label(child.lesson2().getLessonName());
-            Label lesson2Teacher = new Label(child.lesson2().teacherName());
+            Label lesson2Teacher = new Label(child.lesson2().teacher().name());
             lesson2.setFont(new Font(14));
             lesson2Teacher.setFont(new Font(14));
             parentChildrenInfo.addRow(row, new Label(""), lesson2, lesson2Teacher);
@@ -925,7 +925,7 @@ public class ContactsController implements Initializable {
 
             if (child.getLessonId3() == 0) continue;
             Label lesson3 = new Label(child.lesson3().getLessonName());
-            Label lesson3Teacher = new Label(child.lesson3().teacherName());
+            Label lesson3Teacher = new Label(child.lesson3().teacher().name());
             lesson3.setFont(new Font(14));
             lesson3Teacher.setFont(new Font(14));
             parentChildrenInfo.addRow(row, new Label(""), lesson3, lesson3Teacher);

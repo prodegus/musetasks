@@ -1,7 +1,0 @@
-BEGIN:VCARD
-VERSION:4.0
-N:Maximalschüler;Fred;;;
-FN:Fred Maximalschüler
-TEL:+49 1578 12345678
-EMAIL;TYPE=E-Mail:max_mustermann@mail.com
-END:VCARD

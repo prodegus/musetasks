@@ -1,8 +1,0 @@
-BEGIN:VCARD
-VERSION:4.0
-N:Doe;John;;;
-FN:John Doe
-TITLE:Vater von Jack Doe
-TEL:0176/12345678
-EMAIL;TYPE=E-Mail:johndoe@gmail.com
-END:VCARD

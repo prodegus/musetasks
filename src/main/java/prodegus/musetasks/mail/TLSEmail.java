@@ -24,18 +24,18 @@ import static prodegus.musetasks.ui.StageFactories.APP_NAME;
 public class TLSEmail {
 
 	public static void main(String[] args) {
-		Contact contact = new Contact();
-		contact.setFirstName("John");
-		contact.setLastName("Doe2");
-		contact.setPhone("+49 176 12345678");
-		contact.setEmail("johndoe@gmail.com");
+//		Contact contact = new Contact();
+//		contact.setFirstName("John");
+//		contact.setLastName("Doe2");
+//		contact.setPhone("+49 176 12345678");
+//		contact.setEmail("johndoe@gmail.com");
+//
+//		List<File> files = Collections.singletonList(vCard(contact, "Vater von Jack Doe"));
+		prefs.remove("mail_user");
+		prefs.remove("mail_password");
+		prefs.remove("mail_sender");
 
-		List<File> files = Collections.singletonList(vCard(contact, "Vater von Jack Doe"));
-//		prefs.remove("mail_user");
-//		prefs.remove("mail_password");
-//		prefs.remove("mail_sender");
-
-		sendMail("daniel.hanelt@gmail.com", "", "Visitenkarte2", "Siehe Anhang!", getMailSender(), files);
+//		sendMail("daniel.hanelt@gmail.com", "", "Visitenkarte2", "Siehe Anhang!", getMailSender(), files);
 
 //		confirmMail(getMailUser());
 	}

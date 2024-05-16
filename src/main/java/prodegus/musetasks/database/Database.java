@@ -208,6 +208,7 @@ public class Database {
                 "    location    TEXT," +
                 "    room        TEXT," +
                 "    repeat      INTEGER," +
+                "    repeatinter INTEGER," +
                 "    repeattimes INTEGER," +
                 "    repeatend   TEXT," +
                 "    weekday     TEXT," +

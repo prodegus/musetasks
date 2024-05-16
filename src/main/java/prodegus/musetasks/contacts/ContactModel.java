@@ -166,7 +166,6 @@ public class ContactModel {
     public static int findContactID(Contact contact) {
         int id = 0;
         String sql = "SELECT MAX (id) FROM " + contact.table();
-        System.out.println(sql);
 
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
