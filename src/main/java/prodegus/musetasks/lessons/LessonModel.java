@@ -105,6 +105,7 @@ public class LessonModel {
     }
 
     public static int repeatInterFromString(String interval) {
+        if (interval == null) return 0;
         return switch(interval) {
             case "jede", "jeden", "jedes" -> 1;
             case "jede 2.", "jeden 2.", "jedes 2." -> 2;
@@ -120,7 +121,9 @@ public class LessonModel {
         };
     }
 
+
     public static int repeatPeriodFromString(String period) {
+        if (period == null) return REPEAT_PERIOD_OFF;
         return switch(period) {
             case "Tag" -> REPEAT_PERIOD_DAY;
             case "Woche" -> REPEAT_PERIOD_WEEK;
@@ -131,6 +134,7 @@ public class LessonModel {
     }
     
     public static int weekdayFromString(String weekday) {
+        if (weekday == null) return 0;
         return switch(weekday) {
             case "Montag" -> MONDAY;
             case "Dienstag" -> TUESDAY;
@@ -140,6 +144,10 @@ public class LessonModel {
             case "Samstag" -> SATURDAY;
             default -> 0;
         };
+    }
+
+    public static int statusFromString(String statusString) {
+        return 0;
     }
 
 }

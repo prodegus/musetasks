@@ -30,7 +30,7 @@ public class Lesson {
     private SimpleIntegerProperty repeatInter = new SimpleIntegerProperty();
     private SimpleIntegerProperty repeatTimes = new SimpleIntegerProperty();
     private SimpleStringProperty  repeatEnd   = new SimpleStringProperty();
-    private SimpleIntegerProperty  weekday    = new SimpleIntegerProperty();
+    private SimpleIntegerProperty weekday     = new SimpleIntegerProperty();
     private SimpleStringProperty  time        = new SimpleStringProperty();
     private SimpleIntegerProperty duration    = new SimpleIntegerProperty();
     private SimpleStringProperty  startDate   = new SimpleStringProperty();

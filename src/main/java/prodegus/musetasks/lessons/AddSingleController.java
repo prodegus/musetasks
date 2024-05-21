@@ -1,14 +1,13 @@
 package prodegus.musetasks.lessons;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.workspace.cells.StringListCell;
@@ -30,6 +29,7 @@ public class AddSingleController implements Initializable {
 
     @FXML private Label titleTextField;
     @FXML private CheckBox draftCheckBox;
+    @FXML private TextField lessonNameTextField;
     @FXML private ComboBox<Student> studentComboBox;
     @FXML private ComboBox<Teacher> teacherComboBox;
     @FXML private ComboBox<String> instrumentComboBox;
@@ -68,15 +68,19 @@ public class AddSingleController implements Initializable {
         StringBuilder errorMessage = new StringBuilder();
 
         boolean draft = draftCheckBox.isSelected();
+        int category = CATEGORY_SINGLE;
         Student student = studentComboBox.getValue();
         Teacher teacher = teacherComboBox.getValue();
         String instrument = instrumentComboBox.getValue();
-        String duration = durationComboBox.getValue();
+        String durationString = durationComboBox.getValue();
+        String durationMinutes = durationString.replaceAll("[^0-9]", "");
+        int duration = Integer.parseInt(durationMinutes);
         String location = locationComboBox.getValue();
         String room = roomComboBox.getValue();
         boolean repeatSelected = repeatCheckBox.isSelected();
-        int repeatInter = repeatInterFromString(repeatInterComboBox.getValue());
-        int repeatPeriod = repeatPeriodFromString(repeatPeriodComboBox.getValue());
+        String repeatInterString = repeatInterComboBox.getValue();
+        String repeatPeriodString = repeatPeriodComboBox.getValue();
+
         int weekday = weekdayFromString(weekdayComboBox.getValue());
         String time = timeComboBox.getValue();
         boolean repeatEndSelected = repeatEndRadioButton.isSelected();
@@ -86,9 +90,65 @@ public class AddSingleController implements Initializable {
         String startDate = startDatePicker.getValue().toString();
         boolean endDateSelected = endDateCheckBox.isSelected();
         String endDate = endDatePicker.getValue().toString();
-        String status = statusComboBox.getValue();
+        String statusString = statusComboBox.getValue();
+        int status = statusFromString(statusString);
         String statusFromDate = statusFromDatePicker.getValue().toString();
         String statusToDate = statusToDatePicker.getValue().toString();
+        String lessonName = lessonNameTextField.getText().isBlank() ? 
+                student.name() + " (" + instrument + ", Einzel, " + durationMinutes + " min)" :
+                lessonNameTextField.getText();
+
+        lesson.setLessonName(lessonName);
+        lesson.setCategory(category);
+
+        if (instrument == null) {
+            invalidData = true;
+            errorMessage.append("- Bitte Instrument auswählen\n");
+        } else {
+            lesson.setInstrument(instrument);
+        }
+
+        if (teacher == null) {
+            invalidData = true;
+            errorMessage.append("- Bitte Lehrer auswählen\n");
+        } else {
+            lesson.setTeacherId(teacher.getId());
+        }
+
+        if (location == null) {
+            invalidData = true;
+            errorMessage.append("- Bitte Standort auswählen\n");
+        } else {
+            lesson.setLocation(location);
+        }
+
+        if (room == null && !draft) {
+            invalidData = true;
+            errorMessage.append("- Bitte Raum auswählen\n");
+        } else {
+            lesson.setRoom(room);
+        }
+
+        lesson.setRepeat(repeatPeriodFromString(repeatPeriodString));
+        lesson.setRepeatInter(repeatInterFromString(repeatInterString));
+        lesson.setRepeatTimes(repeatTimes);
+        lesson.setRepeatEnd(repeatEnd);
+        lesson.setWeekday(weekday);
+        lesson.setTime(time);
+        lesson.setDuration(duration);
+        lesson.setStartDate(startDate);
+        lesson.setEndDate(endDate);
+        lesson.setStatus(status);
+        lesson.setStatusFrom(statusFromDate);
+        lesson.setStatusTo(statusToDate);
+
+        if (student == null) {
+            invalidData = true;
+            errorMessage.append("- Bitte Schüler auswählen\n");
+        } else {
+            lesson.setStudentId1(student.getId());
+        }
+
     }
 
 

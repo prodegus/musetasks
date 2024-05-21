@@ -7,6 +7,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -25,6 +26,7 @@
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="80.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
@@ -35,7 +37,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <HBox spacing="20.0" GridPane.rowIndex="1">
+                  <HBox spacing="20.0" GridPane.rowIndex="2">
                      <children>
                         <VBox>
                            <children>
@@ -51,7 +53,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="20.0" GridPane.rowIndex="2">
+                  <HBox spacing="20.0" GridPane.rowIndex="3">
                      <children>
                         <VBox>
                            <children>
@@ -68,7 +70,7 @@
                      </children>
                   </HBox>
                   <HBox />
-                  <HBox spacing="10.0" GridPane.rowIndex="4">
+                  <HBox spacing="10.0" GridPane.rowIndex="5">
                      <children>
                         <VBox spacing="10.0">
                            <children>
@@ -104,13 +106,13 @@
                         <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
                      </children>
                   </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="8">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="9">
                      <children>
                         <Button mnemonicParsing="false" onAction="#confirm" text="Bestätigen" />
                         <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
                   </HBox>
-                  <HBox spacing="20.0" GridPane.rowIndex="3">
+                  <HBox spacing="20.0" GridPane.rowIndex="4">
                      <children>
                         <VBox>
                            <children>
@@ -126,7 +128,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="5">
+                  <HBox spacing="10.0" GridPane.rowIndex="6">
                      <children>
                         <VBox spacing="10.0">
                            <children>
@@ -142,7 +144,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="6">
+                  <HBox spacing="10.0" GridPane.rowIndex="7">
                      <children>
                         <VBox spacing="10.0">
                            <children>
@@ -158,7 +160,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="7">
+                  <HBox spacing="10.0" GridPane.rowIndex="8">
                      <children>
                         <VBox spacing="10.0">
                            <children>
@@ -180,6 +182,12 @@
                         </VBox>
                      </children>
                   </HBox>
+                  <VBox GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Bezeichnung (optional)" />
+                        <TextField fx:id="lessonNameTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
                </children>
             </GridPane>
          </children>
