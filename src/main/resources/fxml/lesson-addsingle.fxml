@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,9 +29,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
@@ -70,15 +70,14 @@
                      </children>
                   </HBox>
                   <HBox />
-                  <HBox spacing="10.0" GridPane.rowIndex="5">
+                  <HBox spacing="10.0" GridPane.rowIndex="6">
                      <children>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <CheckBox fx:id="repeatCheckBox" mnemonicParsing="false" text="regelmäßiger Unterricht" />
+                              <Label text="Wiederholung" />
                               <HBox spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="repeatInterComboBox" prefHeight="30.0" promptText="jede" />
-                                    <ComboBox fx:id="repeatPeriodComboBox" prefHeight="30.0" promptText="Woche" />
+                                    <ComboBox fx:id="repeatComboBox" prefHeight="30.0" promptText="jede Woche" />
                                     <ComboBox fx:id="weekdayComboBox" prefHeight="30.0" promptText="montags" />
                                  </children>
                               </HBox>
@@ -87,9 +86,9 @@
                               <Insets right="10.0" />
                            </HBox.margin>
                         </VBox>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <Label text="Uhrzeit:" />
+                              <Label text="Uhrzeit" />
                               <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
                            </children>
                         </VBox>
@@ -106,7 +105,7 @@
                         <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
                      </children>
                   </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="9">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
                      <children>
                         <Button mnemonicParsing="false" onAction="#confirm" text="Bestätigen" />
                         <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
@@ -128,55 +127,39 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="6">
-                     <children>
-                        <VBox spacing="10.0">
-                           <children>
-                              <RadioButton fx:id="repeatEndRadioButton" mnemonicParsing="false" text="wiederholen bis:" />
-                              <DatePicker fx:id="repeatEndDatePicker" prefHeight="30.0" prefWidth="120.0" />
-                           </children>
-                        </VBox>
-                        <VBox spacing="10.0">
-                           <children>
-                              <RadioButton fx:id="repeatTimesRadioButton" mnemonicParsing="false" text="endet nach:" />
-                              <ComboBox fx:id="repeatTimesComboBox" prefHeight="30.0" prefWidth="120.0" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
                   <HBox spacing="10.0" GridPane.rowIndex="7">
                      <children>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <Label text="Beginn:" />
-                              <DatePicker fx:id="startDatePicker" prefHeight="30.0" prefWidth="120.0" />
+                              <Label text="Beginn" />
+                              <DatePicker fx:id="startDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <CheckBox fx:id="endDateCheckBox" mnemonicParsing="false" text="Ende (optional):" />
-                              <DatePicker fx:id="endDatePicker" prefHeight="30.0" prefWidth="120.0" />
+                              <Label text="Ende (optional)" />
+                              <DatePicker fx:id="endDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="8">
+                  <HBox spacing="10.0" GridPane.rowIndex="9">
                      <children>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <Label text="Status:" />
-                              <ComboBox fx:id="statusComboBox" editable="true" prefHeight="30.0" prefWidth="150.0" />
+                              <Label text="Status" />
+                              <ComboBox fx:id="statusComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
                            </children>
                         </VBox>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <Label text="von:" />
+                              <Label text="von" />
                               <DatePicker fx:id="statusFromDatePicker" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>
-                        <VBox spacing="10.0">
+                        <VBox>
                            <children>
-                              <Label text="bis:" />
+                              <Label text="bis" />
                               <DatePicker fx:id="statusToDatePicker" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>

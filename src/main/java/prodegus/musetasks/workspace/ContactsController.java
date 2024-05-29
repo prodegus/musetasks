@@ -896,8 +896,8 @@ public class ContactsController implements Initializable {
         for (Student child : children) {
             if (child == null) continue;
             Label name = new Label(child.name());
-            Label lesson1 = new Label(child.lesson1().getLessonName());
-            Label lesson1Teacher = new Label(child.lesson1().teacher().name());
+            Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().getLessonName());
+            Label lesson1Teacher = new Label(child.lesson1() == null ? "" : child.lesson1().teacher().name());
             name.setFont(new Font(14));
             lesson1.setFont(new Font(14));
             lesson1Teacher.setFont(new Font(14));
@@ -994,9 +994,9 @@ public class ContactsController implements Initializable {
         others.setAll(getOtherListFromDB());
 
         // Initialize contact filters
-        filterLocation1.setText(SCHOOL_LOCATIONS.get(0));
-        filterLocation2.setText(SCHOOL_LOCATIONS.get(1));
-        filterLocation3.setText(SCHOOL_LOCATIONS.get(2));
+        filterLocation1.setText(SCHOOL_LOCATIONS.get(0).getName());
+        filterLocation2.setText(SCHOOL_LOCATIONS.get(1).getName());
+        filterLocation3.setText(SCHOOL_LOCATIONS.get(2).getName());
 
         filterInstrument1ComboBox.setItems(SCHOOL_INSTRUMENTS);
         filterInstrument1ComboBox.setButtonCell(new StringListCell());

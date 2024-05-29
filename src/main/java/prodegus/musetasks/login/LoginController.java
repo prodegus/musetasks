@@ -1,6 +1,7 @@
 package prodegus.musetasks.login;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import prodegus.musetasks.database.Database;
+import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.PopupWindow;
 
 import java.net.URL;
@@ -18,6 +20,7 @@ import java.util.ResourceBundle;
 
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.ui.StageFactories.*;
 
 public class LoginController implements Initializable {
@@ -97,6 +100,16 @@ public class LoginController implements Initializable {
                 Stage stage = newStage("E-Mail-Konto hinzufügen", loader);
                 stage.showAndWait();
         }
+
+        // Enter School Parameters (Locations / Rooms, Instruments etc..)
+        insert(INSTRUMENT_TABLE, "instrument", "Gitarre");
+        insert(INSTRUMENT_TABLE, "instrument", "Klavier");
+        insert(INSTRUMENT_TABLE, "instrument", "Gesang");
+        insert(INSTRUMENT_TABLE, "instrument", "E-Bass");
+        insert(INSTRUMENT_TABLE, "instrument", "Schlagzeug");
+        insert(INSTRUMENT_TABLE, "instrument", "Violine");
+        insert(INSTRUMENT_TABLE, "instrument", "Saxofon");
+        insert(INSTRUMENT_TABLE, "instrument", "Klarinette");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace.fxml"));
         Stage stage = newStage(APP_NAME, loader);

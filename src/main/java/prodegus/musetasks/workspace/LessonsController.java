@@ -18,8 +18,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
@@ -33,9 +35,12 @@ import static prodegus.musetasks.lessons.LessonModel.getLessonListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
+import static prodegus.musetasks.utils.DateTime.H_2024_1;
+import static prodegus.musetasks.utils.DateTime.asString;
 
 public class LessonsController implements Initializable {
 
+    @FXML private TableView<Lesson> lessonTableView;
     @FXML private TableColumn<Lesson, Boolean> selectColumn;
     @FXML private TableColumn<Lesson, String> nameColumn;
     @FXML private TableColumn<Lesson, String> instrumentColumn;
@@ -44,7 +49,7 @@ public class LessonsController implements Initializable {
     @FXML private TableColumn<Lesson, String> locationColumn;
 
     @FXML private CheckBox selectAllCheckBox;
-    
+
     @FXML private CheckBox filterCatCourse;
     @FXML private CheckBox filterCatGroup;
     @FXML private CheckBox filterCatSingle;
@@ -73,18 +78,27 @@ public class LessonsController implements Initializable {
     @FXML private CheckBox filterTimeToday;
     @FXML private MenuButton lessonInstrumentMenuButton;
     @FXML private TextField lessonSearchBar;
-    @FXML private TableView<Lesson> lessonTableView;
     @FXML private MenuButton lessonTeacherMenuButton;
     @FXML private ToggleButton lessonToggleLocation1;
     @FXML private ToggleButton lessonToggleLocation2;
     @FXML private ToggleButton lessonToggleLocation3;
     @FXML private ToggleButton lessonToggleToday;
 
+    @FXML private TableColumn<Appointment, String> aptColumnDate;
+    @FXML private TableColumn<Appointment, String> aptColumnNote;
+    @FXML private TableColumn<Appointment, String> aptColumnStatus;
+    @FXML private TableColumn<Appointment, String> aptColumnTime;
+    @FXML private Label aptLabel;
+    @FXML private TableView<Appointment> aptTableView;
+
+
     private final ObservableList<Lesson> lessons = FXCollections.observableArrayList();
     private final FilteredList<Lesson> filteredLessons = new FilteredList<>(lessons, lesson -> true);
     private final SortedList<Lesson> sortableLessons = new SortedList<>(filteredLessons);
     private Lesson selectedLesson;
+    private Appointment selectedAppointment;
     private TableView<? extends Lesson> selectedTableView;
+    private HalfYear selectedHalfYear;
 
     private final InvalidationListener lessonSearchListener = new InvalidationListener() {
         @Override
@@ -97,10 +111,30 @@ public class LessonsController implements Initializable {
                         containsIgnoreCase(lesson.getLessonName(), filter) ||
                         containsIgnoreCase(lesson.getInstrument(), filter) ||
                         containsIgnoreCase(lesson.teacher().name(), filter) ||
-                        containsIgnoreCase(lesson.studentsNames(), filter));
+                        containsIgnoreCase(lesson.studentsNamesString(), filter));
             }
         }
     };
+
+    @FXML
+    void aptEdit(ActionEvent event) {
+
+    }
+
+    @FXML
+    void aptForwardTo(ActionEvent event) {
+
+    }
+
+    @FXML
+    void aptNextHalfYear(ActionEvent event) {
+
+    }
+
+    @FXML
+    void aptShowPreviousHalfYear(ActionEvent event) {
+
+    }
 
     @FXML
     void showAddCourseWindow(ActionEvent event) {
@@ -135,7 +169,7 @@ public class LessonsController implements Initializable {
     }
 
     @FXML
-    void resetLessonFilter(ActionEvent event) {
+    void resetFilter(ActionEvent event) {
 
     }
 
@@ -175,10 +209,14 @@ public class LessonsController implements Initializable {
             public void handle(MouseEvent event) {
                 if (tableView.getSelectionModel().isEmpty()) return;
                 selectedLesson = tableView.getSelectionModel().getSelectedItem();
-//                showLessonInfo(selectedLesson);
+                showLessonInfo(selectedLesson);
 //                lessonDetails.setVisible(true);
             }
         });
+    }
+
+    public void showLessonInfo(Lesson lesson) {
+        aptTableView.setItems(lesson.appointments(selectedHalfYear.getStart(), selectedHalfYear.getEnd()));
     }
     
     private void refreshLessons() {
@@ -209,15 +247,17 @@ public class LessonsController implements Initializable {
         selectedLesson = tableView.getSelectionModel().getSelectedItem();
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize Lesson List
         lessons.setAll(getLessonListFromDB());
+        selectedHalfYear = H_2024_1;
 
         // Initialize Lesson Filters
-        filterLocation1.setText(SCHOOL_LOCATIONS.get(0));
-        filterLocation2.setText(SCHOOL_LOCATIONS.get(1));
-        filterLocation3.setText(SCHOOL_LOCATIONS.get(2));
+        filterLocation1.setText(SCHOOL_LOCATIONS.get(0).getName());
+        filterLocation2.setText(SCHOOL_LOCATIONS.get(1).getName());
+        filterLocation3.setText(SCHOOL_LOCATIONS.get(2).getName());
 
         filterTeacher1ComboBox.setItems(getTeacherListFromDB());
         filterTeacher1ComboBox.setButtonCell(new TeacherListCellShort());
@@ -285,7 +325,7 @@ public class LessonsController implements Initializable {
         teacherColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().teacher().shortName()));
         teacherColumn.prefWidthProperty().bind(lessonTableView.widthProperty().multiply(0.15));
 
-        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().location().getName()));
         locationColumn.prefWidthProperty().bind(lessonTableView.widthProperty().multiply(0.15));
 
         lessonTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -297,5 +337,25 @@ public class LessonsController implements Initializable {
         // Initialize displayed table view
         lessonTableView.getSortOrder().setAll(nameColumn);
         showTableView(lessonTableView);
+
+        // Initialize lesson info
+
+        // Initialize appointment TableView
+        aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
+        aptColumnNote.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+        aptColumnStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().status()));
+        aptColumnTime.setCellValueFactory(cellData -> new SimpleStringProperty(asString(cellData.getValue().getTime())));
+        aptLabel.setText("Termine im 1. Halbjahr 2024:");
+
+
+        aptTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (aptTableView.getSelectionModel().isEmpty()) return;
+                selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
+//                showLessonInfo(selectedLesson);
+//                lessonDetails.setVisible(true);
+            }
+        });
     }
 }

@@ -16,11 +16,15 @@ public class TeacherModel {
     public static StringConverter<Teacher> teacherStringConverterFormal = new StringConverter<Teacher>() {
         @Override
         public String toString(Teacher teacher) {
-            return teacher.getLastName() + ", " + teacher.getFirstName();
+            if (teacher == null) return "";
+            return teacher.formalName();
         }
 
         @Override
         public Teacher fromString(String string) {
+            for (Teacher teacher : getTeacherListFromDB()) {
+                if (teacher.formalName().equals(string)) return teacher;
+            }
             return null;
         }
     };

@@ -167,4 +167,9 @@ public class Teacher extends Contact {
         List<Integer> results = queryInteger("id", LESSON_TABLE, categoryFilter, teacherFilter);
         return results.size();
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

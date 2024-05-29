@@ -355,12 +355,12 @@ public class Student extends Contact {
 
     public String lesson1Time() {
         if (this.getLessonId1() == 0) return "";
-        return this.lesson1().getTime();
+        return this.lesson1().getTime().toString();
     }
 
     public String lesson1Weekday() {
         if (this.getLessonId1() == 0) return "";
-        return this.lesson1().weekdayToString();
+        return this.lesson1().weekday();
     }
 
     public String lesson2Name() {
@@ -370,12 +370,12 @@ public class Student extends Contact {
 
     public String lesson2Time() {
         if (this.getLessonId2() == 0) return "";
-        return this.lesson2().getTime();
+        return this.lesson2().getTime().toString();
     }
 
     public String lesson2Weekday() {
         if (this.getLessonId2() == 0) return "";
-        return this.lesson2().weekdayToString();
+        return this.lesson2().weekday();
     }
 
     public String lesson3Name() {
@@ -385,12 +385,12 @@ public class Student extends Contact {
 
     public String lesson3Time() {
         if (this.getLessonId3() == 0) return "";
-        return this.lesson3().getTime();
+        return this.lesson3().getTime().toString();
     }
 
     public String lesson3Weekday() {
         if (this.getLessonId3() == 0) return "";
-        return this.lesson3().weekdayToString();
+        return this.lesson3().weekday();
     }
 
     public String parentsNames() {
@@ -433,38 +433,7 @@ public class Student extends Contact {
 
     @Override
     public String toString() {
-        return "Student [" +
-                "id: " + this.getId() + ", " +
-                "lastname: " + this.getLastName() + ", " +
-                "firstname: " + this.getFirstName() + ", " +
-                "category: " + this.getCategory() + ", " +
-                "customer: " + this.getCustomerId() + ", " +
-                "location: " + this.getLocation() + ", " +
-                "street: " + this.getStreet() + ", " +
-                "postalCode: " + this.getPostalCode() + ", " +
-                "city: " + this.getCity() + ", " +
-                "phone: " + this.getPhone() + ", " +
-                "email: " + this.getEmail() + ", " +
-                "zoom: " + this.getZoom() + ", " +
-                "skype: " + this.getSkype() + ", " +
-                "birthDate: " + this.getBirthDate() + ", " +
-                "notes: " + this.getNotes() + ", " +
-                "selected: " + this.isSelected() + ", " +
-                "instrument1: " + this.getInstrument1() + ", " +
-                "instrument2: " + this.getInstrument2() + ", " +
-                "instrument3: " + this.getInstrument3() + ", " +
-                "prospective: " + this.getProspective() + ", " +
-                "status: " + this.getStatus() + ", " +
-                "statusFrom: " + this.getStatusFrom() + ", " +
-                "statusTo: " + this.getStatusTo() + ", " +
-                "parentId1: " + this.getParentId1() + ", " +
-                "parentId2: " + this.getParentId2() + ", " +
-                "teacherId1: " + this.getTeacherId1() + ", " +
-                "teacherId2: " + this.getTeacherId2() + ", " +
-                "teacherId3: " + this.getTeacherId3() + ", " +
-                "lessonId1: " + this.getLessonId1() + ", " +
-                "lessonId2: " + this.getLessonId2() + ", " +
-                "lessonId3: " + this.getLessonId3() + "]";
+        return super.toString();
     }
 
     public void addParentInDB(int parentId) {

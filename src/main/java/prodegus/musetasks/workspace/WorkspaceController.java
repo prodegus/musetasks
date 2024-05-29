@@ -13,8 +13,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.school.SchoolModel.getInstrumentListFromDB;
 
 public class WorkspaceController implements Initializable {
 
@@ -52,17 +54,9 @@ public class WorkspaceController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // Initialize instruments
-        SCHOOL_INSTRUMENTS.add("Gesang");
-        SCHOOL_INSTRUMENTS.add("Klavier");
-        SCHOOL_INSTRUMENTS.add("Gitarre");
-        SCHOOL_INSTRUMENTS.add("Schlagzeug");
-        SCHOOL_INSTRUMENTS.add("E-Bass");
-        SCHOOL_INSTRUMENTS.add("Saxophon");
-        SCHOOL_INSTRUMENTS.add("Klarinette");
+        SCHOOL_INSTRUMENTS.setAll(getInstrumentListFromDB());
 
         // Initialize locations
-        SCHOOL_LOCATIONS.add("Lohmar");
-        SCHOOL_LOCATIONS.add("Gummersbach");
-        SCHOOL_LOCATIONS.add("Meckenheim");
+        SCHOOL_LOCATIONS.setAll(getLocationListFromDB());
     }
 }

@@ -6,7 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.StringListCell;
 
 import java.net.URL;
@@ -17,6 +19,8 @@ import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
+import static prodegus.musetasks.school.LocationModel.fromString;
+import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
@@ -39,9 +43,9 @@ public class AddTeacherController implements Initializable {
     @FXML private ComboBox<String> instrumentComboBox3;
     @FXML private ComboBox<String> instrumentComboBox4;
     @FXML private ComboBox<String> instrumentComboBox5;
-    @FXML private ComboBox<String> locationComboBox1;
-    @FXML private ComboBox<String> locationComboBox2;
-    @FXML private ComboBox<String> locationComboBox3;
+    @FXML private ComboBox<Location> locationComboBox1;
+    @FXML private ComboBox<Location> locationComboBox2;
+    @FXML private ComboBox<Location> locationComboBox3;
     @FXML private CheckBox mondayCheckBox;
     @FXML private CheckBox tuesdayCheckBox;
     @FXML private CheckBox wednesdayCheckBox;
@@ -80,9 +84,9 @@ public class AddTeacherController implements Initializable {
         int category = CATEGORY_TEACHER;
         int customerId = 0;
         StringJoiner locationsJoiner = new StringJoiner(", ");
-        if (!locationComboBox1.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox1.getValue());
-        if (!locationComboBox2.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox2.getValue());
-        if (!locationComboBox3.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox3.getValue());
+        if (!locationComboBox1.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox1.getValue().getName());
+        if (!locationComboBox2.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox2.getValue().getName());
+        if (!locationComboBox3.getSelectionModel().isEmpty()) locationsJoiner.add(locationComboBox3.getValue().getName());
         String locations = locationsJoiner.toString();
         String street = streetTextField.getText();
         String postalCode = postalCodeTextField.getText();
@@ -251,9 +255,9 @@ public class AddTeacherController implements Initializable {
         if (instruments.length > 3) instrumentComboBox4.setValue(instruments[3]);
         if (instruments.length > 4) instrumentComboBox5.setValue(instruments[4]);
 
-        if (locations.length > 0) locationComboBox1.setValue(locations[0]);
-        if (locations.length > 1) locationComboBox2.setValue(locations[1]);
-        if (locations.length > 2) locationComboBox3.setValue(locations[2]);
+        if (locations.length > 0) locationComboBox1.setValue(fromString(locations[0]));
+        if (locations.length > 1) locationComboBox2.setValue(fromString(locations[1]));
+        if (locations.length > 2) locationComboBox3.setValue(fromString(locations[2]));
         if (teacher.getActiveDays().contains("Montag")) mondayCheckBox.setSelected(true);
         if (teacher.getActiveDays().contains("Dienstag")) tuesdayCheckBox.setSelected(true);
         if (teacher.getActiveDays().contains("Mittwoch")) wednesdayCheckBox.setSelected(true);
@@ -291,12 +295,15 @@ public class AddTeacherController implements Initializable {
 
 
         locationComboBox1.setItems(SCHOOL_LOCATIONS);
-        locationComboBox1.setCellFactory(string -> new StringListCell());
+        locationComboBox1.setCellFactory(string -> new LocationListCell());
+        locationComboBox1.setConverter(locationStringConverter);
 
         locationComboBox2.setItems(SCHOOL_LOCATIONS);
-        locationComboBox2.setCellFactory(string -> new StringListCell());
+        locationComboBox2.setCellFactory(string -> new LocationListCell());
+        locationComboBox2.setConverter(locationStringConverter);
 
         locationComboBox3.setItems(SCHOOL_LOCATIONS);
-        locationComboBox3.setCellFactory(string -> new StringListCell());
+        locationComboBox3.setCellFactory(string -> new LocationListCell());
+        locationComboBox3.setConverter(locationStringConverter);
     }
 }

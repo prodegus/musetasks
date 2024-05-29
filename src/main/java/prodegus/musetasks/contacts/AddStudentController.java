@@ -10,7 +10,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.ParentListCellFormal;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
@@ -26,6 +28,8 @@ import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
 import static prodegus.musetasks.contacts.ParentModel.parentStringConverterFormal;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
+import static prodegus.musetasks.school.LocationModel.fromString;
+import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
@@ -45,7 +49,7 @@ public class AddStudentController implements Initializable {
     @FXML private TextField postalCodeTextField;
     @FXML private TextField cityTextField;
     @FXML private DatePicker birthDatePicker;
-    @FXML private ComboBox<String> locationComboBox;
+    @FXML private ComboBox<Location> locationComboBox;
     @FXML private ComboBox<String> instrument1ComboBox;
     @FXML private ComboBox<String> instrument2ComboBox;
     @FXML private ComboBox<String> instrument3ComboBox;
@@ -89,7 +93,7 @@ public class AddStudentController implements Initializable {
         String firstname = firstNameTextField.getText();
         int category = prospectiveCheckBox.isSelected() ? CATEGORY_PROSPECTIVE_STUDENT : CATEGORY_STUDENT;
         int customerId = 0;
-        String location = locationComboBox.getSelectionModel().isEmpty() ? "" : locationComboBox.getValue();
+        Location location = locationComboBox.getValue();
         String street = streetTextField.getText();
         String postalCode = postalCodeTextField.getText();
         String city = cityTextField.getText();
@@ -129,7 +133,7 @@ public class AddStudentController implements Initializable {
 
         newStudent.setCategory(category);
         newStudent.setCustomerId(customerId);
-        newStudent.setLocation(location);
+        if (location != null) newStudent.setLocation(location.getName());
         newStudent.setStreet(street);
 
         if (isInvalidPostalCode(postalCode)) {
@@ -304,7 +308,7 @@ public class AddStudentController implements Initializable {
         postalCodeTextField.setText(string(student.getPostalCode()));
         cityTextField.setText(student.getCity());
         birthDatePicker.getEditor().setText(student.getBirthDate());
-        if (!student.getLocation().isBlank()) locationComboBox.setValue(student.getLocation());
+        if (!student.getLocation().isBlank()) locationComboBox.setValue(fromString(student.getLocation()));
         if (!student.getInstrument1().isBlank()) instrument1ComboBox.setValue(student.getInstrument1());
         if (!student.getInstrument2().isBlank()) instrument2ComboBox.setValue(student.getInstrument2());
         if (!student.getInstrument3().isBlank()) instrument3ComboBox.setValue(student.getInstrument3());
@@ -340,7 +344,8 @@ public class AddStudentController implements Initializable {
         instrument3ComboBox.setCellFactory(string -> new StringListCell());
 
         locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new StringListCell());
+        locationComboBox.setCellFactory(string -> new LocationListCell());
+        locationComboBox.setConverter(locationStringConverter);
 
         teacher1ComboBox.setItems(teachers);
         teacher1ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
@@ -361,14 +366,6 @@ public class AddStudentController implements Initializable {
         parent2ComboBox.setItems(parents);
         parent2ComboBox.setCellFactory(parent -> new ParentListCellFormal());
         parent2ComboBox.setConverter(parentStringConverterFormal);
-
-
-//        contactsAllListView.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
-//            @Override
-//            public ListCell<Contact> call(ListView<Contact> list) {
-//                return new ContactListCell();
-//            }
-//        });
     }
 
 }

@@ -10,7 +10,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.StudentListCell;
 
@@ -22,6 +24,8 @@ import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.StudentModel.*;
+import static prodegus.musetasks.school.LocationModel.fromString;
+import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
@@ -39,7 +43,7 @@ public class AddParentController implements Initializable {
     @FXML private TextField postalCodeTextField;
     @FXML private TextField cityTextField;
     @FXML private DatePicker birthDatePicker;
-    @FXML private ComboBox<String> locationComboBox;
+    @FXML private ComboBox<Location> locationComboBox;
     @FXML private ComboBox<Student> child1ComboBox;
     @FXML private Button child1DeleteButton;
     @FXML private ComboBox<Student> child2ComboBox;
@@ -87,7 +91,7 @@ public class AddParentController implements Initializable {
         String firstname = firstNameTextField.getText();
         int category = CATEGORY_PARENT;
         int customerId = 0;
-        String location = locationComboBox.getSelectionModel().isEmpty() ? "" : locationComboBox.getValue();
+        String location = locationComboBox.getSelectionModel().isEmpty() ? "" : locationComboBox.getValue().getName();
         String street = streetTextField.getText();
         String postalCode = postalCodeTextField.getText();
         String city = cityTextField.getText();
@@ -162,7 +166,7 @@ public class AddParentController implements Initializable {
             PopupWindow.displayInformation("Elternteil konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
-
+        System.out.println("child1ComboBox.getValue(): " + child1ComboBox.getValue());
         if (!editMode) {
             insertContact(newParent);
             id = findContactID(newParent);
@@ -328,7 +332,7 @@ public class AddParentController implements Initializable {
         postalCodeTextField.setText(string(parent.getPostalCode()));
         cityTextField.setText(parent.getCity());
         birthDatePicker.getEditor().setText(parent.getBirthDate());
-        if (!parent.getLocation().isBlank()) locationComboBox.setValue(parent.getLocation());
+        if (!parent.getLocation().isBlank()) locationComboBox.setValue(fromString(parent.getLocation()));
         selectChild(child1ComboBox, parent.getChildId1());
         selectChild(child2ComboBox, parent.getChildId2());
         selectChild(child3ComboBox, parent.getChildId3());
@@ -348,7 +352,8 @@ public class AddParentController implements Initializable {
         ObservableList<Student> students = getStudentListFromDB();
 
         locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new StringListCell());
+        locationComboBox.setCellFactory(string -> new LocationListCell());
+        locationComboBox.setConverter(locationStringConverter);
 
         child1ComboBox.setItems(students);
         child1ComboBox.setButtonCell(new StudentListCell());

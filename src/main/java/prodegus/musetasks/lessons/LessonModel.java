@@ -17,12 +17,16 @@ public class LessonModel {
     public static final int CATEGORY_COURSE = 3;
     public static final int CATEGORY_WORKGROUP = 4;
 
-    public static final int REPEAT_PERIOD_OFF = 0;
-    public static final int REPEAT_PERIOD_DAY = 1;
-    public static final int REPEAT_PERIOD_WEEK = 2;
-    public static final int REPEAT_PERIOD_MONTH = 3;
-    public static final int REPEAT_PERIOD_YEAR = 4;
-    
+    public static final int REPEAT_OFF = 0;
+    public static final int REPEAT_WEEKLY = 1;
+    public static final int REPEAT_2WEEKS = 2;
+    public static final int REPEAT_3WEEKS = 3;
+    public static final int REPEAT_4WEEKS = 4;
+    public static final int REPEAT_5WEEKS = 5;
+    public static final int REPEAT_6WEEKS = 6;
+    public static final int REPEAT_CUSTOM = 7;
+
+    public static final int UNKNOWN_WEEKDAY = 0;
     public static final int MONDAY = 1;
     public static final int TUESDAY = 2;
     public static final int WEDNESDAY = 3;
@@ -30,16 +34,13 @@ public class LessonModel {
     public static final int FRIDAY = 5;
     public static final int SATURDAY = 6;
 
-    public static final ObservableList<String> REPEAT_INTERVALS_DAY = FXCollections.observableArrayList(
-            "jeden", "jeden 2.", "jeden 3.", "jeden 4.", "jeden 5.", "jeden 6.", "jeden 7.", "jeden 8.", "jeden 9.", "jeden 10.");
-    
-    public static final ObservableList<String> REPEAT_INTERVALS_WEEK = FXCollections.observableArrayList(
-            "jede", "jede 2.", "jede 3.", "jede 4.", "jede 5.", "jede 6.", "jede 7.", "jede 8.", "jede 9.", "jede 10.");
-
-    public static final ObservableList<String> REPEAT_INTERVALS_MONTH = REPEAT_INTERVALS_DAY;
-
-    public static final ObservableList<String> REPEAT_INTERVALS_YEAR = FXCollections.observableArrayList(
-            "jedes", "jedes 2.", "jedes 3.", "jedes 4.", "jedes 5.", "jedes 6.", "jedes 7.", "jedes 8.", "jedes 9.", "jedes 10.");
+    public static final int STATUS_DRAFT = 0;
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_MEET = 2;
+    public static final int STATUS_TRIAL = 3;
+    public static final int STATUS_ILL = 4;
+    public static final int STATUS_HOLIDAY = 5;
+    public static final int STATUS_RESIGNED = 6;
 
     public static ObservableList<Lesson> getLessonListFromDB() {
         ObservableList<Lesson> lessons = FXCollections.observableArrayList();
@@ -80,7 +81,7 @@ public class LessonModel {
     }
 
     public static void deleteLesson(Lesson lesson) {
-        delete(LESSON_TABLE, lesson.id());
+        delete(LESSON_TABLE, lesson.getId());
     }
 
     public static void updateLesson(Lesson lesson, int id) {
@@ -104,37 +105,36 @@ public class LessonModel {
         return id;
     }
 
-    public static int repeatInterFromString(String interval) {
-        if (interval == null) return 0;
-        return switch(interval) {
-            case "jede", "jeden", "jedes" -> 1;
-            case "jede 2.", "jeden 2.", "jedes 2." -> 2;
-            case "jede 3.", "jeden 3.", "jedes 3." -> 3;
-            case "jede 4.", "jeden 4.", "jedes 4." -> 4;
-            case "jede 5.", "jeden 5.", "jedes 5." -> 5;
-            case "jede 6.", "jeden 6.", "jedes 6." -> 6;
-            case "jede 7.", "jeden 7.", "jedes 7." -> 7;
-            case "jede 8.", "jeden 8.", "jedes 8." -> 8;
-            case "jede 9.", "jeden 9.", "jedes 9." -> 9;
-            case "jede 10.", "jeden 10.", "jedes 10." -> 10;
-            default -> 0;
+    public static int repeatModeFromString(String repeatMode) {
+        if (repeatMode == null) return REPEAT_OFF;
+        return switch(repeatMode) {
+            case "jede Woche" -> REPEAT_WEEKLY;
+            case "jede 2. Woche" -> REPEAT_2WEEKS;
+            case "jede 3. Woche" -> REPEAT_3WEEKS;
+            case "jede 4. Woche" -> REPEAT_4WEEKS;
+            case "jede 5. Woche" -> REPEAT_5WEEKS;
+            case "jede 6. Woche" -> REPEAT_6WEEKS;
+            case "individuelle Termine" -> REPEAT_CUSTOM;
+            default -> REPEAT_OFF;
         };
     }
 
-
-    public static int repeatPeriodFromString(String period) {
-        if (period == null) return REPEAT_PERIOD_OFF;
-        return switch(period) {
-            case "Tag" -> REPEAT_PERIOD_DAY;
-            case "Woche" -> REPEAT_PERIOD_WEEK;
-            case "Monat" -> REPEAT_PERIOD_MONTH;
-            case "Jahr" -> REPEAT_PERIOD_YEAR;
-            default -> REPEAT_PERIOD_OFF;
+    public static String repeatStringFromInt(int repeat) {
+        return switch(repeat) {
+            case REPEAT_OFF -> "einmaliger Termin";
+            case REPEAT_WEEKLY -> "jede Woche";
+            case REPEAT_2WEEKS -> "jede 2. Woche";
+            case REPEAT_3WEEKS -> "jede 3. Woche";
+            case REPEAT_4WEEKS -> "jede 4. Woche";
+            case REPEAT_5WEEKS -> "jede 5. Woche";
+            case REPEAT_6WEEKS -> "jede 6. Woche";
+            case REPEAT_CUSTOM -> "individuelle Termine";
+            default -> "-";
         };
     }
-    
+
     public static int weekdayFromString(String weekday) {
-        if (weekday == null) return 0;
+        if (weekday == null) return UNKNOWN_WEEKDAY;
         return switch(weekday) {
             case "Montag" -> MONDAY;
             case "Dienstag" -> TUESDAY;
@@ -142,12 +142,8 @@ public class LessonModel {
             case "Donnerstag" -> THURSDAY;
             case "Freitag" -> FRIDAY;
             case "Samstag" -> SATURDAY;
-            default -> 0;
+            default -> UNKNOWN_WEEKDAY;
         };
-    }
-
-    public static int statusFromString(String statusString) {
-        return 0;
     }
 
 }

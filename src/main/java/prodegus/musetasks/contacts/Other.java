@@ -49,4 +49,9 @@ public class Other extends Contact {
         return result.toString();
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
 }

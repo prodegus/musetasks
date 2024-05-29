@@ -297,7 +297,7 @@ public class Contact {
         columns.add("firstname");
         columns.add("category");
         if (this.getCustomerId() != 0) columns.add("customerid");
-        if (!this.getLocation().isBlank()) columns.add("location");
+        if (this.getLocation() != null) columns.add("location");
         if (!this.getStreet().isBlank()) columns.add("street");
         if (this.getPostalCode() != 0) columns.add("postalcode");
         if (!this.getCity().isBlank()) columns.add("city");
@@ -318,7 +318,7 @@ public class Contact {
         values.add(this.getFirstName());
         values.add(String.valueOf(this.getCategory()));
         if (this.getCustomerId() != 0) values.add(String.valueOf(this.getCustomerId()));
-        if (!this.getLocation().isBlank()) values.add(this.getLocation());
+        if (this.getLocation() != null) values.add(this.getLocation());
         if (!this.getStreet().isBlank()) values.add(this.getStreet());
         if (this.getPostalCode() != 0) values.add(String.valueOf(this.getPostalCode()));
         if (!this.getCity().isBlank()) values.add(this.getCity());
@@ -421,5 +421,10 @@ public class Contact {
 
     public String getPostalCodeCity() {
         return (getPostalCode() == 0 ? "" : getPostalCode() + " ") + getCity();
+    }
+
+    @Override
+    public String toString() {
+        return this.formalName();
     }
 }

@@ -1,8 +1,9 @@
 package prodegus.musetasks.lessons;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,20 +11,30 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
+import prodegus.musetasks.school.Location;
+import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.StudentListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.StudentModel.getStudentListFromDB;
 import static prodegus.musetasks.contacts.StudentModel.studentStringConverter;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
 import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.school.LocationModel.fromString;
+import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
+import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.DateTime.times;
+import static prodegus.musetasks.utils.DateTime.toTime;
 
 public class AddSingleController implements Initializable {
 
@@ -34,19 +45,12 @@ public class AddSingleController implements Initializable {
     @FXML private ComboBox<Teacher> teacherComboBox;
     @FXML private ComboBox<String> instrumentComboBox;
     @FXML private ComboBox<String> durationComboBox;
-    @FXML private ComboBox<String> locationComboBox;
+    @FXML private ComboBox<Location> locationComboBox;
     @FXML private ComboBox<String> roomComboBox;
-    @FXML private CheckBox repeatCheckBox;
-    @FXML private ComboBox<String> repeatInterComboBox;
-    @FXML private ComboBox<String> repeatPeriodComboBox;
+    @FXML private ComboBox<String> repeatComboBox;
     @FXML private ComboBox<String> weekdayComboBox;
     @FXML private ComboBox<String> timeComboBox;
-    @FXML private RadioButton repeatEndRadioButton;
-    @FXML private DatePicker repeatEndDatePicker;
-    @FXML private RadioButton repeatTimesRadioButton;
-    @FXML private ComboBox<String> repeatTimesComboBox;
     @FXML private DatePicker startDatePicker;
-    @FXML private CheckBox endDateCheckBox;
     @FXML private DatePicker endDatePicker;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private DatePicker statusFromDatePicker;
@@ -62,85 +66,33 @@ public class AddSingleController implements Initializable {
     }
 
     @FXML
-    void submit(ActionEvent event) {
+    void confirm(ActionEvent event) {
         Lesson lesson = new Lesson();
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
 
         boolean draft = draftCheckBox.isSelected();
         int category = CATEGORY_SINGLE;
+        String lessonName = lessonNameTextField.getText();
         Student student = studentComboBox.getValue();
         Teacher teacher = teacherComboBox.getValue();
-        String instrument = instrumentComboBox.getValue();
+        String instrument = instrumentComboBox.getValue() == null ? "Kein Instrument" : instrumentComboBox.getValue();
         String durationString = durationComboBox.getValue();
-        String durationMinutes = durationString.replaceAll("[^0-9]", "");
-        int duration = Integer.parseInt(durationMinutes);
-        String location = locationComboBox.getValue();
+        Location location = locationComboBox.getValue();
         String room = roomComboBox.getValue();
-        boolean repeatSelected = repeatCheckBox.isSelected();
-        String repeatInterString = repeatInterComboBox.getValue();
-        String repeatPeriodString = repeatPeriodComboBox.getValue();
-
-        int weekday = weekdayFromString(weekdayComboBox.getValue());
-        String time = timeComboBox.getValue();
-        boolean repeatEndSelected = repeatEndRadioButton.isSelected();
-        String repeatEnd = repeatEndDatePicker.getValue().toString();
-        boolean repeatTimesSelected = repeatTimesRadioButton.isSelected();
-        int repeatTimes = Integer.parseInt(String.valueOf(repeatTimesComboBox.getValue().charAt(0)));
-        String startDate = startDatePicker.getValue().toString();
-        boolean endDateSelected = endDateCheckBox.isSelected();
-        String endDate = endDatePicker.getValue().toString();
-        String statusString = statusComboBox.getValue();
-        int status = statusFromString(statusString);
-        String statusFromDate = statusFromDatePicker.getValue().toString();
-        String statusToDate = statusToDatePicker.getValue().toString();
-        String lessonName = lessonNameTextField.getText().isBlank() ? 
-                student.name() + " (" + instrument + ", Einzel, " + durationMinutes + " min)" :
-                lessonNameTextField.getText();
+        int repeat = repeatComboBox.getSelectionModel().getSelectedIndex();
+        System.out.println("repeatComboBox.getSelectionModel().getSelectedIndex(): " + repeatComboBox.getSelectionModel().getSelectedIndex());
+        System.out.println("repeatStringFromInt(repeat): " + repeatStringFromInt(repeat));
+        int weekday = weekdayComboBox.getSelectionModel().getSelectedIndex();
+        String timeString = timeComboBox.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        LocalDate endDate = endDatePicker.getValue();
+        int status = statusComboBox.getSelectionModel().getSelectedIndex();
+        LocalDate statusFrom = statusFromDatePicker.getValue();
+        LocalDate statusTo = statusToDatePicker.getValue();
 
         lesson.setLessonName(lessonName);
         lesson.setCategory(category);
-
-        if (instrument == null) {
-            invalidData = true;
-            errorMessage.append("- Bitte Instrument auswählen\n");
-        } else {
-            lesson.setInstrument(instrument);
-        }
-
-        if (teacher == null) {
-            invalidData = true;
-            errorMessage.append("- Bitte Lehrer auswählen\n");
-        } else {
-            lesson.setTeacherId(teacher.getId());
-        }
-
-        if (location == null) {
-            invalidData = true;
-            errorMessage.append("- Bitte Standort auswählen\n");
-        } else {
-            lesson.setLocation(location);
-        }
-
-        if (room == null && !draft) {
-            invalidData = true;
-            errorMessage.append("- Bitte Raum auswählen\n");
-        } else {
-            lesson.setRoom(room);
-        }
-
-        lesson.setRepeat(repeatPeriodFromString(repeatPeriodString));
-        lesson.setRepeatInter(repeatInterFromString(repeatInterString));
-        lesson.setRepeatTimes(repeatTimes);
-        lesson.setRepeatEnd(repeatEnd);
-        lesson.setWeekday(weekday);
-        lesson.setTime(time);
-        lesson.setDuration(duration);
-        lesson.setStartDate(startDate);
-        lesson.setEndDate(endDate);
-        lesson.setStatus(status);
-        lesson.setStatusFrom(statusFromDate);
-        lesson.setStatusTo(statusToDate);
 
         if (student == null) {
             invalidData = true;
@@ -149,11 +101,80 @@ public class AddSingleController implements Initializable {
             lesson.setStudentId1(student.getId());
         }
 
+        if (teacher == null) {
+            invalidData = !draft;
+            errorMessage.append(draft ? "" : "- Bitte Lehrer auswählen\n");
+        } else {
+            lesson.setTeacherId(teacher.getId());
+        }
+
+        if (instrument.equals("Kein Instrument")) {
+            invalidData = !draft;
+            errorMessage.append(draft ? "" : "- Bitte Instrument auswählen\n");
+        } else {
+            lesson.setInstrument(instrument);
+        }
+
+        lesson.setDuration(Integer.parseInt(durationString.replaceAll("[^0-9]", "")));
+
+        if (location == null) {
+            invalidData = !draft;
+            errorMessage.append(draft ? "" : "- Bitte Standort auswählen\n");
+        } else {
+            lesson.setLocationId(location.getId());
+        }
+
+        if (room == null) {
+            invalidData = !draft;
+            errorMessage.append(draft ? "" : "- Bitte Raum auswählen\n");
+        } else {
+            lesson.setRoom(room);
+        }
+
+        lesson.setRepeat(repeat);
+        lesson.setWeekday(weekday);
+        lesson.setTime(toTime(timeString));
+
+        if (startDate == null) {
+            invalidData = !draft;
+            errorMessage.append(draft ? "" : "- Bitte gültiges Start-Datum eingeben\n");
+        } else {
+            lesson.setStartDate(startDate);
+        }
+
+        lesson.setEndDate(endDate == null ? LocalDate.MAX : endDate);
+        lesson.setStatus(status);
+        lesson.setStatusFrom(statusFrom == null ? LocalDate.MIN : statusFrom);
+        lesson.setStatusTo(statusTo == null ? LocalDate.MAX : statusTo);
+
+        if (invalidData) {
+            PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" + errorMessage);
+            return;
+        }
+
+        if (!editMode) {
+            insertLesson(lesson);
+        } else {
+            updateLesson(lesson, id);
+        }
+        stageOf(event).close();
+    }
+
+    private String createLessonName(String studentName, String instrument, String durationMinutes, boolean draft) {
+        if (!lessonNameTextField.getText().isBlank()) return lessonNameTextField.getText();
+        StringBuilder lessonName = new StringBuilder();
+        if (draft) lessonName.append("[Entwurf] ");
+        lessonName.append(studentName);
+        lessonName.append(" (");
+        lessonName.append(String.join(", ", instrument, "Einzel", durationMinutes + "min)"));
+        return lessonName.toString();
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        draftCheckBox.setSelected(false);
 
         studentComboBox.setItems(getStudentListFromDB());
         studentComboBox.setButtonCell(new StudentListCell());
@@ -169,35 +190,19 @@ public class AddSingleController implements Initializable {
         instrumentComboBox.setButtonCell(new StringListCell());
         instrumentComboBox.setCellFactory(string -> new StringListCell());
 
-        repeatCheckBox.selectedProperty().addListener(selected -> {
-            repeatInterComboBox.setDisable(!repeatCheckBox.isSelected());
-            repeatPeriodComboBox.setDisable(!repeatCheckBox.isSelected());
-            weekdayComboBox.setDisable(!repeatCheckBox.isSelected());
-            timeComboBox.setDisable(!repeatCheckBox.isSelected());
-            repeatEndRadioButton.setDisable(!repeatCheckBox.isSelected());
-            repeatEndDatePicker.setDisable(!repeatCheckBox.isSelected());
-            repeatTimesRadioButton.setDisable(!repeatCheckBox.isSelected());
-            repeatTimesComboBox.setDisable(!repeatCheckBox.isSelected());
-        });
+        durationComboBox.setItems(FXCollections.observableArrayList("30 Minuten", "45 Minuten", "60 Minuten", "90 Minuten", "120 Minuten", "eingeben..."));
+        durationComboBox.getSelectionModel().select(0);
 
-        repeatInterComboBox.setItems(REPEAT_INTERVALS_WEEK);
-        repeatInterComboBox.getSelectionModel().select(0);
-        repeatInterComboBox.setCellFactory(string -> new StringListCell());
+        locationComboBox.setItems(SCHOOL_LOCATIONS);
+        locationComboBox.setCellFactory(string -> new LocationListCell());
+        locationComboBox.setConverter(locationStringConverter);
+        locationComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
+                -> roomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
 
-        repeatPeriodComboBox.setItems(FXCollections.observableArrayList("Tag", "Woche", "Monat", "Jahr"));
-        repeatPeriodComboBox.getSelectionModel().selectedItemProperty().addListener(item -> {
-            switch (repeatPeriodComboBox.getValue()) {
-                case "Tag" -> repeatInterComboBox.setItems(REPEAT_INTERVALS_DAY);
-                case "Monat" -> repeatInterComboBox.setItems(REPEAT_INTERVALS_MONTH);
-                case "Jahr" -> repeatInterComboBox.setItems(REPEAT_INTERVALS_YEAR);
-                default -> repeatInterComboBox.setItems(REPEAT_INTERVALS_WEEK);
-            }
-        });
-
-        weekdayComboBox.setItems(FXCollections.observableArrayList("Montag", "Dienstag", "Mittwoch", "Donnerstag",
+        weekdayComboBox.setItems(FXCollections.observableArrayList("unbekannt", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
                 "Freitag", "Samstag"));
 
-        repeatTimesComboBox.setItems(FXCollections.observableArrayList("2 mal", "3 mal", "4 mal", "5 mal", "6 mal",
-                "7 mal", "8 mal", "9 mal", "10 mal", "11 mal", "12 mal"));
+        timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
+
     }
 }

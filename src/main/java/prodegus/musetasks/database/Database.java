@@ -17,6 +17,10 @@ public class Database {
     public static final String LESSON_TABLE = "mtlessons";
     public static final String APPOINTMENT_TABLE = "mtappointments";
     public static final String TASK_TABLE = "mttasks";
+    public static final String LOCATION_TABLE = "mtlocations";
+    public static final String INSTRUMENT_TABLE = "mtinstruments";
+    public static final String HOLIDAY_TABLE = "mtholidays";
+
     private static final String CONTACT_COLUMNS =
             "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
             "    lastname    TEXT," +
@@ -111,9 +115,37 @@ public class Database {
         }
     }
 
-    public static void createContactTable(String dbPath) {
+    public static void createInstrumentTable(String dbPath) {
         String sql =
-                "CREATE TABLE mtcontacts (" + CONTACT_COLUMNS + ")";
+                "CREATE TABLE mtinstruments (" +
+                "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    instrument  TEXT" +
+                ")";
+
+        try (Connection conn = connect(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createLocationTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtlocations (" +
+                "    id     INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    name   TEXT," +
+                "    room1  TEXT," +
+                "    room2  TEXT," +
+                "    room3  TEXT," +
+                "    room4  TEXT," +
+                "    room5  TEXT," +
+                "    room6  TEXT," +
+                "    room7  TEXT," +
+                "    room8  TEXT," +
+                "    room9  TEXT," +
+                "    room10 TEXT" +
+                ")";
 
         try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
@@ -205,20 +237,17 @@ public class Database {
                 "    category    INTEGER," +
                 "    instrument  TEXT," +
                 "    teacherid   INTEGER REFERENCES mtteachers (id) ON DELETE SET NULL," +
-                "    location    TEXT," +
+                "    locationid  INTEGER REFERENCES mtlocations (id) ON DELETE SET NULL," +
                 "    room        TEXT," +
                 "    repeat      INTEGER," +
-                "    repeatinter INTEGER," +
-                "    repeattimes INTEGER," +
-                "    repeatend   TEXT," +
-                "    weekday     TEXT," +
-                "    time        TEXT," +
+                "    weekday     INTEGER," +
+                "    time        INTEGER," +
                 "    duration    INTEGER," +
-                "    startdate   TEXT," +
-                "    enddate     TEXT," +
+                "    startdate   INTEGER," +
+                "    enddate     INTEGER," +
                 "    status      INTEGER," +
-                "    statusfrom  TEXT," +
-                "    statusto    TEXT," +
+                "    statusfrom  INTEGER," +
+                "    statusto    INTEGER," +
                 "    studentid1  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
                 "    studentid2  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
                 "    studentid3  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
@@ -243,9 +272,13 @@ public class Database {
         String sql =
                 "CREATE TABLE mtappointments (" +
                 "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
-                "    date        TEXT," +
-                "    time        TEXT," +
+                "    date        INTEGER," +
+                "    time        INTEGER," +
+                "    duration    INTEGER," +
                 "    lessonid    INTEGER REFERENCES mtlessons (id) ON DELETE SET NULL," +
+                "    dateold     INTEGER," +
+                "    category    INTEGER," +
+                "    status      INTEGER," +
                 "    description TEXT" +
                 ")";
 
@@ -266,6 +299,22 @@ public class Database {
                 "    comment     TEXT," +
                 "    status      TEXT" +
                 ")";
+
+        try (Connection conn = connect(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createHolidayTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtholidays (" +
+                        "    description TEXT," +
+                        "    start       INT," +
+                        "    end         INT," +
+                        ")";
 
         try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
@@ -344,7 +393,11 @@ public class Database {
     }
 
     public static void updateMultiple(String table, int id, String columnsValues) {
-        String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE id = " + id;
+        updateMultiple(table, columnsValues, new Filter("id", String.valueOf(id)));
+    }
+
+    public static void updateMultiple(String table, String columnsValues, Filter filter) {
+        String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE " + filter.toSQLString();
         System.out.println(sql);
 
         try (Connection connection = connect();
@@ -355,8 +408,12 @@ public class Database {
         }
     }
 
-    public static void delete(String table, String id) {
-        String sql = "DELETE FROM " + table + " WHERE id = " + id;
+    public static void delete(String table, int id) {
+        delete(table, new Filter("id", String.valueOf(id)));
+    }
+
+    public static void delete(String table, Filter filter) {
+        String sql = "DELETE FROM " + table + " WHERE " + filter.toSQLString();
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
@@ -367,7 +424,8 @@ public class Database {
     }
 
     public static void insert(String table, String columns, String values) {
-        String sql = String.join(" ", "INSERT INTO", table, "(", columns, ") VALUES (", values, ")");
+        String sql = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")";
+        System.out.println(sql);
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {

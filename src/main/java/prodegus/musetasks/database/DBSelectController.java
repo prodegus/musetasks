@@ -50,7 +50,10 @@ public class DBSelectController {
                 createLessonTable(dbPath);
                 createAppointmentTable(dbPath);
                 createTaskTable(dbPath);
+                createHolidayTable(dbPath);
                 addConstraintsStudentTable(dbPath);
+                createLocationTable(dbPath);
+                createInstrumentTable(dbPath);
                 break;
         }
         saveDbPath(dbPath);

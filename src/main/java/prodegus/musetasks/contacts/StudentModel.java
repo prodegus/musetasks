@@ -14,11 +14,14 @@ public class StudentModel {
     public static StringConverter<Student> studentStringConverter = new StringConverter<Student>() {
         @Override
         public String toString(Student student) {
-            return student.getLastName() + ", " + student.getFirstName();
+            if (student == null) return "";
+            return student.formalName();
         }
 
         @Override
         public Student fromString(String string) {
+            for (Student student : getStudentListFromDB())
+                if (student.formalName().equals(string)) return student;
             return null;
         }
     };

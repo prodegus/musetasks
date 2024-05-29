@@ -18,7 +18,10 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -217,7 +220,7 @@
                               <Font size="14.0" />
                            </font>
                         </TitledPane>
-                        <Button mnemonicParsing="false" onAction="#resetfilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
+                        <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -284,19 +287,19 @@
                <children>
                   <AnchorPane prefHeight="50.0" prefWidth="631.0">
                      <children>
-                        <Label fx:id="contactName1" alignment="BOTTOM_LEFT" text="Michael Mustermann">
+                        <Label fx:id="lessonInfoTitle" alignment="BOTTOM_LEFT" text="Einzel-Unterricht">
                            <font>
                               <Font size="34.0" />
                            </font>
                         </Label>
                         <VBox AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
                            <children>
-                              <Label fx:id="contactStreet1" text="Hülsenbuscher Str. 18">
+                              <Label text="Lehrer:">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="contactCity1" text="50679 Beerenstadt">
+                              <Label fx:id="contactCity1" text="Mustafa Schleckenstein">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -305,7 +308,7 @@
                         </VBox>
                      </children>
                   </AnchorPane>
-                  <Label fx:id="contactCategory1" text="Schüler" VBox.vgrow="NEVER">
+                  <Label fx:id="lessonInfoSubtitle" text="Fritz Müller / Gitarre / 30 Min / Lohmar (Studio)" VBox.vgrow="NEVER">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -313,13 +316,211 @@
                         <Insets bottom="30.0" />
                      </VBox.margin>
                   </Label>
-                  <StackPane VBox.vgrow="NEVER" />
+                  <StackPane>
+                     <children>
+                        <HBox fx:id="singleInfo" spacing="20.0">
+                           <children>
+                              <GridPane minWidth="300.0" HBox.hgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="140.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="40.0" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Schüler:" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Instrument:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Unterrichtslänge:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="singleInfoStudentName" text="Fritz Müller" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="singleInfoInstrument" text="Gitarre" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="singleInfoDuration" text="30 Minuten" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Standort/Raum:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="singleInfoLocationRoom" text="Lohmar (Studio)" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Unterrichtstermin:" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="singleInfoStudentName1" text="montags 13:30" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Status:" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                       <children>
+                                          <Label fx:id="singleInfoStatus" text="Probemonat">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="singleInfoStatusDate" text="01.05.2024 - 31.05.2024">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </GridPane>
+                              <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="-Infinity" prefWidth="81.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="232.0" minWidth="-Infinity" prefWidth="224.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Beginn:" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="singleInfoStudentName2" text="01.05.2024" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="Ende:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="singleInfoStudentName21" text="ungekündigt" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="-Infinity" prefWidth="161.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="232.0" minWidth="-Infinity" prefWidth="148.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Historie:" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="01.01.2024 - 01.05.2024:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="singleInfoStudentName211" text="Probemonat" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                   <Separator>
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Separator>
-                  <VBox spacing="10.0" />
+                  <Label fx:id="aptLabel" text="Termine im 1. Halbjahr 2024:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="aptTableView" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="aptColumnDate" prefWidth="112.0" text="Datum" />
+                      <TableColumn fx:id="aptColumnTime" prefWidth="107.0" text="Uhrzeit" />
+                        <TableColumn fx:id="aptColumnStatus" prefWidth="111.0" text="Status" />
+                        <TableColumn fx:id="aptColumnNote" prefWidth="285.0" text="Bemerkungen" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#aptShowPreviousHalfYear" prefWidth="160.0" text="&lt;- Voriges Halbjahr">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#aptEdit" prefWidth="160.0" text="Bearbeiten">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#aptForwardTo" prefWidth="160.0" text="Senden an ...">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#aptNextHalfYear" prefWidth="160.0" text="Nächstes Halbjahr -&gt;">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />

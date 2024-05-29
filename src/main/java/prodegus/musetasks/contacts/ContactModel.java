@@ -88,7 +88,7 @@ public class ContactModel {
     }
 
     public static void deleteContact(Contact contact) {
-        delete(contact.table(), contact.id());
+        delete(contact.table(), contact.getId());
     }
 
     public static void addContactsFromXLSToDB(File file, String tableName) {
