@@ -12,14 +12,17 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import prodegus.musetasks.database.Database;
+import prodegus.musetasks.school.Holiday;
 import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.PopupWindow;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.school.HolidayModel.insertHoliday;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.ui.StageFactories.*;
 
@@ -101,15 +104,101 @@ public class LoginController implements Initializable {
                 stage.showAndWait();
         }
 
-        // Enter School Parameters (Locations / Rooms, Instruments etc..)
-        insert(INSTRUMENT_TABLE, "instrument", "Gitarre");
-        insert(INSTRUMENT_TABLE, "instrument", "Klavier");
-        insert(INSTRUMENT_TABLE, "instrument", "Gesang");
-        insert(INSTRUMENT_TABLE, "instrument", "E-Bass");
-        insert(INSTRUMENT_TABLE, "instrument", "Schlagzeug");
-        insert(INSTRUMENT_TABLE, "instrument", "Violine");
-        insert(INSTRUMENT_TABLE, "instrument", "Saxofon");
-        insert(INSTRUMENT_TABLE, "instrument", "Klarinette");
+        // Enter school parameters (locations / rooms, instruments etc..)
+        if (isEmptyTable(INSTRUMENT_TABLE)) {
+            insert(INSTRUMENT_TABLE, "instrument", "'Gitarre'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Klavier'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Gesang'");
+            insert(INSTRUMENT_TABLE, "instrument", "'E-Bass'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Schlagzeug'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Violine'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Saxofon'");
+            insert(INSTRUMENT_TABLE, "instrument", "'Klarinette'");
+        }
+        if (isEmptyTable(LOCATION_TABLE)) {
+            insert(LOCATION_TABLE, "name, room1, room2, room3", "'Lohmar', 'Lokal', 'Studio', 'Büro'");
+            insert(LOCATION_TABLE, "name, room1, room2, room3, room4, room5", "'Gummersbach', 'R 110', 'R 114', 'R 122', 'R 210', 'R 212'");
+            insert(LOCATION_TABLE, "name, room1, room2", "'Meckenheim', 'OG', 'UG'");
+        }
+
+        // Enter/load regional holidays
+        if (isEmptyTable(HOLIDAY_TABLE)) {
+            // 2023
+            insertHoliday(new Holiday("Weihnachtsferien", LocalDate.of(2023, 12, 21), LocalDate.of(2024, 1, 5)));
+
+            // 2024
+            insertHoliday(new Holiday("Neujahrstag", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
+            insertHoliday(new Holiday("Osterferien", LocalDate.of(2024, 3, 25), LocalDate.of(2024, 4, 6)));
+            insertHoliday(new Holiday("Karfreitag", LocalDate.of(2024, 3, 29), LocalDate.of(2024, 3, 29)));
+            insertHoliday(new Holiday("Ostermontag", LocalDate.of(2024, 4, 1), LocalDate.of(2024, 4, 1)));
+            insertHoliday(new Holiday("Tag der Arbeit", LocalDate.of(2024, 5, 1), LocalDate.of(2024, 5, 1)));
+            insertHoliday(new Holiday("Christi Himmelfahrt", LocalDate.of(2024, 5, 9), LocalDate.of(2024, 5, 9)));
+            insertHoliday(new Holiday("Pfingstmontag", LocalDate.of(2024, 5, 20), LocalDate.of(2024, 5, 20)));
+            insertHoliday(new Holiday("Pfingstferien", LocalDate.of(2024, 5, 21), LocalDate.of(2024, 5, 21)));
+            insertHoliday(new Holiday("Fronleichnam", LocalDate.of(2024, 5, 21), LocalDate.of(2024, 5, 21)));
+            insertHoliday(new Holiday("Sommerferien", LocalDate.of(2024, 7, 8), LocalDate.of(2024, 8, 20)));
+            insertHoliday(new Holiday("Tag der deutschen Einheit", LocalDate.of(2024, 10, 3), LocalDate.of(2024, 10, 3)));
+            insertHoliday(new Holiday("Herbstferien", LocalDate.of(2024, 10, 14), LocalDate.of(2024, 10, 26)));
+            insertHoliday(new Holiday("Allerheiligen", LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 1)));
+            insertHoliday(new Holiday("Weihnachtsferien", LocalDate.of(2024, 12, 23), LocalDate.of(2025, 1, 6)));
+            insertHoliday(new Holiday("1. Weihnachtsfeiertag", LocalDate.of(2024, 12, 25), LocalDate.of(2024, 12, 25)));
+            insertHoliday(new Holiday("2. Weihnachtsfeiertag", LocalDate.of(2024, 12, 26), LocalDate.of(2024, 12, 26)));
+
+            // 2025
+            insertHoliday(new Holiday("Neujahrstag", LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 1)));
+            insertHoliday(new Holiday("Osterferien", LocalDate.of(2025, 4, 14), LocalDate.of(2025, 4, 26)));
+            insertHoliday(new Holiday("Karfreitag", LocalDate.of(2025, 4, 18), LocalDate.of(2025, 4, 18)));
+            insertHoliday(new Holiday("Ostermontag", LocalDate.of(2025, 4, 21), LocalDate.of(2025, 4, 21)));
+            insertHoliday(new Holiday("Tag der Arbeit", LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 1)));
+            insertHoliday(new Holiday("Christi Himmelfahrt", LocalDate.of(2025, 5, 29), LocalDate.of(2025, 5, 29)));
+            insertHoliday(new Holiday("Pfingstmontag", LocalDate.of(2025, 6, 9), LocalDate.of(2025, 6, 9)));
+            insertHoliday(new Holiday("Pfingstferien", LocalDate.of(2025, 6, 10), LocalDate.of(2025, 6, 10)));
+            insertHoliday(new Holiday("Fronleichnam", LocalDate.of(2025, 6, 19), LocalDate.of(2025, 6, 19)));
+            insertHoliday(new Holiday("Sommerferien", LocalDate.of(2025, 7, 14), LocalDate.of(2025, 8, 26)));
+            insertHoliday(new Holiday("Tag der deutschen Einheit", LocalDate.of(2025, 10, 3), LocalDate.of(2025, 10, 3)));
+            insertHoliday(new Holiday("Herbstferien", LocalDate.of(2025, 10, 13), LocalDate.of(2025, 10, 25)));
+            insertHoliday(new Holiday("Allerheiligen", LocalDate.of(2025, 11, 1), LocalDate.of(2025, 11, 1)));
+            insertHoliday(new Holiday("Weihnachtsferien", LocalDate.of(2025, 12, 22), LocalDate.of(2026, 1, 6)));
+            insertHoliday(new Holiday("1. Weihnachtsfeiertag", LocalDate.of(2025, 12, 25), LocalDate.of(2025, 12, 25)));
+            insertHoliday(new Holiday("2. Weihnachtsfeiertag", LocalDate.of(2025, 12, 26), LocalDate.of(2025, 12, 26)));
+
+            // 2026
+            insertHoliday(new Holiday("Neujahrstag", LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 1)));
+            insertHoliday(new Holiday("Osterferien", LocalDate.of(2026, 3, 30), LocalDate.of(2026, 4, 11)));
+            insertHoliday(new Holiday("Karfreitag", LocalDate.of(2026, 4, 3), LocalDate.of(2026, 4, 3)));
+            insertHoliday(new Holiday("Ostermontag", LocalDate.of(2026, 4, 6), LocalDate.of(2026, 4, 6)));
+            insertHoliday(new Holiday("Tag der Arbeit", LocalDate.of(2026, 5, 1), LocalDate.of(2026, 5, 1)));
+            insertHoliday(new Holiday("Christi Himmelfahrt", LocalDate.of(2026, 5, 14), LocalDate.of(2026, 5, 14)));
+            insertHoliday(new Holiday("Pfingstmontag", LocalDate.of(2026, 5, 25), LocalDate.of(2026, 5, 25)));
+            insertHoliday(new Holiday("Pfingstferien", LocalDate.of(2026, 5, 26), LocalDate.of(2026, 5, 26)));
+            insertHoliday(new Holiday("Fronleichnam", LocalDate.of(2026, 4, 6), LocalDate.of(2026, 4, 6)));
+            insertHoliday(new Holiday("Sommerferien", LocalDate.of(2026, 7, 20), LocalDate.of(2026, 9, 1)));
+            insertHoliday(new Holiday("Tag der deutschen Einheit", LocalDate.of(2026, 10, 3), LocalDate.of(2026, 10, 3)));
+            insertHoliday(new Holiday("Herbstferien", LocalDate.of(2026, 10, 17), LocalDate.of(2026, 10, 31)));
+            insertHoliday(new Holiday("Allerheiligen", LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 1)));
+            insertHoliday(new Holiday("Weihnachtsferien", LocalDate.of(2026, 12, 23), LocalDate.of(2027, 1, 6)));
+            insertHoliday(new Holiday("1. Weihnachtsfeiertag", LocalDate.of(2026, 12, 25), LocalDate.of(2026, 12, 25)));
+            insertHoliday(new Holiday("2. Weihnachtsfeiertag", LocalDate.of(2026, 12, 26), LocalDate.of(2026, 12, 26)));
+
+            // 2027
+            insertHoliday(new Holiday("Neujahrstag", LocalDate.of(2027, 1, 1), LocalDate.of(2027, 1, 1)));
+            insertHoliday(new Holiday("Osterferien", LocalDate.of(2027, 3, 22), LocalDate.of(2027, 4, 3)));
+            insertHoliday(new Holiday("Karfreitag", LocalDate.of(2027, 3, 26), LocalDate.of(2027, 3, 26)));
+            insertHoliday(new Holiday("Ostermontag", LocalDate.of(2027, 3, 29), LocalDate.of(2027, 3, 29)));
+            insertHoliday(new Holiday("Tag der Arbeit", LocalDate.of(2027, 5, 1), LocalDate.of(2027, 5, 1)));
+            insertHoliday(new Holiday("Christi Himmelfahrt", LocalDate.of(2027, 5, 6), LocalDate.of(2027, 5, 6)));
+            insertHoliday(new Holiday("Pfingstmontag", LocalDate.of(2027, 5, 17), LocalDate.of(2027, 5, 17)));
+            insertHoliday(new Holiday("Pfingstferien", LocalDate.of(2027, 5, 18), LocalDate.of(2027, 5, 18)));
+            insertHoliday(new Holiday("Fronleichnam", LocalDate.of(2027, 5, 27), LocalDate.of(2027, 5, 27)));
+            insertHoliday(new Holiday("Sommerferien", LocalDate.of(2027, 7, 19), LocalDate.of(2027, 8, 31)));
+            insertHoliday(new Holiday("Tag der deutschen Einheit", LocalDate.of(2027, 10, 3), LocalDate.of(2027, 10, 3)));
+            insertHoliday(new Holiday("Herbstferien", LocalDate.of(2027, 10, 23), LocalDate.of(2027, 11, 6)));
+            insertHoliday(new Holiday("Allerheiligen", LocalDate.of(2027, 11, 1), LocalDate.of(2027, 11, 1)));
+            insertHoliday(new Holiday("Weihnachtsferien", LocalDate.of(2027, 12, 24), LocalDate.of(2028, 1, 8)));
+            insertHoliday(new Holiday("1. Weihnachtsfeiertag", LocalDate.of(2027, 12, 25), LocalDate.of(2027, 12, 25)));
+            insertHoliday(new Holiday("2. Weihnachtsfeiertag", LocalDate.of(2027, 12, 26), LocalDate.of(2027, 12, 26)));
+        }
+
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace.fxml"));
         Stage stage = newStage(APP_NAME, loader);

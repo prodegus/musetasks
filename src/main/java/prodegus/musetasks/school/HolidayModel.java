@@ -11,15 +11,32 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
+import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
 import static prodegus.musetasks.database.Database.*;
 
 public class HolidayModel {
+
+    public static Appointment createHolidayAppointment(Holiday holiday) {
+        Appointment appointment = new Appointment();
+        appointment.setDate(holiday.getStart());
+        appointment.setDateOld(holiday.getEnd());
+        appointment.setCategory(CATEGORY_HOLIDAY);
+        appointment.setDescription(holiday.getDescription());
+        return appointment;
+    }
 
     public static boolean isHoliday(LocalDate date) {
         for (Holiday holiday : getHolidayListFromDB()) {
             if (!date.isBefore(holiday.getStart()) && !date.isAfter(holiday.getEnd())) return true;
         }
         return false;
+    }
+
+    public static Holiday getHoliday(LocalDate date) {
+        for (Holiday holiday : getHolidayListFromDB()) {
+            if (!date.isBefore(holiday.getStart()) && !date.isAfter(holiday.getEnd())) return holiday;
+        }
+        return null;
     }
 
     public static ObservableList<Holiday> getHolidayListFromDB() {

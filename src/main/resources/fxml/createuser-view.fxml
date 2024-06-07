@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.login.CreateUserController">
    <children>
       <GridPane maxWidth="400.0">
@@ -24,10 +23,10 @@
         </rowConstraints>
          <children>
             <Label text="Benutzername:" />
-            <Label text="Passwort:" GridPane.rowIndex="1" />
-            <Label text="Passwort wiederholen:" GridPane.rowIndex="2" />
             <TextField fx:id="userTextfield" GridPane.columnIndex="1" />
+            <Label text="Passwort:" GridPane.rowIndex="1" />
             <TextField fx:id="pwTextfield" prefHeight="25.0" prefWidth="247.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Passwort wiederholen:" GridPane.rowIndex="2" />
             <TextField fx:id="pwConfirmTextfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>

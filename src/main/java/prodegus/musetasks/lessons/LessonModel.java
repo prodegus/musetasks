@@ -67,9 +67,8 @@ public class LessonModel {
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                lesson.setAttributes(rs);
-            }
+            if (!rs.next()) return null;
+            lesson.setAttributes(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -268,7 +268,7 @@ public class Contact {
     public String formalName() { return this.getLastName() + ", " + this.getFirstName(); }
 
     public String shortName() {
-        return this.getFirstName() + " " + this.getLastName().charAt(0);
+        return this.getFirstName() + " " + this.getLastName().charAt(0) + ".";
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {

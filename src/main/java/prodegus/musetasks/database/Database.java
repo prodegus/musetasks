@@ -274,6 +274,8 @@ public class Database {
                 "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
                 "    date        INTEGER," +
                 "    time        INTEGER," +
+                "    locationid  INTEGER REFERENCES mtlocations (id) ON DELETE SET NULL," +
+                "    room        TEXT," +
                 "    duration    INTEGER," +
                 "    lessonid    INTEGER REFERENCES mtlessons (id) ON DELETE SET NULL," +
                 "    dateold     INTEGER," +
@@ -312,8 +314,8 @@ public class Database {
         String sql =
                 "CREATE TABLE mtholidays (" +
                         "    description TEXT," +
-                        "    start       INT," +
-                        "    end         INT," +
+                        "    start       INTEGER," +
+                        "    end         INTEGER" +
                         ")";
 
         try (Connection conn = connect(dbPath);

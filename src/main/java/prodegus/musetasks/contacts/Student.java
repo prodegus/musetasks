@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.ui.PopupWindow;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -447,9 +448,53 @@ public class Student extends Contact {
             updateContact(this, "parentid2", parentId);
         }
     }
+    
+    public void addLessonInDB(int lessonId) {
+        if (this.hasLesson(lessonId)) return;
 
-    private boolean hasParent(int parentId) {
+        if (this.getLessonId1() == 0) {
+            updateContact(this, "lessonid1", lessonId);
+            return;
+        }
+        if (this.getLessonId2() == 0) {
+            updateContact(this, "lessonid2", lessonId);
+            return;
+        }
+        if (this.getLessonId3() == 0) {
+            updateContact(this, "lessonid3", lessonId);
+            return;
+        }
+        PopupWindow.displayInformation("Einem Schüler können maximal drei Unterrichte zugewiesen werden!");
+    }
+
+    public void addTeacherInDB(int teacherId) {
+        if (this.hasTeacher(teacherId)) return;
+
+        if (this.getTeacherId1() == 0) {
+            updateContact(this, "teacherid1", teacherId);
+            return;
+        }
+        if (this.getTeacherId2() == 0) {
+            updateContact(this, "teacherid2", teacherId);
+            return;
+        }
+        if (this.getTeacherId3() == 0) {
+            updateContact(this, "teacherid3", teacherId);
+            return;
+        }
+        PopupWindow.displayInformation("Einem Schüler können maximal drei Lehrer zugewiesen werden!");
+    }
+
+    public boolean hasTeacher(int teacherId) {
+        return this.getTeacherId1() == teacherId || this.getTeacherId2() == teacherId || this.getTeacherId3() == teacherId;
+    }
+
+    public boolean hasParent(int parentId) {
         return this.getParentId1() == parentId || this.getParentId2() == parentId;
+    }
+
+    public boolean hasLesson(int lessonId) {
+        return this.getLessonId1() == lessonId || this.getLessonId2() == lessonId || this.getLessonId3() == lessonId;
     }
 
     public boolean hasTeacher(Teacher teacher) {

@@ -84,11 +84,6 @@ public class Parent extends Contact {
         return getStudentFromDB(getChildId1());
     }
 
-    public String child1name() {
-        if (this.getChildId1() == 0) return "";
-        return this.child1().name();
-    }
-
     public List<Student> children() {
         List<Student> children = new ArrayList<>();
         if (this.child1() != null) children.add(this.child1());
@@ -102,11 +97,6 @@ public class Parent extends Contact {
     public Student child2() {
         if (this.getChildId2() == 0) return null;
         return getStudentFromDB(getChildId2());
-    }
-
-    public String child2name() {
-        if (this.getChildId2() == 0) return "";
-        return this.child2().name();
     }
 
     public Student child3() {

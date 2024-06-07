@@ -487,7 +487,7 @@
                               </GridPane>
                            </children>
                         </HBox>
-                        <HBox fx:id="studentInfo" spacing="20.0">
+                        <HBox fx:id="studentInfo" spacing="20.0" visible="false">
                            <children>
                               <GridPane minWidth="300.0" HBox.hgrow="ALWAYS">
                                  <columnConstraints>
@@ -650,7 +650,7 @@
                               </GridPane>
                            </children>
                         </HBox>
-                        <HBox fx:id="parentInfo" layoutX="10.0" layoutY="10.0" spacing="10.0" visible="false">
+                        <HBox fx:id="parentInfo" layoutX="10.0" layoutY="10.0" spacing="10.0">
                            <children>
                               <GridPane HBox.hgrow="ALWAYS">
                                  <columnConstraints>

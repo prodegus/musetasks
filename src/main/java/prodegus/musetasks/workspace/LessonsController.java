@@ -19,6 +19,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
+import prodegus.musetasks.appointments.EditAppointmentController;
+import prodegus.musetasks.contacts.AddStudentController;
+import prodegus.musetasks.contacts.Contact;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.utils.HalfYear;
@@ -29,14 +32,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
 import static prodegus.musetasks.lessons.LessonModel.getLessonListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
-import static prodegus.musetasks.utils.DateTime.H_2024_1;
-import static prodegus.musetasks.utils.DateTime.asString;
+import static prodegus.musetasks.utils.DateTime.*;
 
 public class LessonsController implements Initializable {
 
@@ -90,6 +93,8 @@ public class LessonsController implements Initializable {
     @FXML private TableColumn<Appointment, String> aptColumnTime;
     @FXML private Label aptLabel;
     @FXML private TableView<Appointment> aptTableView;
+    @FXML private Button aptEditButton;
+    @FXML private Button aptForwardButton;
 
 
     private final ObservableList<Lesson> lessons = FXCollections.observableArrayList();
@@ -118,7 +123,8 @@ public class LessonsController implements Initializable {
 
     @FXML
     void aptEdit(ActionEvent event) {
-
+        if (selectedAppointment == null) return;
+        openEditAppointmentWindow(selectedAppointment);
     }
 
     @FXML
@@ -218,10 +224,23 @@ public class LessonsController implements Initializable {
     public void showLessonInfo(Lesson lesson) {
         aptTableView.setItems(lesson.appointments(selectedHalfYear.getStart(), selectedHalfYear.getEnd()));
     }
+
+    private void openEditAppointmentWindow(Appointment selectedAppointment) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editappointment-view.fxml"));
+        Stage stage = newStage("Termin bearbeiten", loader);
+        EditAppointmentController controller = loader.getController();
+        controller.initAppointment(selectedAppointment);
+        stage.showAndWait();
+        refreshAppointments();
+    }
     
     private void refreshLessons() {
         lessons.setAll(getLessonListFromDB());
         tableViewSelect(selectedTableView);
+    }
+
+    private void refreshAppointments() {
+        aptTableView.setItems(selectedLesson.appointments(selectedHalfYear.getStart(), selectedHalfYear.getEnd()));
     }
 
     private void showTableView(TableView<? extends Lesson> tableView) {
@@ -341,10 +360,10 @@ public class LessonsController implements Initializable {
         // Initialize lesson info
 
         // Initialize appointment TableView
-        aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
+        aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateInfo()));
+        aptColumnTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().timeInfo()));
         aptColumnNote.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         aptColumnStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().status()));
-        aptColumnTime.setCellValueFactory(cellData -> new SimpleStringProperty(asString(cellData.getValue().getTime())));
         aptLabel.setText("Termine im 1. Halbjahr 2024:");
 
 
@@ -353,8 +372,7 @@ public class LessonsController implements Initializable {
             public void handle(MouseEvent event) {
                 if (aptTableView.getSelectionModel().isEmpty()) return;
                 selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
-//                showLessonInfo(selectedLesson);
-//                lessonDetails.setVisible(true);
+                aptEditButton.setDisable(selectedAppointment.getCategory() == CATEGORY_HOLIDAY);
             }
         });
     }

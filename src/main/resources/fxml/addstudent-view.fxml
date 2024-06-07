@@ -39,6 +39,25 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Schülerdaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <CheckBox fx:id="prospectiveCheckBox" mnemonicParsing="false" text="Interessent" />
+                     </children>
+                  </VBox>
                   <VBox GridPane.rowIndex="1">
                      <children>
                         <Label text="Vorname" />
@@ -49,12 +68,6 @@
                      <children>
                         <Label text="Nachname" />
                         <TextField fx:id="lastNameTextField" prefHeight="30.0" />
-                     </children>
-                  </VBox>
-                  <VBox GridPane.rowIndex="7">
-                     <children>
-                        <Label text="Standort" />
-                        <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="136.0" promptText="auswählen" />
                      </children>
                   </VBox>
                   <VBox GridPane.rowIndex="3">
@@ -85,6 +98,12 @@
                         <DatePicker fx:id="birthDatePicker" prefHeight="30.0" />
                      </children>
                   </VBox>
+                  <VBox GridPane.rowIndex="7">
+                     <children>
+                        <Label text="Standort" />
+                        <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="136.0" promptText="auswählen" />
+                     </children>
+                  </VBox>
                   <HBox spacing="20.0" GridPane.rowIndex="9">
                      <children>
                         <VBox>
@@ -107,25 +126,6 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox>
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Schülerdaten">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <CheckBox fx:id="prospectiveCheckBox" mnemonicParsing="false" text="Interessent" />
-                     </children>
-                  </VBox>
                   <VBox GridPane.rowIndex="10">
                      <children>
                         <HBox spacing="20.0">
@@ -178,6 +178,24 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Kontaktdaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                   <VBox GridPane.rowIndex="1">
                      <children>
                         <Label text="Telefonnummer Schüler (falls vorhanden)" />
@@ -190,6 +208,18 @@
                         <TextField fx:id="emailTextField" prefHeight="30.0" />
                      </children>
                   </VBox>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
+                     <children>
+                        <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
+                        <ComboBox fx:id="zoomComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="4">
+                     <children>
+                        <CheckBox fx:id="skypeCheckBox" mnemonicParsing="false" onMouseClicked="#skypeCheckBoxClicked" text="Skype" />
+                        <ComboBox fx:id="skypeComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
+                     </children>
+                  </HBox>
                   <VBox GridPane.rowIndex="6">
                      <children>
                         <VBox>
@@ -230,22 +260,10 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox>
+                  <VBox GridPane.rowIndex="8" GridPane.rowSpan="2">
                      <children>
-                        <HBox>
-                           <children>
-                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="221.0" text="Schüler anlegen">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Kontaktdaten">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
+                        <Label text="Notizen" />
+                        <TextArea fx:id="notesTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                      </children>
                   </VBox>
                   <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
@@ -255,24 +273,6 @@
                         <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
-                     <children>
-                        <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
-                        <ComboBox fx:id="zoomComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="4">
-                     <children>
-                        <CheckBox fx:id="skypeCheckBox" mnemonicParsing="false" onMouseClicked="#skypeCheckBoxClicked" text="Skype" />
-                        <ComboBox fx:id="skypeComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
-                     </children>
-                  </HBox>
-                  <VBox GridPane.rowIndex="8" GridPane.rowSpan="2">
-                     <children>
-                        <Label text="Notizen" />
-                        <TextArea fx:id="notesTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
-                     </children>
-                  </VBox>
                </children>
             </GridPane>
          </children>

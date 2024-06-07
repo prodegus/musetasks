@@ -32,13 +32,13 @@ public class DBSelectController {
         FileChooser fileChooser = new FileChooser();
 
         switch (source.getId()) {
-            case "selectButton":
+            case "selectButton" -> {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Datenbank", "*.db"));
                 dbFile = fileChooser.showOpenDialog(source.getScene().getWindow());
                 if (dbFile == null) return;
                 dbPath = dbFile.getAbsolutePath();
-                break;
-            case "createButton":
+            }
+            case "createButton" -> {
                 dbFile = fileChooser.showSaveDialog(source.getScene().getWindow());
                 if (dbFile == null) return;
                 dbPath = dbFile.getAbsolutePath() + ".db";
@@ -51,10 +51,10 @@ public class DBSelectController {
                 createAppointmentTable(dbPath);
                 createTaskTable(dbPath);
                 createHolidayTable(dbPath);
-                addConstraintsStudentTable(dbPath);
                 createLocationTable(dbPath);
                 createInstrumentTable(dbPath);
-                break;
+                addConstraintsStudentTable(dbPath);
+            }
         }
         saveDbPath(dbPath);
         PopupWindow.displayInformation("Datenbank ausgewählt! Bitte Anwendung erneut starten!");

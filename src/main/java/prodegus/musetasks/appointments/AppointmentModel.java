@@ -2,6 +2,7 @@ package prodegus.musetasks.appointments;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import prodegus.musetasks.database.Database;
 import prodegus.musetasks.lessons.Lesson;
 
 import java.sql.Connection;
@@ -14,18 +15,6 @@ import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
 
 public class AppointmentModel {
-    public static int CATEGORY_LESSON_REGULAR = 1;
-    public static int CATEGORY_LESSON_RESCHEDULED = 2;
-    public static int CATEGORY_MEET = 3;
-    public static int CATEGORY_CUSTOM = 4;
-
-    public static int STATUS_OK = 1;
-    public static int STATUS_CANCELLED_STUDENT = 2;
-    public static int STATUS_CANCELLED_TEACHER = 3;
-    public static int STATUS_CANCELLED = 4;
-    public static int STATUS_RESCHEDULED = 5;
-    public static int STATUS_COMPENSATED = 6;
-    public static int STATUS_CHANGED = 7;
 
     public static ObservableList<Appointment> getAppointmentListFromDB() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -106,15 +95,15 @@ public class AppointmentModel {
         return appointment;
     }
 
-    public static void insertAppointment(Appointment appointment) {
-        insert(APPOINTMENT_TABLE, appointment.sqlColumns(), appointment.sqlValues());
+    public static void insert(Appointment appointment) {
+        Database.insert(APPOINTMENT_TABLE, appointment.sqlColumns(), appointment.sqlValues());
     }
 
-    public static void deleteAppointment(Appointment appointment) {
-        delete(APPOINTMENT_TABLE, appointment.getId());
+    public static void delete(Appointment appointment) {
+        Database.delete(APPOINTMENT_TABLE, appointment.getId());
     }
 
-    public static void updateAppointment(Appointment appointment, int id) {
+    public static void update(Appointment appointment, int id) {
         updateMultiple(APPOINTMENT_TABLE, id, appointment.valuesToSQLUpdateString());
     }
 

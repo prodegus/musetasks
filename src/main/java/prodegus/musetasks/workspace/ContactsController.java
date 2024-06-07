@@ -46,6 +46,7 @@ package prodegus.musetasks.workspace;
         import static prodegus.musetasks.contacts.TeacherModel.*;
         import static prodegus.musetasks.contacts.VCard.vCard;
         import static prodegus.musetasks.database.Database.*;
+        import static prodegus.musetasks.lessons.LessonModel.*;
         import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
         import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
         import static prodegus.musetasks.ui.StageFactories.newStage;
@@ -960,12 +961,12 @@ public class ContactsController implements Initializable {
         teacherLocation.setText(selectedTeacher.getLocation());
         teacherNumberOfStudents.setText(selectedTeacher.numberOfStudents() + " (im Einzelunterricht)");
         teacherCourses.setText(selectedTeacher.courses());
-        teacherLocationMonday.setText(selectedTeacher.weekdayLocation("Montag"));
-        teacherLocationTuesday.setText(selectedTeacher.weekdayLocation("Dienstag"));
-        teacherLocationWednesday.setText(selectedTeacher.weekdayLocation("Mittwoch"));
-        teacherLocationThursday.setText(selectedTeacher.weekdayLocation("Donnerstag"));
-        teacherLocationFriday.setText(selectedTeacher.weekdayLocation("Freitag"));
-        teacherLocationSaturday.setText(selectedTeacher.weekdayLocation("Samstag"));
+        teacherLocationMonday.setText(selectedTeacher.weekdayLocation(MONDAY));
+        teacherLocationTuesday.setText(selectedTeacher.weekdayLocation(TUESDAY));
+        teacherLocationWednesday.setText(selectedTeacher.weekdayLocation(WEDNESDAY));
+        teacherLocationThursday.setText(selectedTeacher.weekdayLocation(THURSDAY));
+        teacherLocationFriday.setText(selectedTeacher.weekdayLocation(FRIDAY));
+        teacherLocationSaturday.setText(selectedTeacher.weekdayLocation(SATURDAY));
     }
 
     private void showOtherInfo(Contact contact) {

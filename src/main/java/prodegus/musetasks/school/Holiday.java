@@ -1,31 +1,37 @@
 package prodegus.musetasks.school;
 
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.appointments.Appointment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
+import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
 
 public class Holiday {
 
-    private SimpleStringProperty description = new SimpleStringProperty();
+    private String description = "";
     private LocalDate start = LocalDate.MIN;
     private LocalDate end = LocalDate.MAX;
 
-    public String getDescription() {
-        return description.get();
+    public Holiday() {}
+
+    public Holiday(String description, LocalDate start, LocalDate end) {
+        this.description = description;
+        this.start = start;
+        this.end = end;
     }
 
-    public SimpleStringProperty descriptionProperty() {
+    public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
-        this.description.set(description);
+        this.description = description;
     }
 
     public LocalDate getStart() {
@@ -43,6 +49,8 @@ public class Holiday {
     public void setEnd(LocalDate end) {
         this.end = end;
     }
+
+
 
     public void setAttributes(ResultSet rs) throws SQLException {
         this.setDescription(rs.getString("description"));

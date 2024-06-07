@@ -324,6 +324,7 @@
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="140.0" />
                                     <ColumnConstraints hgrow="ALWAYS" />
+                                    <ColumnConstraints />
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
@@ -501,12 +502,12 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#aptEdit" prefWidth="160.0" text="Bearbeiten">
+                        <Button fx:id="aptEditButton" mnemonicParsing="false" onAction="#aptEdit" prefWidth="160.0" text="Bearbeiten">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#aptForwardTo" prefWidth="160.0" text="Senden an ...">
+                        <Button fx:id="aptForwardButton" mnemonicParsing="false" onAction="#aptForwardTo" prefWidth="160.0" text="Senden an ...">
                            <font>
                               <Font size="14.0" />
                            </font>

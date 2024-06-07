@@ -1,19 +1,24 @@
 package prodegus.musetasks.utils;
 
+import javafx.scene.control.DatePicker;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class DateTime {
 
     public static final HalfYear H_2024_1 = new HalfYear(LocalDate.of(2024, 1, 6), LocalDate.of(2024, 8, 20));
     public static final HalfYear H_2024_2 = new HalfYear(LocalDate.of(2024, 8, 21), LocalDate.of(2025, 1, 6));
+
+    public static String fullDateTimeString(LocalDate date, LocalTime time) {
+        return weekdayDateString(date) + " - " + time.toString() + " Uhr";
+    }
 
     public static void main(String[] args) {
         System.out.println("toTime(0): " + toTime(0));
@@ -41,6 +46,17 @@ public class DateTime {
             }
         }
         return times;
+    }
+
+    public static boolean invalidDateInput(DatePicker datePicker) {
+        String dateString = datePicker.getEditor().getText();
+        if (dateString.isBlank()) return false;
+        try {
+            datePicker.getConverter().fromString(dateString);
+        } catch (DateTimeParseException e) {
+            return true;
+        }
+        return false;
     }
 
     public static LocalTime toTime(int timeDigits) {
@@ -77,6 +93,11 @@ public class DateTime {
 
     public static String asString(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    public static String weekdayDateString(LocalDate date) {
+        String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMANY);
+        return String.join(", ", dayOfWeek, asString(date));
     }
 
 }

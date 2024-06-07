@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.Strings.string;
 
 public class Teacher extends Contact {
@@ -145,18 +146,15 @@ public class Teacher extends Contact {
         return courses.toString();
     }
 
-    public String weekdayLocation(String weekday) {
-        StringBuilder locations = new StringBuilder();
+    public String weekdayLocation(int weekday) {
+        StringJoiner locations = new StringJoiner(", ");
         Filter teacherFilter = new Filter("teacherid", this.id());
-        Filter weekdayFilter = new Filter("weekday", "'" + weekday + "'");
-        HashSet<String> results = new LinkedHashSet<>(
-                queryString("location", LESSON_TABLE, teacherFilter, weekdayFilter));
+        Filter weekdayFilter = new Filter("weekday", String.valueOf(weekday));
+        HashSet<Integer> results = new LinkedHashSet<>(
+                queryInteger("locationid", LESSON_TABLE, teacherFilter, weekdayFilter));
         if (results.size() == 0) return "-";
-        int i = 1;
-        for (String string : results) {
-            locations.append(string);
-            if (i < results.size()) locations.append(", ");
-            i++;
+        for (Integer locationId : results) {
+            locations.add(getLocationFromDB(locationId).getName());
         }
         return locations.toString();
     }

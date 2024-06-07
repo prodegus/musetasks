@@ -37,6 +37,23 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <VBox>
+                     <children>
+                        <Label fx:id="titleTextField" prefHeight="35.0" text="Einzel-Unterricht anlegen">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <HBox />
+                        <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Bezeichnung (optional)" />
+                        <TextField fx:id="lessonNameTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
                   <HBox spacing="20.0" GridPane.rowIndex="2">
                      <children>
                         <VBox>
@@ -69,7 +86,22 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox />
+                  <HBox spacing="20.0" GridPane.rowIndex="4">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Standort" />
+                              <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Raum" />
+                              <ComboBox fx:id="roomComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                   <HBox spacing="10.0" GridPane.rowIndex="6">
                      <children>
                         <VBox>
@@ -90,39 +122,6 @@
                            <children>
                               <Label text="Uhrzeit" />
                               <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <VBox>
-                     <children>
-                        <Label fx:id="titleTextField" prefHeight="35.0" text="Einzel-Unterricht anlegen">
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                        </Label>
-                        <HBox />
-                        <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
-                     </children>
-                  </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#confirm" text="Bestätigen" />
-                        <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
-                     </children>
-                  </HBox>
-                  <HBox spacing="20.0" GridPane.rowIndex="4">
-                     <children>
-                        <VBox>
-                           <children>
-                              <Label text="Standort" />
-                              <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <Label text="Raum" />
-                              <ComboBox fx:id="roomComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
                            </children>
                         </VBox>
                      </children>
@@ -165,12 +164,12 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox GridPane.rowIndex="1">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
                      <children>
-                        <Label text="Bezeichnung (optional)" />
-                        <TextField fx:id="lessonNameTextField" prefHeight="30.0" />
+                        <Button mnemonicParsing="false" onAction="#confirm" text="Bestätigen" />
+                        <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
             </GridPane>
          </children>

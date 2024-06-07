@@ -11,7 +11,7 @@ public class TeacherListCellShort extends ListCell<Teacher> {
         if (item == null) {
             setText("auswählen");
         } else {
-            setText(item.getLastName() + ", " + item.getFirstName().charAt(0));
+            setText(item.getLastName() + ", " + item.getFirstName().charAt(0) + ".");
         }
 
     }

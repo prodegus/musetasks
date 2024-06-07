@@ -9,20 +9,22 @@ import javafx.collections.ObservableList;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
+import prodegus.musetasks.school.Holiday;
 import prodegus.musetasks.school.Location;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
+import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
+import static prodegus.musetasks.school.HolidayModel.createHolidayAppointment;
+import static prodegus.musetasks.school.HolidayModel.getHoliday;
 import static prodegus.musetasks.school.HolidayModel.isHoliday;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.DateTime.*;
@@ -372,15 +374,33 @@ public class Lesson {
 
     public ObservableList<Appointment> appointments(LocalDate startDate, LocalDate endDate) {
         ObservableList<Appointment> list = FXCollections.observableArrayList();
-        LocalDate realStartDate = startDate;
+        LocalDate realStartDate = startDate.isBefore(this.getStartDate()) ? this.getStartDate() : startDate;
+        LocalDate realEndDate = endDate == LocalDate.MIN || endDate.isAfter(this.getEndDate()) ? this.getEndDate() : endDate;
+        Holiday currentHoliday = null;
 
         list.addAll(getLessonAppointmentsFromDB(this.getId(), startDate, endDate));
+        if (this.getStatus() == STATUS_MEET || this.getStatus() == STATUS_DRAFT)
+            return list;
+        while (realStartDate.getDayOfWeek().getValue() != this.getWeekday())
+            realStartDate = realStartDate.plusDays(1);
 
-        while (realStartDate.getDayOfWeek().getValue() != this.getWeekday()) realStartDate = realStartDate.plusDays(1);
-        for (LocalDate date = realStartDate; !date.isAfter(endDate); date = date.plusWeeks(1)) {
-            if (!isHoliday(date) && !isChanged(this, date)) list.add(this.createAppointment(date));
+        for (LocalDate date = realStartDate; !date.isAfter(realEndDate); date = date.plusWeeks(1)) {
+            Holiday holiday = getHoliday(date);
+
+            if (holiday != null) {
+                if (currentHoliday == null || !holiday.getDescription().equals(currentHoliday.getDescription())) {
+                    currentHoliday = holiday;
+                    list.add(createHolidayAppointment(currentHoliday));
+                }
+                continue;
+            }
+
+            if (isChanged(this, date))
+                continue;
+
+            list.add(this.createAppointment(date));
         }
-
+        Collections.sort(list);
         return list;
     }
 
@@ -388,6 +408,8 @@ public class Lesson {
         Appointment appointment = new Appointment();
         appointment.setDate(date);
         appointment.setTime(this.getTime());
+        appointment.setLocationId(this.getLocationId());
+        appointment.setRoom(this.getRoom());
         appointment.setDuration(this.getDuration());
         appointment.setLessonId(this.getId());
         appointment.setCategory(CATEGORY_LESSON_REGULAR);
@@ -415,6 +437,14 @@ public class Lesson {
     public Location location() {
         if (this.getLocationId() == 0) return null;
         return getLocationFromDB(this.getLocationId());
+    }
+
+    public String locationRoom() {
+        return this.location().getName() + "(" + this.getRoom() + ")";
+    }
+
+    public String regularAppointment() {
+        return String.join(" ", this.weekday(), this.getTime().toString());
     }
 
     public List<String> studentsNames() {
@@ -480,7 +510,7 @@ public class Lesson {
         this.setTime(toTime(rs.getInt("time")));
         this.setDuration(rs.getInt("duration"));
         this.setStartDate(toDate(rs.getInt("startdate")));
-        this.setEndDate(toDate(rs.getInt("enddate")));
+        this.setEndDate(rs.getInt("enddate") == 0 ? LocalDate.MAX : toDate(rs.getInt("enddate")));
         this.setStatus(rs.getInt("status"));
         this.setStatusFrom(toDate(rs.getInt("statusfrom")));
         this.setStatusTo(toDate(rs.getInt("statusto")));

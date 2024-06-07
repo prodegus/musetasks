@@ -3,6 +3,7 @@ package prodegus.musetasks.appointments;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.school.Location;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,14 +11,31 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.StringJoiner;
 
+import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
 
-public class Appointment {
+public class Appointment implements Comparable<Appointment> {
+
+    public static final int CATEGORY_LESSON_REGULAR = 1;
+    public static final int CATEGORY_LESSON_RESCHEDULED = 2;
+    public static final int CATEGORY_MEET = 3;
+    public static final int CATEGORY_HOLIDAY = 4;
+    public static final int CATEGORY_CUSTOM = 5;
+
+    public static final int STATUS_OK = 1;
+    public static final int STATUS_CANCELLED_STUDENT = 2;
+    public static final int STATUS_CANCELLED_TEACHER = 3;
+    public static final int STATUS_DROPPED = 4;
+    public static final int STATUS_RESCHEDULED = 5;
+    public static final int STATUS_COMPENSATED = 6;
+    public static final int STATUS_CHANGED = 7;
 
     private SimpleIntegerProperty id          = new SimpleIntegerProperty();
     private LocalDate             date        = LocalDate.MIN;
     private LocalTime             time        = LocalTime.MAX;
+    private SimpleIntegerProperty locationId  = new SimpleIntegerProperty();
+    private SimpleStringProperty  room        = new SimpleStringProperty();
     private SimpleIntegerProperty duration    = new SimpleIntegerProperty();
     private SimpleIntegerProperty lessonId    = new SimpleIntegerProperty();
     private LocalDate             dateOld     = LocalDate.MIN;
@@ -52,6 +70,30 @@ public class Appointment {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public int getLocationId() {
+        return locationId.get();
+    }
+
+    public SimpleIntegerProperty locationIdProperty() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId.set(locationId);
+    }
+
+    public String getRoom() {
+        return room.get();
+    }
+
+    public SimpleStringProperty roomProperty() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room.set(room);
     }
 
     public int getDuration() {
@@ -134,20 +176,9 @@ public class Appointment {
         this.selected.set(selected);
     }
 
-
-
-    public static int CATEGORY_LESSON_REGULAR = 1;
-    public static int CATEGORY_LESSON_RESCHEDULED = 2;
-    public static int CATEGORY_MEET = 3;
-    public static int CATEGORY_CUSTOM = 4;
-
-    public static int STATUS_OK = 1;
-    public static int STATUS_CANCELLED_STUDENT = 2;
-    public static int STATUS_CANCELLED_TEACHER = 3;
-    public static int STATUS_CANCELLED = 4;
-    public static int STATUS_RESCHEDULED = 5;
-    public static int STATUS_COMPENSATED = 6;
-    public static int STATUS_CHANGED = 7;
+    public Location location() {
+        return getLocationFromDB(this.getLocationId());
+    }
 
     public String category() {
         return switch(this.getCategory()) {
@@ -160,22 +191,38 @@ public class Appointment {
     }
 
     public String status() {
+        if (this.getCategory() == CATEGORY_HOLIDAY) return "";
         return switch(this.getStatus()) {
-            case 1 -> "Planmäßig";
-            case 2 -> "Abgesagt (Schüler)";
-            case 3 -> "Abgesagt (Lehrer)";
-            case 4 -> "Abgesagt";
-            case 5 -> "Nachholtermin geplant";
-            case 6 -> "Nachgeholt";
-            case 7 -> "Verschoben";
+            case STATUS_OK -> "Planmäßig";
+            case STATUS_CANCELLED_STUDENT, STATUS_CANCELLED_TEACHER -> "Nachholtermin offen";
+            case STATUS_DROPPED -> "Abgesagt";
+            case STATUS_RESCHEDULED -> "Nachholtermin geplant";
+            case STATUS_COMPENSATED -> "Nachgeholt";
+            case STATUS_CHANGED -> "Verschoben";
             default -> "";
         };
+    }
+
+    public String dateInfo() {
+        if (this.getCategory() == CATEGORY_HOLIDAY) {
+            LocalDate start = this.getDate();
+            LocalDate end = this.getDateOld();
+            return (start.isEqual(end) ? weekdayDateString(start) : String.join(" - ", asString(start), asString(end)));
+        }
+        return weekdayDateString(this.date);
+    }
+
+    public String timeInfo() {
+        if (this.getCategory() == CATEGORY_HOLIDAY) return "";
+        return String.join(" - ", asString(this.getTime()), asString(this.getTime().plusMinutes(this.getDuration())));
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
         this.setId(rs.getInt("id"));
         this.setDate(toDate(rs.getInt("date")));
         this.setTime(toTime(rs.getInt("time")));
+        this.setLocationId(rs.getInt("locationid"));
+        this.setRoom(rs.getString("room"));
         this.setDuration(rs.getInt("duration"));
         this.setLessonId(rs.getInt("lessonid"));
         this.setDateOld(toDate(rs.getInt("dateold")));
@@ -189,6 +236,8 @@ public class Appointment {
         
         if (this.getDate() != LocalDate.MIN) columns.add("date");
         if (this.getTime() != LocalTime.MAX) columns.add("time");
+        if (this.getLocationId() != 0) columns.add("locationid");
+        if (!this.getRoom().isBlank()) columns.add("room");
         if (this.getDuration() != 0) columns.add("duration");
         if (this.getLessonId() != 0) columns.add("lessonid");
         if (this.getDateOld() != LocalDate.MIN) columns.add("dateold");
@@ -204,8 +253,10 @@ public class Appointment {
 
         if (this.getDate() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getDate())));
         if (this.getTime() != LocalTime.MAX) values.add(String.valueOf(toInt(this.getTime())));
-        if (this.getDuration() != 0) values.add("duration");
-        if (this.getLessonId() != 0) values.add("lessonid");
+        if (this.getLocationId() != 0) values.add(String.valueOf(this.getLocationId()));
+        if (!this.getRoom().isBlank()) values.add(this.getRoom());
+        if (this.getDuration() != 0) values.add(String.valueOf(this.getDuration()));
+        if (this.getLessonId() != 0) values.add(String.valueOf(this.getLessonId()));
         if (this.getDateOld() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getDateOld())));
         values.add(String.valueOf(this.getCategory()));
         values.add(String.valueOf(this.getStatus()));
@@ -220,6 +271,8 @@ public class Appointment {
         sb.append("date        = ").append(this.getDate() == LocalDate.MIN ? "null" : toInt(this.getDate())).append(", ");
         sb.append("time        = ").append(this.getTime() == LocalTime.MAX ? "null" : toInt(this.getTime())).append(", ");
         sb.append("duration    = ").append(this.getDuration()).append(", ");
+        sb.append("locationid  = ").append(this.getLocationId() == 0 ? "null" : this.getLocationId()).append(", ");
+        sb.append("room        = ").append(this.getRoom().isBlank() ? "null" : this.getRoom()).append(", ");
         sb.append("lessonid    = ").append(this.getLessonId() == 0 ? "null" : this.getLessonId()).append(", ");
         sb.append("dateold     = ").append(this.getDateOld() == LocalDate.MIN ? "null" : toInt(this.getDateOld())).append(", ");
         sb.append("category    = ").append(this.getCategory()).append(", ");
@@ -229,4 +282,9 @@ public class Appointment {
         return sb.toString();
     }
 
+    @Override
+    public int compareTo(Appointment o) {
+        if (this.getDate() == null || o.getDate() == null) return 0;
+        return getDate().compareTo(o.getDate());
+    }
 }

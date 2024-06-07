@@ -36,6 +36,24 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Lehrerdaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                   <VBox GridPane.rowIndex="1">
                      <children>
                         <Label text="Vorname" />
@@ -76,30 +94,6 @@
                         <DatePicker fx:id="birthDatePicker" prefHeight="30.0" />
                      </children>
                   </VBox>
-                  <VBox>
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Lehrerdaten">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="8">
-                     <children>
-                        <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
-                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
-                     </children>
-                  </HBox>
                   <HBox spacing="20.0" GridPane.rowIndex="7">
                      <children>
                         <VBox>
@@ -137,6 +131,12 @@
                         </VBox>
                      </children>
                   </HBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="8">
+                     <children>
+                        <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
             <GridPane fx:id="communicationForm" maxWidth="450.0">
@@ -157,18 +157,6 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <VBox GridPane.rowIndex="1">
-                     <children>
-                        <Label text="Telefonnummer" />
-                        <TextField fx:id="phoneTextField" prefHeight="30.0" />
-                     </children>
-                  </VBox>
-                  <VBox GridPane.rowIndex="2">
-                     <children>
-                        <Label text="E-Mail-Adresse" />
-                        <TextField fx:id="emailTextField" prefHeight="30.0" />
-                     </children>
-                  </VBox>
                   <VBox>
                      <children>
                         <HBox>
@@ -187,13 +175,18 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                  <VBox GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToTeacherForm" text="Zurück zu Personendaten" />
-                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addTeacher" text="Bestätigen" />
-                        <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                        <Label text="Telefonnummer" />
+                        <TextField fx:id="phoneTextField" prefHeight="30.0" />
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox GridPane.rowIndex="2">
+                     <children>
+                        <Label text="E-Mail-Adresse" />
+                        <TextField fx:id="emailTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
                   <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
                      <children>
                         <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
@@ -212,6 +205,13 @@
                         <TextArea fx:id="notesTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                      </children>
                   </VBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToTeacherForm" text="Zurück zu Personendaten" />
+                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addTeacher" text="Bestätigen" />
+                        <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
          </children>

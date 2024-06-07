@@ -19,7 +19,7 @@
    <children>
       <StackPane>
          <children>
-            <GridPane fx:id="otherDataForm" maxWidth="450.0">
+            <GridPane fx:id="otherDataForm" maxWidth="450.0" visible="false">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
               </columnConstraints>
@@ -37,6 +37,34 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="279.0" text="Kontakt anlegen">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Personendaten">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label prefHeight="27.0" prefWidth="244.0" text="Beschreibung:" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="descriptionTextField" prefHeight="30.0" prefWidth="450.0" HBox.hgrow="SOMETIMES" />
+                     </children>
+                  </HBox>
                   <VBox GridPane.rowIndex="3">
                      <children>
                         <VBox>
@@ -81,40 +109,6 @@
                         <DatePicker fx:id="birthDatePicker" prefHeight="30.0" />
                      </children>
                   </VBox>
-                  <VBox>
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="279.0" text="Kontakt anlegen">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Personendaten">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
-                     <children>
-                        <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
-                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="1">
-                     <children>
-                        <Label prefHeight="27.0" prefWidth="244.0" text="Beschreibung:" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="descriptionTextField" prefHeight="30.0" prefWidth="450.0" HBox.hgrow="SOMETIMES" />
-                     </children>
-                  </HBox>
                   <VBox GridPane.rowIndex="9">
                      <children>
                         <Label text="Standort(e)" />
@@ -123,9 +117,15 @@
                         <ComboBox fx:id="locationComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
                      </children>
                   </VBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                     <children>
+                        <Button fx:id="toContactFormButton" mnemonicParsing="false" onAction="#goToCommunicationForm" text="Weiter zu Kontaktdaten" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
-            <GridPane fx:id="communicationForm" maxWidth="450.0" visible="false">
+            <GridPane fx:id="communicationForm" maxWidth="450.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
                </columnConstraints>
@@ -143,18 +143,6 @@
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <VBox GridPane.rowIndex="1">
-                     <children>
-                        <Label text="Telefonnummer" />
-                        <TextField fx:id="phoneTextField" prefHeight="30.0" />
-                     </children>
-                  </VBox>
-                  <VBox GridPane.rowIndex="2">
-                     <children>
-                        <Label text="E-Mail-Adresse" />
-                        <TextField fx:id="emailTextField" prefHeight="30.0" />
-                     </children>
-                  </VBox>
                   <VBox>
                      <children>
                         <HBox>
@@ -173,13 +161,18 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                  <VBox GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToOtherForm" text="Zurück zu Personendaten" />
-                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addOther" text="Bestätigen" />
-                        <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                        <Label text="Telefonnummer" />
+                        <TextField fx:id="phoneTextField" prefHeight="30.0" />
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox GridPane.rowIndex="2">
+                     <children>
+                        <Label text="E-Mail-Adresse" />
+                        <TextField fx:id="emailTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
                   <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
                      <children>
                         <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
@@ -198,6 +191,13 @@
                         <TextArea fx:id="notesTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                      </children>
                   </VBox>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="10">
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#goToOtherForm" text="Zurück zu Personendaten" />
+                        <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#addOther" text="Bestätigen" />
+                        <Button fx:id="cancelButton2" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
          </children>

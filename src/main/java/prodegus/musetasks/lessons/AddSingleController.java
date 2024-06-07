@@ -132,8 +132,20 @@ public class AddSingleController implements Initializable {
         }
 
         lesson.setRepeat(repeat);
-        lesson.setWeekday(weekday);
-        lesson.setTime(toTime(timeString));
+
+        if (weekday < 0) {
+            invalidData = true;
+            errorMessage.append("- Bitte Wochentag auswählen\n");
+        } else {
+            lesson.setWeekday(weekday);
+        }
+
+        if (timeComboBox.getSelectionModel().isEmpty()) {
+            invalidData = true;
+            errorMessage.append("- Bitte Uhrzeit angeben\n");
+        } else {
+            lesson.setTime(toTime(timeString));
+        }
 
         if (startDate == null) {
             invalidData = !draft;
@@ -154,8 +166,11 @@ public class AddSingleController implements Initializable {
 
         if (!editMode) {
             insertLesson(lesson);
+            student.addLessonInDB(getLastLessonID());
+            student.addTeacherInDB(teacher.getId());
         } else {
             updateLesson(lesson, id);
+            student.addLessonInDB(id);
         }
         stageOf(event).close();
     }
