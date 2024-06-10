@@ -35,10 +35,10 @@ public class DateTime {
     public static List<String> times(int startHour, int endHour) {
         List<String> times = new ArrayList<>();
         times.add("unbekannt");
-        String[] quarterHours = {"00", "15", "30", "45"};
+        String[] minutes = {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
         for(int i = startHour; i < endHour; i++) {
-            for(int j = 0; j < 4; j++) {
-                String time = i + ":" + quarterHours[j];
+            for(int j = 0; j < 12; j++) {
+                String time = i + ":" + minutes[j];
                 if(i < 10) {
                     time = "0" + time;
                 }

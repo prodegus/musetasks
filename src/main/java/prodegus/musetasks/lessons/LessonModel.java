@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import static prodegus.musetasks.database.Database.*;
 
@@ -17,14 +19,13 @@ public class LessonModel {
     public static final int CATEGORY_COURSE = 3;
     public static final int CATEGORY_WORKGROUP = 4;
 
-    public static final int REPEAT_OFF = 0;
     public static final int REPEAT_WEEKLY = 1;
     public static final int REPEAT_2WEEKS = 2;
     public static final int REPEAT_3WEEKS = 3;
     public static final int REPEAT_4WEEKS = 4;
     public static final int REPEAT_5WEEKS = 5;
     public static final int REPEAT_6WEEKS = 6;
-    public static final int REPEAT_CUSTOM = 7;
+    public static final int REPEAT_OFF = 7;
 
     public static final int UNKNOWN_WEEKDAY = 0;
     public static final int MONDAY = 1;
@@ -41,6 +42,16 @@ public class LessonModel {
     public static final int STATUS_ILL = 4;
     public static final int STATUS_HOLIDAY = 5;
     public static final int STATUS_RESIGNED = 6;
+
+    public static final ObservableList<String> LESSON_STATUS_LIST = FXCollections.observableArrayList(
+            "Entwurf",
+            "Aktiv",
+            "Schnupper-Unterricht",
+            "Probemonat",
+            "Unterbochen (Krankheit)",
+            "Unterbrochen (Urlaub)",
+            "Gekündigt"
+    );
 
     public static ObservableList<Lesson> getLessonListFromDB() {
         ObservableList<Lesson> lessons = FXCollections.observableArrayList();

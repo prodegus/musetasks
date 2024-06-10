@@ -40,6 +40,8 @@ public class AddSingleController implements Initializable {
 
     @FXML private Label titleTextField;
     @FXML private CheckBox draftCheckBox;
+    @FXML private CheckBox meetCheckBox;
+    @FXML private CheckBox trialCheckBox;
     @FXML private TextField lessonNameTextField;
     @FXML private ComboBox<Student> studentComboBox;
     @FXML private ComboBox<Teacher> teacherComboBox;
@@ -50,6 +52,7 @@ public class AddSingleController implements Initializable {
     @FXML private ComboBox<String> repeatComboBox;
     @FXML private ComboBox<String> weekdayComboBox;
     @FXML private ComboBox<String> timeComboBox;
+    @FXML private Label beginDateLabel;
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private ComboBox<String> statusComboBox;
@@ -72,6 +75,8 @@ public class AddSingleController implements Initializable {
         StringBuilder errorMessage = new StringBuilder();
 
         boolean draft = draftCheckBox.isSelected();
+        boolean meet = meetCheckBox.isSelected();
+        boolean trial = trialCheckBox.isSelected();
         int category = CATEGORY_SINGLE;
         String lessonName = lessonNameTextField.getText();
         Student student = studentComboBox.getValue();
@@ -131,9 +136,15 @@ public class AddSingleController implements Initializable {
             lesson.setRoom(room);
         }
 
+        if (repeat < 1) {
+            invalidData = true;
+            errorMessage.append("- Bitte Unterrichts-Rhythmus auswählen\n");
+        } else {
+            lesson.setRepeat(repeat);
+        }
         lesson.setRepeat(repeat);
 
-        if (weekday < 0) {
+        if (weekday < 1) {
             invalidData = true;
             errorMessage.append("- Bitte Wochentag auswählen\n");
         } else {
@@ -191,6 +202,15 @@ public class AddSingleController implements Initializable {
 
         draftCheckBox.setSelected(false);
 
+        meetCheckBox.selectedProperty().addListener(e -> {
+            boolean meet = meetCheckBox.isSelected();
+            repeatComboBox.getSelectionModel().select(meet ? REPEAT_OFF : 0);
+            repeatComboBox.setDisable(meet);
+            beginDateLabel.setText(meet ? "Datum" : "Beginn");
+            statusComboBox.getSelectionModel().select(meet ? STATUS_MEET : STATUS_ACTIVE);
+            statusComboBox.setDisable(meet);
+        });
+
         studentComboBox.setItems(getStudentListFromDB());
         studentComboBox.setButtonCell(new StudentListCell());
         studentComboBox.setCellFactory(student -> new StudentListCell());
@@ -214,10 +234,17 @@ public class AddSingleController implements Initializable {
         locationComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
                 -> roomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
 
-        weekdayComboBox.setItems(FXCollections.observableArrayList("unbekannt", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
+        repeatComboBox.setItems(FXCollections.observableArrayList("auswählen", "jede Woche", "alle 2 Wochen", "alle 3 Wochen",
+                "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin"));
+        repeatComboBox.getSelectionModel().select(1);
+
+        weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
                 "Freitag", "Samstag"));
+        weekdayComboBox.getSelectionModel().select(0);
 
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
+
+        statusComboBox.setItems(FXCollections.observableArrayList(LESSON_STATUS_LIST));
 
     }
 }

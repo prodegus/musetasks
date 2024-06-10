@@ -45,7 +45,13 @@
                            </font>
                         </Label>
                         <HBox />
-                        <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
+                        <HBox spacing="20.0">
+                           <children>
+                              <CheckBox fx:id="draftCheckBox" mnemonicParsing="false" text="Entwurfsmodus" />
+                              <CheckBox fx:id="meetCheckBox" mnemonicParsing="false" text="Schnupper-Unterricht" />
+                              <CheckBox fx:id="trialCheckBox" mnemonicParsing="false" text="Probemonat" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox GridPane.rowIndex="1">
@@ -107,16 +113,17 @@
                         <VBox>
                            <children>
                               <Label text="Wiederholung" />
-                              <HBox spacing="5.0">
-                                 <children>
-                                    <ComboBox fx:id="repeatComboBox" prefHeight="30.0" promptText="jede Woche" />
-                                    <ComboBox fx:id="weekdayComboBox" prefHeight="30.0" promptText="montags" />
-                                 </children>
-                              </HBox>
+                              <ComboBox fx:id="repeatComboBox" prefHeight="30.0" promptText="jede Woche" />
                            </children>
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets />
                            </HBox.margin>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Wochentag" />
+                              <ComboBox fx:id="weekdayComboBox" prefHeight="30.0" promptText="montags" />
+                           </children>
                         </VBox>
                         <VBox>
                            <children>
@@ -130,7 +137,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <Label text="Beginn" />
+                              <Label fx:id="beginDateLabel" text="Beginn" />
                               <DatePicker fx:id="startDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>
