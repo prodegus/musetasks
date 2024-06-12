@@ -26,6 +26,7 @@ public class LessonModel {
     public static final int REPEAT_5WEEKS = 5;
     public static final int REPEAT_6WEEKS = 6;
     public static final int REPEAT_OFF = 7;
+    public static final int REPEAT_CUSTOM = 8;
 
     public static final int UNKNOWN_WEEKDAY = 0;
     public static final int MONDAY = 1;
@@ -42,6 +43,7 @@ public class LessonModel {
     public static final int STATUS_ILL = 4;
     public static final int STATUS_HOLIDAY = 5;
     public static final int STATUS_RESIGNED = 6;
+    public static final int STATUS_NO_SELECTION = 7;
 
     public static final ObservableList<String> LESSON_STATUS_LIST = FXCollections.observableArrayList(
             "Entwurf",
@@ -50,7 +52,8 @@ public class LessonModel {
             "Probemonat",
             "Unterbochen (Krankheit)",
             "Unterbrochen (Urlaub)",
-            "Gekündigt"
+            "Gekündigt",
+            "auswählen"
     );
 
     public static ObservableList<Lesson> getLessonListFromDB() {

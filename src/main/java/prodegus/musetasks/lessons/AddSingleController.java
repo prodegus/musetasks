@@ -39,9 +39,14 @@ import static prodegus.musetasks.utils.DateTime.toTime;
 public class AddSingleController implements Initializable {
 
     @FXML private Label titleTextField;
-    @FXML private CheckBox draftCheckBox;
-    @FXML private CheckBox meetCheckBox;
-    @FXML private CheckBox trialCheckBox;
+    @FXML private ToggleGroup aptConfirm;
+    @FXML private RadioButton confirmDraft;
+    @FXML private RadioButton confirmProposed;
+    @FXML private RadioButton confirmYes;
+    @FXML private ToggleGroup lessonStatus;
+    @FXML private RadioButton statusMeet;
+    @FXML private RadioButton statusTrial;
+    @FXML private RadioButton statusActive;
     @FXML private TextField lessonNameTextField;
     @FXML private ComboBox<Student> studentComboBox;
     @FXML private ComboBox<Teacher> teacherComboBox;
@@ -53,6 +58,7 @@ public class AddSingleController implements Initializable {
     @FXML private ComboBox<String> weekdayComboBox;
     @FXML private ComboBox<String> timeComboBox;
     @FXML private Label beginDateLabel;
+    @FXML private Label endDateLabel;
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private ComboBox<String> statusComboBox;
@@ -74,9 +80,12 @@ public class AddSingleController implements Initializable {
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
 
-        boolean draft = draftCheckBox.isSelected();
-        boolean meet = meetCheckBox.isSelected();
-        boolean trial = trialCheckBox.isSelected();
+        boolean draft = confirmDraft.isSelected();
+        boolean toBeConfirmed = confirmProposed.isSelected();
+        boolean confirmed = confirmYes.isSelected();
+        boolean meet = statusMeet.isSelected();
+        boolean trial = statusTrial.isSelected();
+        boolean active = statusActive.isSelected();
         int category = CATEGORY_SINGLE;
         String lessonName = lessonNameTextField.getText();
         Student student = studentComboBox.getValue();
@@ -199,16 +208,28 @@ public class AddSingleController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        draftCheckBox.setSelected(false);
-
-        meetCheckBox.selectedProperty().addListener(e -> {
-            boolean meet = meetCheckBox.isSelected();
-            repeatComboBox.getSelectionModel().select(meet ? REPEAT_OFF : 0);
-            repeatComboBox.setDisable(meet);
-            beginDateLabel.setText(meet ? "Datum" : "Beginn");
-            statusComboBox.getSelectionModel().select(meet ? STATUS_MEET : STATUS_ACTIVE);
-            statusComboBox.setDisable(meet);
+        lessonStatus.selectedToggleProperty().addListener(e -> {
+            Toggle selectedToggle = lessonStatus.getSelectedToggle();
+            if (selectedToggle.equals(statusMeet)) {
+                repeatComboBox.getSelectionModel().select(REPEAT_OFF);
+                repeatComboBox.setDisable(true);
+                statusComboBox.getSelectionModel().select(STATUS_MEET);
+                endDateLabel.setText("Ende (optional):");
+            }
+            if (selectedToggle.equals(statusTrial)) {
+                repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
+                repeatComboBox.setDisable(false);
+                statusComboBox.getSelectionModel().select(STATUS_TRIAL);
+                beginDateLabel.setText("Probemonat von:");
+                endDateLabel.setText("bis:");
+            }
+            if (selectedToggle.equals(statusActive)) {
+                repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
+                repeatComboBox.setDisable(false);
+                statusComboBox.getSelectionModel().select(STATUS_ACTIVE);
+                beginDateLabel.setText("Beginn:");
+                endDateLabel.setText("Ende (optional):");
+            }
         });
 
         studentComboBox.setItems(getStudentListFromDB());
@@ -236,6 +257,12 @@ public class AddSingleController implements Initializable {
 
         repeatComboBox.setItems(FXCollections.observableArrayList("auswählen", "jede Woche", "alle 2 Wochen", "alle 3 Wochen",
                 "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin"));
+        repeatComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            boolean repeatOff = repeatComboBox.getValue().equals("einmaliger Termin");
+            weekdayComboBox.setDisable(repeatOff);
+            beginDateLabel.setText(repeatOff ? "Datum" : "Beginn");
+            endDatePicker.setDisable(repeatOff);
+        });
         repeatComboBox.getSelectionModel().select(1);
 
         weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
