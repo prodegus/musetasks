@@ -9,7 +9,12 @@ public class Filter {
         this.value = value;
     }
 
+    public Filter(String key, int value) {
+        this.key = key;
+        this.value = String.valueOf(value);
+    }
+
     public String toSQLString() {
-        return key +  " = " + value;
+        return key +  " = '" + value + "'";
     }
 }

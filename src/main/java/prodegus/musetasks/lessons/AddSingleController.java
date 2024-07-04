@@ -1,14 +1,12 @@
 package prodegus.musetasks.lessons;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.school.Location;
@@ -22,13 +20,10 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-import static prodegus.musetasks.contacts.ContactModel.*;
-import static prodegus.musetasks.contacts.StudentModel.getStudentListFromDB;
-import static prodegus.musetasks.contacts.StudentModel.studentStringConverter;
+import static prodegus.musetasks.contacts.StudentModel.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
 import static prodegus.musetasks.lessons.LessonModel.*;
-import static prodegus.musetasks.school.LocationModel.fromString;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
@@ -39,14 +34,14 @@ import static prodegus.musetasks.utils.DateTime.toTime;
 public class AddSingleController implements Initializable {
 
     @FXML private Label titleTextField;
-    @FXML private ToggleGroup aptConfirm;
-    @FXML private RadioButton confirmDraft;
-    @FXML private RadioButton confirmProposed;
-    @FXML private RadioButton confirmYes;
-    @FXML private ToggleGroup lessonStatus;
-    @FXML private RadioButton statusMeet;
-    @FXML private RadioButton statusTrial;
-    @FXML private RadioButton statusActive;
+    @FXML private ToggleGroup aptStatusGroup;
+    @FXML private RadioButton aptDraftRadioButton;
+    @FXML private RadioButton aptRequestRadioButton;
+    @FXML private RadioButton aptConfirmedRadioButton;
+    @FXML private ToggleGroup lessonStatusGroup;
+    @FXML private RadioButton lessonStatusMeet;
+    @FXML private RadioButton lessonStatusTrial;
+    @FXML private RadioButton lessonStatusActive;
     @FXML private TextField lessonNameTextField;
     @FXML private ComboBox<Student> studentComboBox;
     @FXML private ComboBox<Teacher> teacherComboBox;
@@ -54,12 +49,19 @@ public class AddSingleController implements Initializable {
     @FXML private ComboBox<String> durationComboBox;
     @FXML private ComboBox<Location> locationComboBox;
     @FXML private ComboBox<String> roomComboBox;
+    @FXML private HBox hBoxApt;
+    @FXML private VBox vBoxRepeat;
     @FXML private ComboBox<String> repeatComboBox;
+    @FXML private VBox vBoxWeekday;
     @FXML private ComboBox<String> weekdayComboBox;
+    @FXML private VBox vBoxTime;
     @FXML private ComboBox<String> timeComboBox;
-    @FXML private Label beginDateLabel;
-    @FXML private Label endDateLabel;
+    @FXML private HBox hBoxPeriod;
+    @FXML private VBox vBoxStartDate;
+    @FXML private Label startDateLabel;
     @FXML private DatePicker startDatePicker;
+    @FXML private VBox vBoxEndDate;
+    @FXML private Label endDateLabel;
     @FXML private DatePicker endDatePicker;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private DatePicker statusFromDatePicker;
@@ -79,13 +81,8 @@ public class AddSingleController implements Initializable {
         Lesson lesson = new Lesson();
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
-
-        boolean draft = confirmDraft.isSelected();
-        boolean toBeConfirmed = confirmProposed.isSelected();
-        boolean confirmed = confirmYes.isSelected();
-        boolean meet = statusMeet.isSelected();
-        boolean trial = statusTrial.isSelected();
-        boolean active = statusActive.isSelected();
+        int lessonStatus = getLessonStatus();
+        int aptStatus = getAppointmentStatus();
         int category = CATEGORY_SINGLE;
         String lessonName = lessonNameTextField.getText();
         Student student = studentComboBox.getValue();
@@ -95,18 +92,16 @@ public class AddSingleController implements Initializable {
         Location location = locationComboBox.getValue();
         String room = roomComboBox.getValue();
         int repeat = repeatComboBox.getSelectionModel().getSelectedIndex();
-        System.out.println("repeatComboBox.getSelectionModel().getSelectedIndex(): " + repeatComboBox.getSelectionModel().getSelectedIndex());
-        System.out.println("repeatStringFromInt(repeat): " + repeatStringFromInt(repeat));
         int weekday = weekdayComboBox.getSelectionModel().getSelectedIndex();
         String timeString = timeComboBox.getValue();
         LocalDate startDate = startDatePicker.getValue();
         LocalDate endDate = endDatePicker.getValue();
-        int status = statusComboBox.getSelectionModel().getSelectedIndex();
-        LocalDate statusFrom = statusFromDatePicker.getValue();
-        LocalDate statusTo = statusToDatePicker.getValue();
+        System.out.println("endDatePicker.getValue(): " + endDatePicker.getValue());
 
         lesson.setLessonName(lessonName);
         lesson.setCategory(category);
+
+        boolean draft = aptStatus == LESSON_APT_STATUS_DRAFT;
 
         if (student == null) {
             invalidData = true;
@@ -151,9 +146,8 @@ public class AddSingleController implements Initializable {
         } else {
             lesson.setRepeat(repeat);
         }
-        lesson.setRepeat(repeat);
 
-        if (weekday < 1) {
+        if (weekday < 1 && repeat != REPEAT_OFF) {
             invalidData = true;
             errorMessage.append("- Bitte Wochentag auswählen\n");
         } else {
@@ -174,10 +168,15 @@ public class AddSingleController implements Initializable {
             lesson.setStartDate(startDate);
         }
 
-        lesson.setEndDate(endDate == null ? LocalDate.MAX : endDate);
-        lesson.setStatus(status);
-        lesson.setStatusFrom(statusFrom == null ? LocalDate.MIN : statusFrom);
-        lesson.setStatusTo(statusTo == null ? LocalDate.MAX : statusTo);
+        if (endDate == null && getLessonStatus() == LESSON_STATUS_TRIAL) {
+            invalidData = true;
+            errorMessage.append("- Bitte End-Datum für den Probemonat angeben");
+        } else {
+            lesson.setEndDate(endDate == null ? LocalDate.MAX : endDate);
+        }
+
+        lesson.setLessonStatus(lessonStatus);
+        lesson.setAptStatus(aptStatus);
 
         if (invalidData) {
             PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" + errorMessage);
@@ -188,9 +187,13 @@ public class AddSingleController implements Initializable {
             insertLesson(lesson);
             student.addLessonInDB(getLastLessonID());
             student.addTeacherInDB(teacher.getId());
+            insertLessonAppointments(getLastLessonID());
+
         } else {
             updateLesson(lesson, id);
             student.addLessonInDB(id);
+            student.addTeacherInDB(teacher.getId());
+            insertLessonAppointments(id);
         }
         stageOf(event).close();
     }
@@ -205,30 +208,79 @@ public class AddSingleController implements Initializable {
         return lessonName.toString();
     }
 
+    private int getLessonStatus() {
+        if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusMeet)) return LESSON_STATUS_MEET;
+        if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusTrial)) return LESSON_STATUS_TRIAL;
+        if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusActive)) return LESSON_STATUS_ACTIVE;
+        return 0;
+    }
+
+    private int getAppointmentStatus() {
+        if (aptStatusGroup.getSelectedToggle().equals(aptDraftRadioButton)) return LESSON_APT_STATUS_DRAFT;
+        if (aptStatusGroup.getSelectedToggle().equals(aptRequestRadioButton)) return LESSON_APT_STATUS_REQUEST;
+        if (aptStatusGroup.getSelectedToggle().equals(aptConfirmedRadioButton)) return LESSON_APT_STATUS_CONFIRMED;
+        return 0;
+    }
+
+    public void initLesson(Lesson lesson) {
+        editMode = true;
+        id = lesson.getId();
+        titleTextField.setText("Einzel-Unterricht bearbeiten");
+
+        switch (lesson.getAptStatus()) {
+            case LESSON_APT_STATUS_DRAFT -> aptDraftRadioButton.setSelected(true);
+            case LESSON_APT_STATUS_REQUEST -> aptRequestRadioButton.setSelected(true);
+            case LESSON_APT_STATUS_CONFIRMED -> aptConfirmedRadioButton.setSelected(true);
+        }
+
+        switch (lesson.getLessonStatus()) {
+            case LESSON_STATUS_MEET -> lessonStatusMeet.setSelected(true);
+            case LESSON_STATUS_TRIAL -> lessonStatusTrial.setSelected(true);
+            case LESSON_STATUS_ACTIVE -> lessonStatusActive.setSelected(true);
+        }
+
+        lessonNameTextField.setText(lesson.getLessonName());
+        studentComboBox.setValue(getStudentFromDB(lesson.getStudentId1()));
+        teacherComboBox.setValue(lesson.teacher());
+        instrumentComboBox.setValue(lesson.getInstrument());
+        durationComboBox.setValue(lesson.durationString());
+        locationComboBox.setValue(lesson.location());
+        roomComboBox.setValue(lesson.getRoom());
+        if (lesson.getRepeat() != REPEAT_OFF && lesson.getRepeat() != REPEAT_CUSTOM && lesson.getWeekday() != 0)
+            weekdayComboBox.setValue(lesson.weekday());
+        timeComboBox.setValue(lesson.getTime().toString() + " Uhr");
+        startDatePicker.setValue(lesson.getStartDate());
+        if (!lesson.getEndDate().equals(LocalDate.MAX)) endDatePicker.setValue(lesson.getEndDate());
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        lessonStatus.selectedToggleProperty().addListener(e -> {
-            Toggle selectedToggle = lessonStatus.getSelectedToggle();
-            if (selectedToggle.equals(statusMeet)) {
+
+        lessonStatusGroup.selectedToggleProperty().addListener(e -> {
+            Toggle selectedToggle = lessonStatusGroup.getSelectedToggle();
+            if (selectedToggle.equals(lessonStatusMeet)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_OFF);
-                repeatComboBox.setDisable(true);
-                statusComboBox.getSelectionModel().select(STATUS_MEET);
-                endDateLabel.setText("Ende (optional):");
+                weekdayComboBox.getSelectionModel().select(WEEKDAY_NO_SELECTION);
+                startDateLabel.setText("Schnupper-Termin");
+                hBoxApt.getChildren().setAll(vBoxStartDate, vBoxTime);
+                hBoxPeriod.getChildren().clear();
             }
-            if (selectedToggle.equals(statusTrial)) {
+            if (selectedToggle.equals(lessonStatusTrial)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
-                repeatComboBox.setDisable(false);
-                statusComboBox.getSelectionModel().select(STATUS_TRIAL);
-                beginDateLabel.setText("Probemonat von:");
+                weekdayComboBox.getSelectionModel().select(editMode ? getLessonFromDB(id).getWeekday() : 0);
+                startDateLabel.setText("Probemonat von:");
                 endDateLabel.setText("bis:");
+                hBoxApt.getChildren().setAll(vBoxRepeat, vBoxWeekday, vBoxTime);
+                hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
             }
-            if (selectedToggle.equals(statusActive)) {
+            if (selectedToggle.equals(lessonStatusActive)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
-                repeatComboBox.setDisable(false);
-                statusComboBox.getSelectionModel().select(STATUS_ACTIVE);
-                beginDateLabel.setText("Beginn:");
+                weekdayComboBox.getSelectionModel().select(0);
+                startDateLabel.setText("Beginn:");
                 endDateLabel.setText("Ende (optional):");
+                hBoxApt.getChildren().setAll(vBoxRepeat, vBoxWeekday, vBoxTime);
+                hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
             }
         });
 
@@ -260,18 +312,19 @@ public class AddSingleController implements Initializable {
         repeatComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             boolean repeatOff = repeatComboBox.getValue().equals("einmaliger Termin");
             weekdayComboBox.setDisable(repeatOff);
-            beginDateLabel.setText(repeatOff ? "Datum" : "Beginn");
+            startDateLabel.setText(repeatOff ? "Datum" : "Beginn");
             endDatePicker.setDisable(repeatOff);
         });
-        repeatComboBox.getSelectionModel().select(1);
 
         weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
-                "Freitag", "Samstag"));
-        weekdayComboBox.getSelectionModel().select(0);
+                "Freitag", "Samstag", "nicht festgelegt"));
 
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
 
         statusComboBox.setItems(FXCollections.observableArrayList(LESSON_STATUS_LIST));
 
+        repeatComboBox.getSelectionModel().select(1);
+        aptDraftRadioButton.setSelected(true);
+        lessonStatusMeet.setSelected(true);
     }
 }

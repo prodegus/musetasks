@@ -21,6 +21,7 @@ import java.util.StringJoiner;
 
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
+import static prodegus.musetasks.lessons.LessonModel.REPEAT_OFF;
 import static prodegus.musetasks.lessons.LessonModel.getLessonFromDB;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
@@ -145,8 +146,14 @@ public class EditAppointmentController implements Initializable {
             if (oldAppointment.getStatus() == STATUS_DROPPED)
                 descriptionOld.append(", wird nicht nachgeholt");
             oldAppointment.setDescription(descriptionOld.toString());
-            System.out.println("insert oldAppointment");
-            insert(oldAppointment);
+
+            if (oldAppointment.getId() != 0) {
+                update(oldAppointment, oldAppointment.getId());
+                System.out.println("update oldAppointment");
+            } else {
+                insert(oldAppointment);
+                System.out.println("insert oldAppointment");
+            }
         }
         if (!cancelled) {
             newAppointment.setDescription(newAppointment.getCategory() == CATEGORY_LESSON_REGULAR ? reason :
@@ -168,7 +175,7 @@ public class EditAppointmentController implements Initializable {
         instrumentLabel.setText(lesson.getInstrument());
         locationRoomLabel.setText(lesson.locationRoom());
         teacherLabel.setText(lesson.teacher().name());
-        regularAptLabel.setText(lesson.regularAppointment());
+        regularAptLabel.setText(lesson.getRepeat() == REPEAT_OFF ? "nicht festgelegt" : lesson.regularAppointment());
         newDatePicker.setValue(appointment.getDate());
         newTimeHoursTextField.setText(String.valueOf(oldTime.getHour()));
         newTimeMinTextField.setText((oldTime.getMinute() < 10 ? "0" : "") + oldTime.getMinute());

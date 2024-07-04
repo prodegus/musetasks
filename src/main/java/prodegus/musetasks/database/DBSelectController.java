@@ -6,12 +6,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
+import prodegus.musetasks.contacts.Student;
+import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.ui.PopupWindow;
 
 import java.io.File;
 
+import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.Strings.string;
 
 public class DBSelectController {
 
@@ -61,6 +65,8 @@ public class DBSelectController {
         stageOf(event).close();
         Platform.exit();
     }
+
+
 
     @FXML
     void cancel(ActionEvent event) {

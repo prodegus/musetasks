@@ -232,32 +232,33 @@ public class Database {
     public static void createLessonTable(String dbPath) {
         String sql =
                 "CREATE TABLE mtlessons (" +
-                "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
-                "    lessonname  TEXT," +
-                "    category    INTEGER," +
-                "    instrument  TEXT," +
-                "    teacherid   INTEGER REFERENCES mtteachers (id) ON DELETE SET NULL," +
-                "    locationid  INTEGER REFERENCES mtlocations (id) ON DELETE SET NULL," +
-                "    room        TEXT," +
-                "    repeat      INTEGER," +
-                "    weekday     INTEGER," +
-                "    time        INTEGER," +
-                "    duration    INTEGER," +
-                "    startdate   INTEGER," +
-                "    enddate     INTEGER," +
-                "    status      INTEGER," +
-                "    statusfrom  INTEGER," +
-                "    statusto    INTEGER," +
-                "    studentid1  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid2  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid3  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid4  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid5  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid6  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid7  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid8  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid9  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
-                "    studentid10 INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL" +
+                "    id           INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
+                "    lessonname   TEXT," +
+                "    category     INTEGER," +
+                "    instrument   TEXT," +
+                "    teacherid    INTEGER REFERENCES mtteachers (id) ON DELETE SET NULL," +
+                "    locationid   INTEGER REFERENCES mtlocations (id) ON DELETE SET NULL," +
+                "    room         TEXT," +
+                "    repeat       INTEGER," +
+                "    weekday      INTEGER," +
+                "    time         INTEGER," +
+                "    duration     INTEGER," +
+                "    startdate    INTEGER," +
+                "    enddate      INTEGER," +
+                "    lessonstatus INTEGER," +
+                "    aptstatus    INTEGER," +
+                "    statusfrom   INTEGER," +
+                "    statusto     INTEGER," +
+                "    studentid1   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid2   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid3   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid4   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid5   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid6   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid7   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid8   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid9   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                "    studentid10  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL" +
                 ")";
 
         try (Connection conn = connect(dbPath);
@@ -414,6 +415,24 @@ public class Database {
         delete(table, new Filter("id", String.valueOf(id)));
     }
 
+    public static void delete(String table, Filter ... filters) {
+        StringBuilder sql = new StringBuilder("DELETE FROM " + table + " WHERE ");
+
+        int i = 1;
+        for (Filter filter : filters) {
+            sql.append(filter.toSQLString());
+            if (i < filters.length) sql.append(" AND ");
+            i++;
+        }
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql.toString());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void delete(String table, Filter filter) {
         String sql = "DELETE FROM " + table + " WHERE " + filter.toSQLString();
 
@@ -482,6 +501,8 @@ public class Database {
             if (i < filters.length) sql.append(" AND ");
             i++;
         }
+
+        System.out.println(sql);
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();

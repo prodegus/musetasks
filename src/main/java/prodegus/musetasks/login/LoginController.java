@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import prodegus.musetasks.contacts.Student;
+import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.school.Holiday;
 import prodegus.musetasks.school.Location;
@@ -20,6 +22,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import static prodegus.musetasks.contacts.ContactModel.*;
+import static prodegus.musetasks.contacts.ContactModel.insertContact;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.school.HolidayModel.insertHoliday;
@@ -217,6 +221,54 @@ public class LoginController implements Initializable {
         stage.showAndWait();
     }
 
+    private void insertDummyEntries() {
+        createUser("a", "123123");
+
+        Student dummyStudent = new Student();
+        dummyStudent.setLastName("Meier");
+        dummyStudent.setFirstName("Fritz");
+        dummyStudent.setCategory(CATEGORY_STUDENT);
+        dummyStudent.setLocation("");
+        dummyStudent.setStreet("");
+        dummyStudent.setCity("");
+        dummyStudent.setPhone("");
+        dummyStudent.setEmail("");
+        dummyStudent.setZoom("");
+        dummyStudent.setSkype("");
+        dummyStudent.setBirthDate("");
+        dummyStudent.setNotes("");
+        dummyStudent.setSelected(false);
+        dummyStudent.setInstrument1("Gitarre");
+        dummyStudent.setInstrument2("");
+        dummyStudent.setInstrument3("");
+        dummyStudent.setProspective(false);
+        dummyStudent.setStatus("");
+        dummyStudent.setStatusFrom("");
+        dummyStudent.setStatusTo("");
+        insertContact(dummyStudent);
+
+        Teacher dummyTeacher = new Teacher();
+        dummyTeacher.setFirstName("Max");
+        dummyTeacher.setLastName("Muster");
+        dummyTeacher.setCategory(CATEGORY_TEACHER);
+        dummyTeacher.setLocation("");
+        dummyTeacher.setStreet("");
+        dummyTeacher.setCity("");
+        dummyTeacher.setPhone("");
+        dummyTeacher.setEmail("");
+        dummyTeacher.setZoom("");
+        dummyTeacher.setSkype("");
+        dummyTeacher.setBirthDate("");
+        dummyTeacher.setNotes("");
+        dummyTeacher.setSelected(false);
+        dummyTeacher.setInstruments("Gitarre");
+        dummyTeacher.setActiveDays("");
+        dummyTeacher.setStatus("");
+        dummyTeacher.setStatusFrom("");
+        dummyTeacher.setStatusTo("");
+        insertContact(dummyTeacher);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("connected: " + connected());
@@ -233,8 +285,11 @@ public class LoginController implements Initializable {
         if (!tableExists(USER_TABLE)) {
             PopupWindow.displayInformation("Datenbank-Fehler! Bitte andere Datenbank auswählen oder neu anlegen!");
             selectDB();
+            return;
         }
 
-
+        if (isEmptyTable(USER_TABLE)) {
+            insertDummyEntries();
+        }
     }
 }

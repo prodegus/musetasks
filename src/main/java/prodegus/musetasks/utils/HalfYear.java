@@ -26,4 +26,10 @@ public class HalfYear {
     public void setEnd(LocalDate end) {
         this.end = end;
     }
+
+    public String title() {
+        int number = this.getStart().getMonthValue() < 6 ? 1 : 2;
+        int year = this.getStart().getYear();
+        return number + ". Halbjahr " + year;
+    }
 }

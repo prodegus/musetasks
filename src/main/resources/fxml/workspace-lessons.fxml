@@ -479,6 +479,26 @@
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Separator>
+                  <AnchorPane>
+                     <children>
+                        <Label text="Aktionen" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_RIGHT" layoutX="631.0" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" spacing="10.0" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#editLesson" prefWidth="140.0" text="Unterricht bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLesson" prefWidth="140.0" text="Unterricht löschen" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <Separator>
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Separator>
                   <Label fx:id="aptLabel" text="Termine im 1. Halbjahr 2024:">
                      <font>
                         <Font name="System Bold" size="14.0" />
@@ -512,7 +532,7 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#aptNextHalfYear" prefWidth="160.0" text="Nächstes Halbjahr -&gt;">
+                        <Button mnemonicParsing="false" onAction="#aptShowNextHalfYear" prefWidth="160.0" text="Nächstes Halbjahr -&gt;">
                            <font>
                               <Font size="14.0" />
                            </font>

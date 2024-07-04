@@ -39,11 +39,7 @@ public class AppointmentModel {
         String sql =
                 "SELECT * FROM " + APPOINTMENT_TABLE +
                 " WHERE lessonid = " + lessonId +
-                " AND (" +
-                        "date BETWEEN " + toInt(startDate) + " AND " + toInt(endDate) +
-                        " OR " +
-                        "dateold BETWEEN " + toInt(startDate) + " AND " + toInt(endDate) +
-                ")";
+                " AND (date BETWEEN " + toInt(startDate) + " AND " + toInt(endDate) + ")";
 
         try (Connection connection = connect();
              Statement statement = connection.createStatement();

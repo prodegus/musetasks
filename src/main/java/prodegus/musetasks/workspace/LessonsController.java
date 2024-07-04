@@ -20,10 +20,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
-import prodegus.musetasks.contacts.AddStudentController;
-import prodegus.musetasks.contacts.Contact;
 import prodegus.musetasks.contacts.Teacher;
+import prodegus.musetasks.lessons.AddSingleController;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.ui.PopupWindow;
 import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
@@ -35,9 +35,11 @@ import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
+import static prodegus.musetasks.lessons.LessonModel.CATEGORY_SINGLE;
 import static prodegus.musetasks.lessons.LessonModel.getLessonListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.ui.PopupWindow.displayInformation;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.utils.DateTime.*;
 
@@ -122,6 +124,28 @@ public class LessonsController implements Initializable {
     };
 
     @FXML
+    void editLesson(ActionEvent event) {
+        switch (selectedLesson.getCategory()) {
+            case CATEGORY_SINGLE -> showEditSingleWindow(selectedLesson);
+        }
+
+    }
+
+    private void showEditSingleWindow(Lesson lesson) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addsingle.fxml"));
+        Stage stage = newStage("Einzel-Unterricht bearbeiten", loader);
+        AddSingleController controller = loader.getController();
+        controller.initLesson(selectedLesson);
+        stage.showAndWait();
+        refreshLessons();
+    }
+
+    @FXML
+    void deleteLesson(ActionEvent event) {
+
+    }
+
+    @FXML
     void aptEdit(ActionEvent event) {
         if (selectedAppointment == null) return;
         openEditAppointmentWindow(selectedAppointment);
@@ -133,13 +157,27 @@ public class LessonsController implements Initializable {
     }
 
     @FXML
-    void aptNextHalfYear(ActionEvent event) {
-
+    void aptShowNextHalfYear(ActionEvent event) {
+        int currentIndex = halfYears.indexOf(selectedHalfYear);
+        if (currentIndex == halfYears.size() - 1) {
+            displayInformation("Ende der Liste erreicht!");
+            return;
+        }
+        selectedHalfYear = halfYears.get(currentIndex + 1);
+        aptLabel.setText("Termine im " + selectedHalfYear.title() + ":");
+        refreshAppointments();
     }
 
     @FXML
     void aptShowPreviousHalfYear(ActionEvent event) {
-
+        int currentIndex = halfYears.indexOf(selectedHalfYear);
+        if (currentIndex == 0) {
+            displayInformation("Anfang der Liste erreicht!");
+            return;
+        }
+        selectedHalfYear = halfYears.get(currentIndex - 1);
+        aptLabel.setText("Termine im " + selectedHalfYear.title() + ":");
+        refreshAppointments();
     }
 
     @FXML
@@ -222,7 +260,8 @@ public class LessonsController implements Initializable {
     }
 
     public void showLessonInfo(Lesson lesson) {
-        aptTableView.setItems(lesson.appointments(selectedHalfYear.getStart(), selectedHalfYear.getEnd()));
+        if (lesson == null) return;
+        aptTableView.setItems(lesson.appointments(selectedHalfYear));
     }
 
     private void openEditAppointmentWindow(Appointment selectedAppointment) {
@@ -237,6 +276,7 @@ public class LessonsController implements Initializable {
     private void refreshLessons() {
         lessons.setAll(getLessonListFromDB());
         tableViewSelect(selectedTableView);
+        showLessonInfo(selectedLesson);
     }
 
     private void refreshAppointments() {
@@ -271,7 +311,8 @@ public class LessonsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize Lesson List
         lessons.setAll(getLessonListFromDB());
-        selectedHalfYear = H_2024_1;
+        selectedHalfYear = currentHalfYear();
+        aptLabel.setText("Termine im " + selectedHalfYear.title() + ":");
 
         // Initialize Lesson Filters
         filterLocation1.setText(SCHOOL_LOCATIONS.get(0).getName());
@@ -361,9 +402,17 @@ public class LessonsController implements Initializable {
 
         // Initialize appointment TableView
         aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateInfo()));
+        aptColumnDate.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.23));
+
         aptColumnTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().timeInfo()));
-        aptColumnNote.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+        aptColumnTime.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.13));
+
         aptColumnStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().status()));
+        aptColumnStatus.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.23));
+
+        aptColumnNote.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+        aptColumnNote.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.4));
+
         aptLabel.setText("Termine im 1. Halbjahr 2024:");
 
 
@@ -372,6 +421,7 @@ public class LessonsController implements Initializable {
             public void handle(MouseEvent event) {
                 if (aptTableView.getSelectionModel().isEmpty()) return;
                 selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
+                System.out.println("selectedAppointment.getId(): " + selectedAppointment.getId());
                 aptEditButton.setDisable(selectedAppointment.getCategory() == CATEGORY_HOLIDAY);
             }
         });

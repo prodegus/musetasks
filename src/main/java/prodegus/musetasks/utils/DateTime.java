@@ -1,5 +1,6 @@
 package prodegus.musetasks.utils;
 
+import javafx.collections.FXCollections;
 import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
@@ -15,6 +16,22 @@ public class DateTime {
 
     public static final HalfYear H_2024_1 = new HalfYear(LocalDate.of(2024, 1, 6), LocalDate.of(2024, 8, 20));
     public static final HalfYear H_2024_2 = new HalfYear(LocalDate.of(2024, 8, 21), LocalDate.of(2025, 1, 6));
+    public static final HalfYear H_2025_1 = new HalfYear(LocalDate.of(2025, 1, 7), LocalDate.of(2025, 8, 26));
+    public static final HalfYear H_2025_2 = new HalfYear(LocalDate.of(2025, 8, 27), LocalDate.of(2026, 1, 6));
+    public static final HalfYear H_2026_1 = new HalfYear(LocalDate.of(2026, 1, 7), LocalDate.of(2026, 9, 1));
+    public static final HalfYear H_2026_2 = new HalfYear(LocalDate.of(2026, 9, 2), LocalDate.of(2027, 1, 6));
+    public static final HalfYear H_2027_1 = new HalfYear(LocalDate.of(2027, 1, 7), LocalDate.of(2027, 8, 31));
+    public static final HalfYear H_2027_2 = new HalfYear(LocalDate.of(2027, 9, 1), LocalDate.of(2028, 1, 8));
+    public static final List<HalfYear> halfYears = FXCollections.observableArrayList(H_2024_1, H_2024_2, H_2025_1,
+            H_2025_2, H_2026_1, H_2026_2, H_2027_1, H_2027_2);
+
+    public static HalfYear currentHalfYear() {
+        LocalDate now = LocalDate.now();
+        for (HalfYear halfYear : halfYears) {
+            if (!now.isBefore(halfYear.getStart()) && !now.isAfter(halfYear.getEnd())) return halfYear;
+        }
+        return null;
+    }
 
     public static String fullDateTimeString(LocalDate date, LocalTime time) {
         return weekdayDateString(date) + " - " + time.toString() + " Uhr";

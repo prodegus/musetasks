@@ -19,9 +19,10 @@ public class Appointment implements Comparable<Appointment> {
 
     public static final int CATEGORY_LESSON_REGULAR = 1;
     public static final int CATEGORY_LESSON_RESCHEDULED = 2;
-    public static final int CATEGORY_MEET = 3;
-    public static final int CATEGORY_HOLIDAY = 4;
-    public static final int CATEGORY_CUSTOM = 5;
+    public static final int CATEGORY_LESSON_MEET = 3;
+    public static final int CATEGORY_LESSON_TRIAL = 4;
+    public static final int CATEGORY_HOLIDAY = 5;
+    public static final int CATEGORY_CUSTOM = 6;
 
     public static final int STATUS_OK = 1;
     public static final int STATUS_CANCELLED_STUDENT = 2;
@@ -272,7 +273,7 @@ public class Appointment implements Comparable<Appointment> {
         sb.append("time        = ").append(this.getTime() == LocalTime.MAX ? "null" : toInt(this.getTime())).append(", ");
         sb.append("duration    = ").append(this.getDuration()).append(", ");
         sb.append("locationid  = ").append(this.getLocationId() == 0 ? "null" : this.getLocationId()).append(", ");
-        sb.append("room        = ").append(this.getRoom().isBlank() ? "null" : this.getRoom()).append(", ");
+        sb.append("room        = ").append(this.getRoom().isBlank() ? "null" : ("'" + this.getRoom() +"'")).append(", ");
         sb.append("lessonid    = ").append(this.getLessonId() == 0 ? "null" : this.getLessonId()).append(", ");
         sb.append("dateold     = ").append(this.getDateOld() == LocalDate.MIN ? "null" : toInt(this.getDateOld())).append(", ");
         sb.append("category    = ").append(this.getCategory()).append(", ");

@@ -2,14 +2,18 @@ package prodegus.musetasks.lessons;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import prodegus.musetasks.appointments.Appointment;
+import prodegus.musetasks.database.Filter;
+import prodegus.musetasks.ui.PopupWindow;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
+import static prodegus.musetasks.appointments.Appointment.*;
+import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.database.Database.*;
 
 public class LessonModel {
@@ -28,32 +32,51 @@ public class LessonModel {
     public static final int REPEAT_OFF = 7;
     public static final int REPEAT_CUSTOM = 8;
 
-    public static final int UNKNOWN_WEEKDAY = 0;
     public static final int MONDAY = 1;
     public static final int TUESDAY = 2;
     public static final int WEDNESDAY = 3;
     public static final int THURSDAY = 4;
     public static final int FRIDAY = 5;
     public static final int SATURDAY = 6;
+    public static final int WEEKDAY_NO_SELECTION = 7;
 
-    public static final int STATUS_DRAFT = 0;
-    public static final int STATUS_ACTIVE = 1;
-    public static final int STATUS_MEET = 2;
-    public static final int STATUS_TRIAL = 3;
-    public static final int STATUS_ILL = 4;
-    public static final int STATUS_HOLIDAY = 5;
-    public static final int STATUS_RESIGNED = 6;
-    public static final int STATUS_NO_SELECTION = 7;
+    public static final int LESSON_STATUS_MEET = 1;
+    public static final int LESSON_STATUS_TRIAL = 2;
+    public static final int LESSON_STATUS_ACTIVE = 3;
+    public static final int LESSON_STATUS_ILL = 4;
+    public static final int LESSON_STATUS_HOLIDAY = 5;
+    public static final int LESSON_STATUS_RESIGNED = 6;
+
+    public static final int LESSON_APT_STATUS_DRAFT = 1;
+    public static final int LESSON_APT_STATUS_REQUEST = 2;
+    public static final int LESSON_APT_STATUS_CONFIRMED = 3;
 
     public static final ObservableList<String> LESSON_STATUS_LIST = FXCollections.observableArrayList(
-            "Entwurf",
-            "Aktiv",
-            "Schnupper-Unterricht",
-            "Probemonat",
-            "Unterbochen (Krankheit)",
-            "Unterbrochen (Urlaub)",
-            "Gekündigt",
-            "auswählen"
+            "auswählen",                // 0
+            "Schnupper-Unterricht",     // 1
+            "Probemonat",               // 2
+            "Aktiv",                    // 3
+            "Unterbrochen (Krankheit)", // 4
+            "Unterbrochen (Urlaub)",    // 5
+            "Gekündigt"                 // 6
+    );
+
+    public static final ObservableList<String> LESSON_APT_STATUS_LIST = FXCollections.observableArrayList(
+            "auswählen",        // 0
+            "Entwurf",          // 1
+            "Termin angefragt", // 2
+            "Termin bestätigt"  // 3
+    );
+
+    public static final ObservableList<String> WEEKDAY_LIST = FXCollections.observableArrayList(
+            "auswählen",    // 0
+            "Montag",       // 1
+            "Dienstag",     // 2
+            "Mittwoch",     // 3
+            "Donnerstag",   // 4
+            "Freitag",      // 5
+            "Samstag",      // 6
+            "keine Auswahl" // 7
     );
 
     public static ObservableList<Lesson> getLessonListFromDB() {
@@ -89,6 +112,71 @@ public class LessonModel {
         return lesson;
     }
 
+    public static void insertLessonAppointments(int lessonId) {
+        Lesson lesson = getLessonFromDB(lessonId);
+        if (lesson == null || lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) return;
+
+        if (lesson.getLessonStatus() == LESSON_STATUS_MEET) {
+            if (meetExists(lessonId)) {
+                String meetExistsMessage = "Für diesen Unterricht wurde bereits ein Schnupper-Termin festgelegt.\n\n" +
+                        "Termin überschreiben?";
+                if (!PopupWindow.displayYesNo(meetExistsMessage)) return;
+                delete(APPOINTMENT_TABLE, new Filter("lessonid", lessonId), new Filter("description", "Schnupper-Unterricht"));
+            }
+
+            Appointment appointment = new Appointment();
+            appointment.setDate(lesson.getStartDate());
+            appointment.setTime(lesson.getTime());
+            appointment.setLocationId(lesson.getLocationId());
+            appointment.setRoom(lesson.getRoom());
+            appointment.setDuration(lesson.getDuration());
+            appointment.setLessonId(lesson.getId());
+            appointment.setCategory(CATEGORY_LESSON_MEET);
+            appointment.setStatus(STATUS_OK);
+            appointment.setDescription("Schnupper-Unterricht");
+            insert(appointment);
+        }
+
+        if (lesson.getLessonStatus() == LESSON_STATUS_TRIAL) {
+            if (trialExists(lessonId)) {
+                String trialExistsMessage = "Für diesen Unterricht wurde bereits ein Probemonat festgelegt.\n\n" +
+                        "Termine überschreiben?";
+                if (!PopupWindow.displayYesNo(trialExistsMessage)) return;
+                delete(APPOINTMENT_TABLE, new Filter("lessonid", lessonId), new Filter("description", "Probemonat"));
+            }
+
+            LocalDate realStartDate = lesson.getStartDate();
+            while (realStartDate.getDayOfWeek().getValue() != lesson.getWeekday())
+                realStartDate = realStartDate.plusDays(1);
+
+            for (LocalDate date = realStartDate; !date.isAfter(lesson.getEndDate()); date = date.plusWeeks(lesson.getRepeat())) {
+                Appointment appointment = new Appointment();
+                appointment.setDate(date);
+                appointment.setTime(lesson.getTime());
+                appointment.setLocationId(lesson.getLocationId());
+                appointment.setRoom(lesson.getRoom());
+                appointment.setDuration(lesson.getDuration());
+                appointment.setLessonId(lesson.getId());
+                appointment.setCategory(CATEGORY_LESSON_TRIAL);
+                appointment.setStatus(STATUS_OK);
+                appointment.setDescription("Probemonat");
+                insert(appointment);
+            }
+        }
+    }
+
+    public static boolean trialExists(int lessonId) {
+        Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
+        Filter trial = new Filter("description", "Probemonat");
+        return !queryInteger("id", APPOINTMENT_TABLE, lesson, trial).isEmpty();
+    }
+
+    public static boolean meetExists(int lessonId) {
+        Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
+        Filter trial = new Filter("description", "Schnupper-Unterricht");
+        return !queryInteger("id", APPOINTMENT_TABLE, lesson, trial).isEmpty();
+    }
+
     public static void insertLesson(Lesson lesson) {
         insert(LESSON_TABLE, lesson.sqlColumns(), lesson.sqlValues());
     }
@@ -116,47 +204,6 @@ public class LessonModel {
         }
 
         return id;
-    }
-
-    public static int repeatModeFromString(String repeatMode) {
-        if (repeatMode == null) return REPEAT_OFF;
-        return switch(repeatMode) {
-            case "jede Woche" -> REPEAT_WEEKLY;
-            case "jede 2. Woche" -> REPEAT_2WEEKS;
-            case "jede 3. Woche" -> REPEAT_3WEEKS;
-            case "jede 4. Woche" -> REPEAT_4WEEKS;
-            case "jede 5. Woche" -> REPEAT_5WEEKS;
-            case "jede 6. Woche" -> REPEAT_6WEEKS;
-            case "individuelle Termine" -> REPEAT_CUSTOM;
-            default -> REPEAT_OFF;
-        };
-    }
-
-    public static String repeatStringFromInt(int repeat) {
-        return switch(repeat) {
-            case REPEAT_OFF -> "einmaliger Termin";
-            case REPEAT_WEEKLY -> "jede Woche";
-            case REPEAT_2WEEKS -> "jede 2. Woche";
-            case REPEAT_3WEEKS -> "jede 3. Woche";
-            case REPEAT_4WEEKS -> "jede 4. Woche";
-            case REPEAT_5WEEKS -> "jede 5. Woche";
-            case REPEAT_6WEEKS -> "jede 6. Woche";
-            case REPEAT_CUSTOM -> "individuelle Termine";
-            default -> "-";
-        };
-    }
-
-    public static int weekdayFromString(String weekday) {
-        if (weekday == null) return UNKNOWN_WEEKDAY;
-        return switch(weekday) {
-            case "Montag" -> MONDAY;
-            case "Dienstag" -> TUESDAY;
-            case "Mittwoch" -> WEDNESDAY;
-            case "Donnerstag" -> THURSDAY;
-            case "Freitag" -> FRIDAY;
-            case "Samstag" -> SATURDAY;
-            default -> UNKNOWN_WEEKDAY;
-        };
     }
 
 }

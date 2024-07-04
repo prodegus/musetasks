@@ -26,7 +26,7 @@
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="80.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
@@ -103,9 +103,9 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="7">
+                  <HBox fx:id="hBoxApt" spacing="10.0" GridPane.rowIndex="7">
                      <children>
-                        <VBox>
+                        <VBox fx:id="vBoxRepeat">
                            <children>
                               <Label text="Wiederholung" />
                               <ComboBox fx:id="repeatComboBox" prefHeight="30.0" promptText="jede Woche" />
@@ -114,13 +114,13 @@
                               <Insets />
                            </HBox.margin>
                         </VBox>
-                        <VBox>
+                        <VBox fx:id="vBoxWeekday">
                            <children>
                               <Label text="Wochentag" />
                               <ComboBox fx:id="weekdayComboBox" prefHeight="30.0" promptText="montags" />
                            </children>
                         </VBox>
-                        <VBox>
+                        <VBox fx:id="vBoxTime">
                            <children>
                               <Label text="Uhrzeit" />
                               <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
@@ -128,15 +128,15 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="8">
+                  <HBox fx:id="hBoxPeriod" spacing="10.0" GridPane.rowIndex="8">
                      <children>
-                        <VBox>
+                        <VBox fx:id="vBoxStartDate">
                            <children>
-                              <Label fx:id="beginDateLabel" text="Beginn" />
+                              <Label fx:id="startDateLabel" text="Beginn" />
                               <DatePicker fx:id="startDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
                            </children>
                         </VBox>
-                        <VBox>
+                        <VBox fx:id="vBoxEndDate">
                            <children>
                               <Label fx:id="endDateLabel" text="Ende (optional)" />
                               <DatePicker fx:id="endDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
@@ -144,7 +144,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox spacing="10.0" GridPane.rowIndex="10">
+                  <HBox spacing="10.0" visible="false" GridPane.rowIndex="10">
                      <children>
                         <VBox>
                            <children>
@@ -181,13 +181,13 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <RadioButton fx:id="confirmDraft" mnemonicParsing="false" selected="true" text="Entwurf">
+                              <RadioButton fx:id="aptDraftRadioButton" mnemonicParsing="false" text="Entwurf">
                                  <toggleGroup>
-                                    <ToggleGroup fx:id="aptConfirm" />
+                                    <ToggleGroup fx:id="aptStatusGroup" />
                                  </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="confirmProposed" mnemonicParsing="false" text="Termin angefragt" toggleGroup="$aptConfirm" />
-                              <RadioButton fx:id="confirmYes" mnemonicParsing="false" text="Termin bestätigt" toggleGroup="$aptConfirm" />
+                              <RadioButton fx:id="aptRequestRadioButton" mnemonicParsing="false" text="Termin angefragt" toggleGroup="$aptStatusGroup" />
+                              <RadioButton fx:id="aptConfirmedRadioButton" mnemonicParsing="false" text="Termin bestätigt" toggleGroup="$aptStatusGroup" />
                            </children>
                         </VBox>
                         <VBox>
@@ -197,13 +197,13 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <RadioButton fx:id="statusMeet" mnemonicParsing="false" selected="true" text="Schnupper-Unterricht">
+                              <RadioButton fx:id="lessonStatusMeet" mnemonicParsing="false" text="Schnupper-Unterricht">
                                  <toggleGroup>
-                                    <ToggleGroup fx:id="lessonStatus" />
+                                    <ToggleGroup fx:id="lessonStatusGroup" />
                                  </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="statusTrial" mnemonicParsing="false" text="Probemonat" toggleGroup="$lessonStatus" />
-                              <RadioButton fx:id="statusActive" mnemonicParsing="false" text="Laufender Unterricht" toggleGroup="$lessonStatus" />
+                              <RadioButton fx:id="lessonStatusTrial" mnemonicParsing="false" text="Probemonat" toggleGroup="$lessonStatusGroup" />
+                              <RadioButton fx:id="lessonStatusActive" mnemonicParsing="false" text="Laufender Unterricht" toggleGroup="$lessonStatusGroup" />
                            </children>
                         </VBox>
                      </children>

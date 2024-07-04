@@ -37,6 +37,10 @@ module prodegus.musetasks {
 
     opens prodegus.musetasks.school to javafx.fxml;
     exports prodegus.musetasks.school;
-    exports prodegus.musetasks.appointments;
+
+    opens prodegus.musetasks.utils to javafx.fxml;
+    exports prodegus.musetasks.utils;
+
     opens prodegus.musetasks.appointments to javafx.fxml;
+    exports prodegus.musetasks.appointments;
 }

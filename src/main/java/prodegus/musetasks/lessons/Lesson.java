@@ -1,6 +1,5 @@
 package prodegus.musetasks.lessons;
 
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +10,7 @@ import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.school.Holiday;
 import prodegus.musetasks.school.Location;
+import prodegus.musetasks.utils.HalfYear;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +25,6 @@ import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 import static prodegus.musetasks.school.HolidayModel.createHolidayAppointment;
 import static prodegus.musetasks.school.HolidayModel.getHoliday;
-import static prodegus.musetasks.school.HolidayModel.isHoliday;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.Strings.string;
@@ -45,9 +44,8 @@ public class Lesson {
     private SimpleIntegerProperty duration = new SimpleIntegerProperty();
     private LocalDate startDate = LocalDate.MIN;
     private LocalDate endDate = LocalDate.MAX;
-    private SimpleIntegerProperty status = new SimpleIntegerProperty();
-    private LocalDate statusFrom = LocalDate.MIN;
-    private LocalDate statusTo = LocalDate.MAX;
+    private SimpleIntegerProperty lessonStatus = new SimpleIntegerProperty();
+    private SimpleIntegerProperty aptStatus = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId1 = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId2 = new SimpleIntegerProperty();
     private SimpleIntegerProperty studentId3 = new SimpleIntegerProperty();
@@ -204,32 +202,28 @@ public class Lesson {
         this.endDate = endDate;
     }
 
-    public int getStatus() {
-        return status.get();
+    public int getLessonStatus() {
+        return lessonStatus.get();
     }
 
-    public void setStatus(int status) {
-        this.status.set(status);
+    public void setLessonStatus(int lessonStatus) {
+        this.lessonStatus.set(lessonStatus);
     }
 
-    public SimpleIntegerProperty statusProperty() {
-        return status;
+    public SimpleIntegerProperty lessonStatusProperty() {
+        return lessonStatus;
     }
 
-    public LocalDate getStatusFrom() {
-        return statusFrom;
+    public int getAptStatus() {
+        return aptStatus.get();
     }
 
-    public void setStatusFrom(LocalDate statusFrom) {
-        this.statusFrom = statusFrom;
+    public SimpleIntegerProperty aptStatusProperty() {
+        return aptStatus;
     }
 
-    public LocalDate getStatusTo() {
-        return statusTo;
-    }
-
-    public void setStatusTo(LocalDate statusTo) {
-        this.statusTo = statusTo;
+    public void setAptStatus(int aptStatus) {
+        this.aptStatus.set(aptStatus);
     }
 
     public int getStudentId1() {
@@ -368,8 +362,16 @@ public class Lesson {
         return String.valueOf(this.getId());
     }
 
+    public String durationString() {
+        return this.getDuration() + " Minuten";
+    }
+
     public Teacher teacher() {
         return getTeacherFromDB(getTeacherId());
+    }
+
+    public ObservableList<Appointment> appointments(HalfYear halfYear) {
+        return this.appointments(halfYear.getStart(), halfYear.getEnd());
     }
 
     public ObservableList<Appointment> appointments(LocalDate startDate, LocalDate endDate) {
@@ -379,7 +381,7 @@ public class Lesson {
         Holiday currentHoliday = null;
 
         list.addAll(getLessonAppointmentsFromDB(this.getId(), startDate, endDate));
-        if (this.getStatus() == STATUS_MEET || this.getStatus() == STATUS_DRAFT)
+        if (this.getLessonStatus() != LESSON_STATUS_ACTIVE || this.getAptStatus() == LESSON_APT_STATUS_DRAFT)
             return list;
         while (realStartDate.getDayOfWeek().getValue() != this.getWeekday())
             realStartDate = realStartDate.plusDays(1);
@@ -472,28 +474,16 @@ public class Lesson {
     }
 
     public String weekday() {
-        return switch (this.getWeekday()) {
-            case UNKNOWN_WEEKDAY ->  "nicht festgelegt";
-            case MONDAY -> "Montag";
-            case TUESDAY -> "Dienstag";
-            case WEDNESDAY -> "Mittwoch";
-            case THURSDAY -> "Donnerstag";
-            case FRIDAY -> "Freitag";
-            case SATURDAY -> "Samstag";
-            default -> "";
-        };
+        if (this.getWeekday() < 1 || this.getWeekday() > 6) return "";
+        return WEEKDAY_LIST.get(this.getWeekday());
     }
 
-    public String status() {
-        return switch (this.getStatus()) {
-            case STATUS_ACTIVE -> "Aktiv";
-            case STATUS_MEET -> "Schnupper-Unterricht";
-            case STATUS_TRIAL -> "Probemonat";
-            case STATUS_ILL -> "Pause (Krankheit)";
-            case STATUS_HOLIDAY -> "Pause (Urlaub)";
-            case STATUS_RESIGNED -> "Gekündigt";
-            default -> "Entwurf";
-        };
+    public String lessonStatus() {
+        return LESSON_STATUS_LIST.get(this.getLessonStatus());
+    }
+
+    public String appointmentStatus() {
+        return LESSON_APT_STATUS_LIST.get(this.getAptStatus());
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
@@ -511,9 +501,8 @@ public class Lesson {
         this.setDuration(rs.getInt("duration"));
         this.setStartDate(toDate(rs.getInt("startdate")));
         this.setEndDate(rs.getInt("enddate") == 0 ? LocalDate.MAX : toDate(rs.getInt("enddate")));
-        this.setStatus(rs.getInt("status"));
-        this.setStatusFrom(toDate(rs.getInt("statusfrom")));
-        this.setStatusTo(toDate(rs.getInt("statusto")));
+        this.setLessonStatus(rs.getInt("lessonstatus"));
+        this.setAptStatus(rs.getInt("aptstatus"));
         this.setStudentId1(rs.getInt("studentid1"));
         this.setStudentId2(rs.getInt("studentid2"));
         this.setStudentId3(rs.getInt("studentid3"));
@@ -542,9 +531,8 @@ public class Lesson {
         columns.add("duration");
         if (this.getStartDate() != LocalDate.MIN) columns.add("startdate");
         if (this.getEndDate() != LocalDate.MAX) columns.add("enddate");
-        columns.add("status");
-        if (this.getStatusFrom() != LocalDate.MIN) columns.add("statusfrom");
-        if (this.getStatusTo() != LocalDate.MAX) columns.add("statusto");
+        columns.add("lessonstatus");
+        columns.add("aptstatus");
         if (this.getStudentId1() != 0) columns.add("studentid1");
         if (this.getStudentId2() != 0) columns.add("studentid2");
         if (this.getStudentId3() != 0) columns.add("studentid3");
@@ -574,9 +562,8 @@ public class Lesson {
         values.add(String.valueOf(this.getDuration()));
         if (getStartDate() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getStartDate())));
         if (getEndDate() != LocalDate.MAX) values.add(String.valueOf(toInt(this.getEndDate())));
-        values.add(String.valueOf(this.getStatus()));
-        if (getStatusFrom() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getStatusFrom())));
-        if (getStatusTo() != LocalDate.MAX) values.add(String.valueOf(toInt(this.getStatusTo())));
+        values.add(String.valueOf(this.getLessonStatus()));
+        values.add(String.valueOf(this.getAptStatus()));
         if (this.getStudentId1() != 0) values.add(String.valueOf(this.getStudentId1()));
         if (this.getStudentId2() != 0) values.add(String.valueOf(this.getStudentId2()));
         if (this.getStudentId3() != 0) values.add(String.valueOf(this.getStudentId3()));
@@ -594,31 +581,30 @@ public class Lesson {
     public String valuesToSQLUpdateString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("lessonname  = '").append(this.getLessonName()).append("', ");
-        sb.append("category    = ").append(this.getCategory()).append(", ");
-        sb.append("instrument  = '").append(this.getInstrument()).append("', ");
-        sb.append("teacherid   = ").append(this.getTeacherId() == 0 ? "null" : this.getTeacherId()).append(", ");
-        sb.append("locationid  = ").append(this.getLocationId() == 0 ? "null" : this.getLocationId()).append(", ");
-        sb.append("room        = '").append(this.getRoom()).append("', ");
-        sb.append("repeat      = ").append(this.getRepeat()).append(", ");
-        sb.append("weekday     = ").append(this.getWeekday()).append(", ");
-        sb.append("time        = ").append(this.getTime() == LocalTime.MAX ? "null" : toInt(this.getTime())).append(", ");
-        sb.append("duration    = ").append(this.getDuration()).append(", ");
-        sb.append("startdate   = ").append(this.getStartDate() == LocalDate.MIN ? "null" : toInt(this.getStartDate())).append(", ");
-        sb.append("enddate     = ").append(this.getEndDate() == LocalDate.MAX ? "null" : toInt(this.getEndDate())).append(", ");
-        sb.append("status      = ").append(this.getStatus()).append(", ");
-        sb.append("statusfrom  = ").append(this.getStatusFrom() == LocalDate.MIN ? "null" : toInt(this.getStatusFrom())).append(", ");
-        sb.append("statusto    = ").append(this.getStatusTo() == LocalDate.MAX ? "null" : toInt(this.getStatusTo())).append(", ");
-        sb.append("studentid1  = ").append(this.getStudentId1() == 0 ? "null" : this.getStudentId1()).append(", ");
-        sb.append("studentid2  = ").append(this.getStudentId2() == 0 ? "null" : this.getStudentId2()).append(", ");
-        sb.append("studentid3  = ").append(this.getStudentId3() == 0 ? "null" : this.getStudentId3()).append(", ");
-        sb.append("studentid4  = ").append(this.getStudentId4() == 0 ? "null" : this.getStudentId4()).append(", ");
-        sb.append("studentid5  = ").append(this.getStudentId5() == 0 ? "null" : this.getStudentId5()).append(", ");
-        sb.append("studentid6  = ").append(this.getStudentId6() == 0 ? "null" : this.getStudentId6()).append(", ");
-        sb.append("studentid7  = ").append(this.getStudentId7() == 0 ? "null" : this.getStudentId7()).append(", ");
-        sb.append("studentid8  = ").append(this.getStudentId8() == 0 ? "null" : this.getStudentId8()).append(", ");
-        sb.append("studentid9  = ").append(this.getStudentId9() == 0 ? "null" : this.getStudentId9()).append(", ");
-        sb.append("studentid10 = ").append(this.getStudentId10() == 0 ? "null" : this.getStudentId10());
+        sb.append("lessonname   = '").append(this.getLessonName()).append("', ");
+        sb.append("category     = ").append(this.getCategory()).append(", ");
+        sb.append("instrument   = '").append(this.getInstrument()).append("', ");
+        sb.append("teacherid    = ").append(this.getTeacherId() == 0 ? "null" : this.getTeacherId()).append(", ");
+        sb.append("locationid   = ").append(this.getLocationId() == 0 ? "null" : this.getLocationId()).append(", ");
+        sb.append("room         = '").append(this.getRoom()).append("', ");
+        sb.append("repeat       = ").append(this.getRepeat()).append(", ");
+        sb.append("weekday      = ").append(this.getWeekday()).append(", ");
+        sb.append("time         = ").append(this.getTime() == LocalTime.MAX ? "null" : toInt(this.getTime())).append(", ");
+        sb.append("duration     = ").append(this.getDuration()).append(", ");
+        sb.append("startdate    = ").append(this.getStartDate() == LocalDate.MIN ? "null" : toInt(this.getStartDate())).append(", ");
+        sb.append("enddate      = ").append(this.getEndDate() == LocalDate.MAX ? "null" : toInt(this.getEndDate())).append(", ");
+        sb.append("lessonstatus = ").append(this.getLessonStatus()).append(", ");
+        sb.append("aptstatus    = ").append(this.getAptStatus()).append(", ");
+        sb.append("studentid1   = ").append(this.getStudentId1() == 0 ? "null" : this.getStudentId1()).append(", ");
+        sb.append("studentid2   = ").append(this.getStudentId2() == 0 ? "null" : this.getStudentId2()).append(", ");
+        sb.append("studentid3   = ").append(this.getStudentId3() == 0 ? "null" : this.getStudentId3()).append(", ");
+        sb.append("studentid4   = ").append(this.getStudentId4() == 0 ? "null" : this.getStudentId4()).append(", ");
+        sb.append("studentid5   = ").append(this.getStudentId5() == 0 ? "null" : this.getStudentId5()).append(", ");
+        sb.append("studentid6   = ").append(this.getStudentId6() == 0 ? "null" : this.getStudentId6()).append(", ");
+        sb.append("studentid7   = ").append(this.getStudentId7() == 0 ? "null" : this.getStudentId7()).append(", ");
+        sb.append("studentid8   = ").append(this.getStudentId8() == 0 ? "null" : this.getStudentId8()).append(", ");
+        sb.append("studentid9   = ").append(this.getStudentId9() == 0 ? "null" : this.getStudentId9()).append(", ");
+        sb.append("studentid10  = ").append(this.getStudentId10() == 0 ? "null" : this.getStudentId10());
 
         return sb.toString();
     }
