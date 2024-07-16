@@ -58,8 +58,6 @@ public class TLSEmail {
 	}
 
 	public static boolean sendMail(String to, String cc, String subject, String messageText, String sender, List<File> attachments) {
-		System.out.println("sendMail() invoked");
-
 		Properties props = getPropertiesOutlookSMTP();
 		Session session = Session.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -99,11 +97,7 @@ public class TLSEmail {
 
 			message.setContent(multipart);
 
-			System.out.println("Message is ready");
-
 			Transport.send(message);
-
-			System.out.println("Email sent successfully!!");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

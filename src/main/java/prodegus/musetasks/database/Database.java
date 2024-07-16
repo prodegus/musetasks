@@ -15,6 +15,7 @@ public class Database {
     public static final String PARENT_TABLE = "mtparents";
     public static final String OTHER_TABLE = "mtothers";
     public static final String LESSON_TABLE = "mtlessons";
+    public static final String LESSON_CHANGE_TABLE = "mtlessonchanges";
     public static final String APPOINTMENT_TABLE = "mtappointments";
     public static final String TASK_TABLE = "mttasks";
     public static final String LOCATION_TABLE = "mtlocations";
@@ -247,8 +248,6 @@ public class Database {
                 "    enddate      INTEGER," +
                 "    lessonstatus INTEGER," +
                 "    aptstatus    INTEGER," +
-                "    statusfrom   INTEGER," +
-                "    statusto     INTEGER," +
                 "    studentid1   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
                 "    studentid2   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
                 "    studentid3   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
@@ -260,6 +259,46 @@ public class Database {
                 "    studentid9   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
                 "    studentid10  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL" +
                 ")";
+
+        try (Connection conn = connect(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createLessonChangeTable(String dbPath) {
+        String sql =
+                "CREATE TABLE mtlessonchanges (" +
+                        "    id           INTEGER REFERENCES mtlessons (id) ON DELETE SET NULL," +
+                        "    lessonname   TEXT," +
+                        "    category     INTEGER," +
+                        "    instrument   TEXT," +
+                        "    teacherid    INTEGER REFERENCES mtteachers (id) ON DELETE SET NULL," +
+                        "    locationid   INTEGER REFERENCES mtlocations (id) ON DELETE SET NULL," +
+                        "    room         TEXT," +
+                        "    repeat       INTEGER," +
+                        "    weekday      INTEGER," +
+                        "    time         INTEGER," +
+                        "    duration     INTEGER," +
+                        "    startdate    INTEGER," +
+                        "    enddate      INTEGER," +
+                        "    lessonstatus INTEGER," +
+                        "    aptstatus    INTEGER," +
+                        "    studentid1   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid2   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid3   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid4   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid5   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid6   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid7   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid8   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid9   INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    studentid10  INTEGER REFERENCES mtstudents (id) ON DELETE SET NULL," +
+                        "    changedate   INTEGER, " +
+                        "    changedone   INTEGER" +
+                        ")";
 
         try (Connection conn = connect(dbPath);
              Statement stmt = conn.createStatement()) {
@@ -386,7 +425,6 @@ public class Database {
 
     public static void update(String table, String id, String column, int newValue) {
         String sql = "UPDATE " + table + " SET " + column + " = " + newValue + " WHERE id = " + id;
-        System.out.println(sql);
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -401,6 +439,17 @@ public class Database {
 
     public static void updateMultiple(String table, String columnsValues, Filter filter) {
         String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE " + filter.toSQLString();
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static void updateMultiple(String table, String columnsValues, Filter filter1, Filter filter2) {
+        String sql = "UPDATE " + table + " SET " + columnsValues + " WHERE " + filter1.toSQLString() + " AND " + filter2.toSQLString();
         System.out.println(sql);
 
         try (Connection connection = connect();
@@ -446,7 +495,6 @@ public class Database {
 
     public static void insert(String table, String columns, String values) {
         String sql = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")";
-        System.out.println(sql);
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
@@ -501,8 +549,6 @@ public class Database {
             if (i < filters.length) sql.append(" AND ");
             i++;
         }
-
-        System.out.println(sql);
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();

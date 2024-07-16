@@ -381,8 +381,6 @@ public class Lesson {
         Holiday currentHoliday = null;
 
         list.addAll(getLessonAppointmentsFromDB(this.getId(), startDate, endDate));
-        if (this.getLessonStatus() != LESSON_STATUS_ACTIVE || this.getAptStatus() == LESSON_APT_STATUS_DRAFT)
-            return list;
         while (realStartDate.getDayOfWeek().getValue() != this.getWeekday())
             realStartDate = realStartDate.plusDays(1);
 
@@ -397,13 +395,24 @@ public class Lesson {
                 continue;
             }
 
-            if (isChanged(this, date))
+            if (isChanged(this, date)) {
                 continue;
+            }
 
-            list.add(this.createAppointment(date));
+            this.addAppointment(list, date);
         }
         Collections.sort(list);
         return list;
+    }
+
+    public void addAppointment(ObservableList<Appointment> list, LocalDate date) {
+        LessonChange latestChange = getLatestLessonChange(this.getId(), date);
+        Lesson futureLesson = latestChange == null ? this : latestChange.lesson();
+
+        if (futureLesson.getLessonStatus() != LESSON_STATUS_ACTIVE) {
+            return;
+        }
+        list.add(futureLesson.createAppointment(date));
     }
 
     public Appointment createAppointment(LocalDate date) {

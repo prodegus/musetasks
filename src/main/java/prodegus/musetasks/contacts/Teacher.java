@@ -134,7 +134,7 @@ public class Teacher extends Contact {
 
     public String courses() {
         StringBuilder courses = new StringBuilder();
-        Filter courseFilter = new Filter("category", "'Kurs'");
+        Filter courseFilter = new Filter("category", "Kurs");
         Filter teacherFilter = new Filter("teacherid", this.id());
         List<String> results = queryString("lessonname", LESSON_TABLE, courseFilter, teacherFilter);
         int i = 1;
@@ -160,7 +160,7 @@ public class Teacher extends Contact {
     }
 
     public int numberOfStudents() {
-        Filter categoryFilter = new Filter("category", "'Einzelunterricht'");
+        Filter categoryFilter = new Filter("category", "Einzelunterricht");
         Filter teacherFilter = new Filter("teacherid", this.id());
         List<Integer> results = queryInteger("id", LESSON_TABLE, categoryFilter, teacherFilter);
         return results.size();

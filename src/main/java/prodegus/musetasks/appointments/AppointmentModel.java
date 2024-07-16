@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
+import static prodegus.musetasks.appointments.Appointment.CATEGORY_LESSON_REGULAR;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
 
@@ -77,6 +78,25 @@ public class AppointmentModel {
     
     public static Appointment getAppointmentFromDB(int id) {
         String sql = "SELECT * FROM " + APPOINTMENT_TABLE + " WHERE id = " + id;
+        Appointment appointment = new Appointment();
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            while (rs.next()) {
+                appointment.setAttributes(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return appointment;
+    }
+
+    public static Appointment findRegularAppointment(Lesson lesson, LocalDate date) {
+        String sql = "SELECT * FROM " + APPOINTMENT_TABLE +
+                " WHERE lessonid = " + lesson.getId() +
+                " AND date = " + toInt(date) +
+                " AND category = " + CATEGORY_LESSON_REGULAR;
         Appointment appointment = new Appointment();
 
         try (Connection connection = connect();

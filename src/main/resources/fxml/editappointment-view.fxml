@@ -6,9 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -26,12 +23,13 @@
             <RowConstraints minHeight="10.0" prefHeight="70.0" valignment="TOP" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <VBox>
@@ -124,28 +122,15 @@
             </GridPane>
             <HBox spacing="25.0" GridPane.rowIndex="3">
                <children>
-                  <VBox spacing="5.0">
-                     <children>
-                        <RadioButton fx:id="cancelAptRadioButton" mnemonicParsing="false" onAction="#cancelAptChecked" text="Termin absagen">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="cancelChangeSwitch" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton fx:id="changeAptRadioButton" mnemonicParsing="false" onAction="#changeAptChecked" text="Termin ändern" toggleGroup="$cancelChangeSwitch" />
-                     </children>
-                     <padding>
-                        <Insets top="4.0" />
-                     </padding>
-                  </VBox>
                   <VBox>
                      <children>
-                        <Label fx:id="reasonLabel" text="Grund der Änderung:" />
-                        <ComboBox fx:id="editReasonComboBox" maxWidth="200.0" prefHeight="30.0" prefWidth="200.0" />
+                        <Label fx:id="reasonLabel" text="Grund der Änderung" />
+                        <ComboBox fx:id="editReasonComboBox" prefHeight="30.0" prefWidth="240.0" promptText="auswählen" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox fx:id="newAptHBox" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="4">
+            <HBox fx:id="newAptHBox" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="5">
                <children>
                   <VBox>
                      <children>
@@ -159,53 +144,19 @@
                   <VBox>
                      <children>
                         <Label text="Neue Uhrzeit" />
-                        <HBox>
-                           <children>
-                              <TextField fx:id="newTimeHoursTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="35.0" text="12">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextField>
-                              <Label alignment="BOTTOM_CENTER" contentDisplay="TOP" text=":">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="2.0" right="2.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="newTimeMinTextField" prefHeight="30.0" prefWidth="35.0" text="47">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextField>
-                              <Label text="Uhr">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="5.0" top="2.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                        </HBox>
+                        <HBox />
+                        <ComboBox fx:id="newTimeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
-                        <Label fx:id="reasonLabel1" text="Neue Dauer:" />
+                        <Label fx:id="reasonLabel1" text="Neue Dauer" />
                         <ComboBox fx:id="newDurationComboBox" maxWidth="-Infinity" prefHeight="30.0" prefWidth="90.0" promptText="45 min" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox spacing="20.0" GridPane.rowIndex="7">
+            <HBox spacing="20.0" GridPane.rowIndex="8">
                <children>
                   <Label text="Beteiligte informieren:" />
                   <VBox>
@@ -219,15 +170,15 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="8">
+            <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="9">
                <children>
                   <Button mnemonicParsing="false" onAction="#confirm" prefWidth="80.0" text="Bestätigen" />
                   <Button mnemonicParsing="false" onAction="#cancel" prefWidth="80.0" text="Abbrechen" />
                </children>
             </HBox>
-            <VBox fx:id="newRoomVBox" GridPane.rowIndex="5">
+            <VBox fx:id="newRoomVBox" GridPane.rowIndex="6">
                <children>
-                  <Label text="Neuer Raum:" />
+                  <Label text="Neuer Raum" />
                   <HBox spacing="10.0">
                      <children>
                         <ComboBox fx:id="newLocationComboBox" maxWidth="-Infinity" prefHeight="30.0" prefWidth="140.0" promptText="Standort" />
@@ -236,6 +187,7 @@
                   </HBox>
                </children>
             </VBox>
+            <CheckBox fx:id="rescheduleCheckBox" mnemonicParsing="false" text="Nachholtermin vereinbart" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

@@ -37,15 +37,12 @@ public class EditAppointmentController implements Initializable {
     @FXML private Label locationRoomLabel;
     @FXML private Label teacherLabel;
     @FXML private Label regularAptLabel;
-    @FXML private ToggleGroup cancelChangeSwitch;
-    @FXML private RadioButton cancelAptRadioButton;
-    @FXML private RadioButton changeAptRadioButton;
     @FXML private Label reasonLabel;
     @FXML private ComboBox<String> editReasonComboBox;
+    @FXML private CheckBox rescheduleCheckBox;
     @FXML private HBox newAptHBox;
     @FXML private DatePicker newDatePicker;
-    @FXML private TextField newTimeHoursTextField;
-    @FXML private TextField newTimeMinTextField;
+    @FXML private ComboBox<String> newTimeComboBox;
     @FXML private ComboBox<String> newDurationComboBox;
     @FXML private VBox newRoomVBox;
     @FXML private ComboBox<Location> newLocationComboBox;
@@ -56,8 +53,37 @@ public class EditAppointmentController implements Initializable {
     @FXML private CheckBox informTeacherCheckBox;
     @FXML private CheckBox informAllCheckBox;
 
-    public Lesson lesson;
-    public Appointment appointmentToEdit;
+    public static final int EDIT_MODE_DROPPED = 1;
+    public static final int EDIT_MODE_RESCHEDULE = 2;
+    public static final int EDIT_MODE_CHANGE = 3;
+
+    private int editMode;
+    private Lesson lesson;
+    private Appointment appointmentToEdit;
+
+    public int getEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(int editMode) {
+        this.editMode = editMode;
+    }
+
+    public Lesson getLesson() {
+        return lesson;
+    }
+
+    public void setLesson(Lesson lesson) {
+        this.lesson = lesson;
+    }
+
+    public Appointment getAppointmentToEdit() {
+        return appointmentToEdit;
+    }
+
+    public void setAppointmentToEdit(Appointment appointmentToEdit) {
+        this.appointmentToEdit = appointmentToEdit;
+    }
 
     @FXML
     void cancel(ActionEvent event) {
@@ -69,8 +95,9 @@ public class EditAppointmentController implements Initializable {
         newAptHBox.setDisable(true);
         newRoomVBox.setDisable(true);
         reasonLabel.setText("Grund der Absage:");
-        editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Absage (Schüler)",
-                "Krankheit (Schüler)", "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
+        editReasonComboBox.setItems(FXCollections.observableArrayList(
+                "Kurzfristige Absage (Schüler) - wird nicht nachgeholt", "Krankheit (Schüler)", "Krankheit (Lehrer)",
+                "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
     }
 
     @FXML
@@ -78,107 +105,173 @@ public class EditAppointmentController implements Initializable {
         newAptHBox.setDisable(false);
         newRoomVBox.setDisable(false);
         reasonLabel.setText("Grund der Änderung:");
-        editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Änderung", "Krankheit (Schüler)",
-                "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)", "Raumwechsel"));
+        editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Terminänderung", "Raumwechsel"));
+    }
+
+    @FXML
+    void rescheduleAptChecked(ActionEvent event) {
+        newAptHBox.setDisable(false);
+        newRoomVBox.setDisable(false);
+        reasonLabel.setText("Grund der Änderung:");
+        editReasonComboBox.setItems(FXCollections.observableArrayList("Krankheit (Schüler)", "Krankheit (Lehrer)",
+                "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
     }
 
     @FXML
     void confirm(ActionEvent event) {
-        Appointment oldAppointment = appointmentToEdit;
-        Appointment newAppointment = new Appointment();
+
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
 
-        boolean cancelled = cancelAptRadioButton.isSelected();
         String reason = editReasonComboBox.getValue();
-        LocalDate date = newDatePicker.getValue();
-        LocalTime time = LocalTime.of(Integer.parseInt(newTimeHoursTextField.getText()),
-                Integer.parseInt(newTimeMinTextField.getText()));
-        String durationString = newDurationComboBox.getValue();
-        Location location = newLocationComboBox.getValue();
-        String room = newRoomComboBox.getValue();
+        LocalDate newDate = newDatePicker.getValue();
+        String timeString = newTimeComboBox.getValue();
+        LocalTime newTime;
+        int newDuration = Integer.parseInt(newDurationComboBox.getValue().replaceAll("[^0-9]", ""));
+        Location newLocation = newLocationComboBox.getValue();
+        String newRoom = newRoomComboBox.getValue();
         boolean informParents = informParentsCheckBox.isSelected();
         boolean informStudents = informStudentsCheckBox.isSelected();
         boolean informTeacher = informTeacherCheckBox.isSelected();
-        boolean changeOnly = false;
+        boolean reschedule = rescheduleCheckBox.isSelected();
 
-        newAppointment.setCategory(CATEGORY_LESSON_RESCHEDULED);
-        newAppointment.setStatus(STATUS_OK);
+        Appointment oldAppointment = appointmentToEdit;
 
-        switch (reason) {
-            case "Kurzfristige Absage (Schüler)" -> oldAppointment.setStatus(STATUS_DROPPED);
-            case "Kurzfristige Änderung", "Raumwechsel" -> {
-                newAppointment.setCategory(CATEGORY_LESSON_REGULAR);
-                newAppointment.setStatus(STATUS_CHANGED);
-                changeOnly = true;
-            }
-            case "Krankheit (Schüler)", "Sonstige Gründe (Schüler)" ->
-                    oldAppointment.setStatus(cancelled ? STATUS_CANCELLED_STUDENT : STATUS_RESCHEDULED);
-            case "Krankheit (Lehrer)", "Sonstige Gründe (Lehrer)" ->
-                    oldAppointment.setStatus(cancelled ? STATUS_CANCELLED_TEACHER : STATUS_RESCHEDULED);
-        }
-
-        if (invalidDateInput(newDatePicker)) {
-            invalidData = true;
-            errorMessage.append("- Bitte gültiges Datum eingeben (z.B. 01.01.2000)\n");
-        } else {
-            newAppointment.setDate(date);
-        }
-
-        newAppointment.setTime(time);
-        newAppointment.setLocationId(location == null ? 0 : location.getId());
-        newAppointment.setRoom(room == null ? "" : room);
-        newAppointment.setDuration(Integer.parseInt(durationString.replaceAll("[^0-9]", "")));
-        newAppointment.setLessonId(appointmentToEdit.getLessonId());
-        newAppointment.setDateOld(appointmentToEdit.getDate());
-        System.out.println("appointmentToEdit.getDate(): " + appointmentToEdit.getDate());
-
-        if (invalidData) {
-            PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n" + errorMessage);
+        if (newTimeComboBox.getSelectionModel().isEmpty()) {
+            PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n- Bitte gültige Uhrzeit angeben!");
             return;
+        } else {
+            newTime = toTime(timeString);
+            lesson.setTime(newTime);
         }
 
-        if (!changeOnly) {
-            StringBuilder descriptionOld = new StringBuilder(reason);
+        if (editMode == EDIT_MODE_DROPPED) {
+            oldAppointment.setStatus(STATUS_DROPPED);
+            oldAppointment.setDescription(reason + ", wird nicht nachgeholt");
             oldAppointment.setDateOld(oldAppointment.getDate());
-            if (oldAppointment.getStatus() == STATUS_RESCHEDULED)
-                descriptionOld.append(", Nachholtermin: ").append(asString(date)).append(", ").append(asString(time));
-            if (oldAppointment.getStatus() == STATUS_DROPPED)
-                descriptionOld.append(", wird nicht nachgeholt");
-            oldAppointment.setDescription(descriptionOld.toString());
 
             if (oldAppointment.getId() != 0) {
                 update(oldAppointment, oldAppointment.getId());
-                System.out.println("update oldAppointment");
             } else {
                 insert(oldAppointment);
-                System.out.println("insert oldAppointment");
             }
         }
-        if (!cancelled) {
-            newAppointment.setDescription(newAppointment.getCategory() == CATEGORY_LESSON_REGULAR ? reason :
-                    "Nachholtermin für " + asString(newAppointment.getDateOld()));
-            System.out.println("insert newAppointment");
-            insert(newAppointment);
-        }
-        stageOf(event).close();
 
+        if (editMode == EDIT_MODE_RESCHEDULE) {
+            oldAppointment.setStatus(reschedule ? STATUS_RESCHEDULED : STATUS_CANCELLED);
+            oldAppointment.setDescription(reason + (reschedule ? ", Nachholtermin: " + asString(newDate, newTime) : ""));
+            oldAppointment.setDateOld(oldAppointment.getDate());
+            if (oldAppointment.getId() != 0) {
+                update(oldAppointment, oldAppointment.getId());
+            } else {
+                insert(oldAppointment);
+            }
+
+            if (reschedule) {
+                Appointment newAppointment = new Appointment();
+                newAppointment.setCategory(CATEGORY_LESSON_RESCHEDULED);
+                newAppointment.setStatus(STATUS_OK);
+                if (invalidDateInput(newDatePicker)) {
+                    invalidData = true;
+                    errorMessage.append("- Bitte gültiges Datum eingeben (z.B. 01.01.2000)\n");
+                } else {
+                    newAppointment.setDate(newDate);
+                }
+                newAppointment.setTime(newTime);
+                newAppointment.setLocationId(newLocation == null ? 0 : newLocation.getId());
+                newAppointment.setRoom(newRoom == null ? "" : newRoom);
+                newAppointment.setDuration(newDuration);
+                newAppointment.setLessonId(appointmentToEdit.getLessonId());
+                newAppointment.setDateOld(appointmentToEdit.getDate());
+                newAppointment.setDescription("Nachholtermin für " + asString(newAppointment.getDateOld()));
+
+                if (invalidData) {
+                    PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n" + errorMessage);
+                    return;
+                }
+
+                insert(newAppointment);
+            }
+
+        }
+
+        if (editMode == EDIT_MODE_CHANGE) {
+            oldAppointment.setStatus(STATUS_CHANGED);
+            if (invalidDateInput(newDatePicker)) {
+                invalidData = true;
+                errorMessage.append("- Bitte gültiges Datum eingeben (z.B. 01.01.2000)\n");
+            } else {
+                oldAppointment.setDate(newDate);
+            }
+            oldAppointment.setTime(newTime);
+            oldAppointment.setLocationId(newLocation == null ? 0 : newLocation.getId());
+            oldAppointment.setRoom(newRoom == null ? "" : newRoom);
+            oldAppointment.setDuration(newDuration);
+            if (!oldAppointment.isReplacement()) oldAppointment.setDateOld(appointmentToEdit.getDate());
+            if (oldAppointment.getDescription().isBlank()) oldAppointment.setDescription(reason);
+            if (invalidData) {
+                PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n" + errorMessage);
+                return;
+            }
+
+            if (oldAppointment.getId() != 0) {
+                update(oldAppointment, oldAppointment.getId());
+                if (oldAppointment.isReplacement()) {
+                    Appointment originalApt = findRegularAppointment(lesson, oldAppointment.getDateOld());
+                    String originalDescription = originalApt.getDescription();
+                    int length = originalDescription.length();
+                    originalApt.setDescription(originalDescription.substring(0, length - 17) + asString(newDate, newTime));
+                    update(originalApt, originalApt.getId());
+                }
+            } else {
+                insert(oldAppointment);
+            }
+        }
+
+        stageOf(event).close();
     }
 
     public void initAppointment(Appointment appointment) {
-        appointmentToEdit = appointment;
-        lesson = getLessonFromDB(appointment.getLessonId());
+        switch(editMode) {
+            case EDIT_MODE_DROPPED -> {
+                titleTextField.setText("Termin absagen");
+                reasonLabel.setText("Grund der Absage");
+                editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Absage (Schüler)",
+                        "Krankheit (Schüler)", "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
+                newAptHBox.setDisable(true);
+                newRoomVBox.setDisable(true);
+                rescheduleCheckBox.setVisible(false);
+            }
+            case EDIT_MODE_RESCHEDULE -> {
+                titleTextField.setText("Termin absagen");
+                reasonLabel.setText("Grund der Absage");
+                editReasonComboBox.setItems(FXCollections.observableArrayList("Krankheit (Schüler)",
+                        "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
+                newAptHBox.setDisable(false);
+                newRoomVBox.setDisable(false);
+            }
+            case EDIT_MODE_CHANGE -> {
+                titleTextField.setText("Termin bearbeiten");
+                reasonLabel.setText("Grund der Änderung");
+                editReasonComboBox.setItems(FXCollections.observableArrayList("Individuelle Terminänderung", "Raumwechsel"));
+                newAptHBox.setDisable(false);
+                newRoomVBox.setDisable(false);
+            }
+        }
+
+        setAppointmentToEdit(appointment);
+        setLesson(getLessonFromDB(appointment.getLessonId()));
         LocalDate oldDate = appointment.getDate();
         LocalTime oldTime = appointment.getTime();
-        oldDateTimeLabel.setText(fullDateTimeString(oldDate, oldTime));
+        oldDateTimeLabel.setText(fullDateTimeString(oldDate, oldTime)
+                + (appointment.getCategory() == CATEGORY_LESSON_RESCHEDULED ? "(Nachholtermin für " + appointment.getDateOld() + ")" : ""));
         studentNameLabel.setText(lesson.studentsNamesString());
         instrumentLabel.setText(lesson.getInstrument());
         locationRoomLabel.setText(lesson.locationRoom());
         teacherLabel.setText(lesson.teacher().name());
         regularAptLabel.setText(lesson.getRepeat() == REPEAT_OFF ? "nicht festgelegt" : lesson.regularAppointment());
         newDatePicker.setValue(appointment.getDate());
-        newTimeHoursTextField.setText(String.valueOf(oldTime.getHour()));
-        newTimeMinTextField.setText((oldTime.getMinute() < 10 ? "0" : "") + oldTime.getMinute());
+        newTimeComboBox.setValue(lesson.getTime().toString() + " Uhr");
         newDurationComboBox.setValue(switch(appointment.getDuration()) {
             case 30 -> "30 Minuten";
             case 45 -> "45 Minuten";
@@ -196,36 +289,15 @@ public class EditAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        changeAptRadioButton.setSelected(true);
-        newAptHBox.setVisible(true);
-        editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Änderung", "Krankheit (Schüler)",
-                "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
-
-        newTimeHoursTextField.focusedProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> {
-            if (newTimeHoursTextField.isFocused() && !newTimeHoursTextField.getText().isEmpty())
-                newTimeHoursTextField.selectAll();
-            if (!newTimeHoursTextField.isFocused() && newTimeHoursTextField.getText().isBlank())
-                newTimeHoursTextField.setText("0");
-        }));
-
-        newTimeHoursTextField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isBlank() && Integer.parseInt(newValue) > 23) newTimeHoursTextField.setText(String.valueOf(23));
-            if (newValue.length() > 2) newTimeHoursTextField.setText(newValue.substring(0, 2));
+        rescheduleCheckBox.selectedProperty().addListener(e -> {
+            newAptHBox.setDisable(!rescheduleCheckBox.isSelected());
+            newRoomVBox.setDisable(!rescheduleCheckBox.isSelected());
         });
-        
-        newTimeMinTextField.focusedProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() -> {
-            if (newTimeMinTextField.isFocused() && !newTimeMinTextField.getText().isEmpty())
-                newTimeMinTextField.selectAll();
-            switch (newTimeMinTextField.getText().length()) {
-                case 0 -> newTimeMinTextField.setText("00");
-                case 1 -> newTimeMinTextField.setText("0" + newTimeMinTextField.getText());
-            }
-        }));
 
-        newTimeMinTextField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isBlank() && Integer.parseInt(newValue) > 59) newTimeMinTextField.setText(String.valueOf(59));
-            if (newValue.length() > 2) newTimeMinTextField.setText(newValue.substring(0, 2));
-        });
+        newAptHBox.setDisable(true);
+        newRoomVBox.setDisable(true);
+
+        newTimeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
 
         newDurationComboBox.setItems(FXCollections.observableArrayList("30 Minuten", "45 Minuten", "60 Minuten",
                 "90 Minuten", "120 Minuten", "auswählen"));

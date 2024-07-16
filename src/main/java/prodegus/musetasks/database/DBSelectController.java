@@ -52,6 +52,7 @@ public class DBSelectController {
                 createParentTable(dbPath);
                 createOtherTable(dbPath);
                 createLessonTable(dbPath);
+                createLessonChangeTable(dbPath);
                 createAppointmentTable(dbPath);
                 createTaskTable(dbPath);
                 createHolidayTable(dbPath);

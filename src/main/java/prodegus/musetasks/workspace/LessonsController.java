@@ -17,26 +17,28 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.AddSingleController;
 import prodegus.musetasks.lessons.Lesson;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.lessons.LessonChange;
 import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
+import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
-import static prodegus.musetasks.lessons.LessonModel.CATEGORY_SINGLE;
-import static prodegus.musetasks.lessons.LessonModel.getLessonListFromDB;
+import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.PopupWindow.displayInformation;
@@ -89,13 +91,37 @@ public class LessonsController implements Initializable {
     @FXML private ToggleButton lessonToggleLocation3;
     @FXML private ToggleButton lessonToggleToday;
 
+    @FXML
+    private Label singleInfoDuration;
+
+    @FXML
+    private GridPane singleInfoGridPane;
+
+    @FXML
+    private Label singleInfoInstrument;
+
+    @FXML
+    private Label singleInfoLocationRoom;
+
+    @FXML
+    private Label singleInfoStudentName;
+
+    @FXML
+    private Label singleInfoRegularAppointment;
+
+    @FXML
+    private Label singleInfoStatus;
+
+    @FXML
+    private GridPane lessonChangesGridPane;
+
     @FXML private TableColumn<Appointment, String> aptColumnDate;
     @FXML private TableColumn<Appointment, String> aptColumnNote;
     @FXML private TableColumn<Appointment, String> aptColumnStatus;
     @FXML private TableColumn<Appointment, String> aptColumnTime;
     @FXML private Label aptLabel;
     @FXML private TableView<Appointment> aptTableView;
-    @FXML private Button aptEditButton;
+    @FXML private MenuButton aptEditButton;
     @FXML private Button aptForwardButton;
 
 
@@ -124,6 +150,24 @@ public class LessonsController implements Initializable {
     };
 
     @FXML
+    void aptEditChange(ActionEvent event) {
+        if (selectedAppointment == null) return;
+        openEditAppointmentWindow(selectedAppointment, EDIT_MODE_CHANGE);
+    }
+
+    @FXML
+    void aptEditDrop(ActionEvent event) {
+        if (selectedAppointment == null) return;
+        openEditAppointmentWindow(selectedAppointment, EDIT_MODE_DROPPED);
+    }
+
+    @FXML
+    void aptEditReschedule(ActionEvent event) {
+        if (selectedAppointment == null) return;
+        openEditAppointmentWindow(selectedAppointment, EDIT_MODE_RESCHEDULE);
+    }
+
+    @FXML
     void editLesson(ActionEvent event) {
         switch (selectedLesson.getCategory()) {
             case CATEGORY_SINGLE -> showEditSingleWindow(selectedLesson);
@@ -145,11 +189,6 @@ public class LessonsController implements Initializable {
 
     }
 
-    @FXML
-    void aptEdit(ActionEvent event) {
-        if (selectedAppointment == null) return;
-        openEditAppointmentWindow(selectedAppointment);
-    }
 
     @FXML
     void aptForwardTo(ActionEvent event) {
@@ -264,10 +303,65 @@ public class LessonsController implements Initializable {
         aptTableView.setItems(lesson.appointments(selectedHalfYear));
     }
 
-    private void openEditAppointmentWindow(Appointment selectedAppointment) {
+    private void showLessonChanges(int lessonId) {
+        List<LessonChange> changes = getLessonChangeListFromDB(lessonId);
+        if (changes.isEmpty()) {
+//            clearLessonChanges();
+            return;
+        }
+
+        for (LessonChange change : changes) {
+
+        }
+
+//        int row = 1;
+//        for (Student child : children) {
+//            if (child == null) continue;
+//            Label name = new Label(child.name());
+//            Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().getLessonName());
+//            Label lesson1Teacher = new Label(child.lesson1() == null ? "" : child.lesson1().teacher().name());
+//            name.setFont(new Font(14));
+//            lesson1.setFont(new Font(14));
+//            lesson1Teacher.setFont(new Font(14));
+//
+//            parentChildrenInfo.addRow(row);
+//            parentChildrenInfo.add(new Separator(), 0, row, 3, 1);
+//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(10);
+//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(10);
+//            row++;
+//
+//            parentChildrenInfo.addRow(row, name, lesson1, lesson1Teacher);
+//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
+//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
+//            row++;
+//
+//            if (child.getLessonId2() == 0) continue;
+//            Label lesson2 = new Label(child.lesson2().getLessonName());
+//            Label lesson2Teacher = new Label(child.lesson2().teacher().name());
+//            lesson2.setFont(new Font(14));
+//            lesson2Teacher.setFont(new Font(14));
+//            parentChildrenInfo.addRow(row, new Label(""), lesson2, lesson2Teacher);
+//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
+//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
+//            row++;
+//
+//            if (child.getLessonId3() == 0) continue;
+//            Label lesson3 = new Label(child.lesson3().getLessonName());
+//            Label lesson3Teacher = new Label(child.lesson3().teacher().name());
+//            lesson3.setFont(new Font(14));
+//            lesson3Teacher.setFont(new Font(14));
+//            parentChildrenInfo.addRow(row, new Label(""), lesson3, lesson3Teacher);
+//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
+//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
+//            row++;
+//        }
+    }
+
+    private void openEditAppointmentWindow(Appointment selectedAppointment, int editMode) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editappointment-view.fxml"));
         Stage stage = newStage("Termin bearbeiten", loader);
         EditAppointmentController controller = loader.getController();
+        controller.setEditMode(editMode);
         controller.initAppointment(selectedAppointment);
         stage.showAndWait();
         refreshAppointments();
@@ -421,7 +515,6 @@ public class LessonsController implements Initializable {
             public void handle(MouseEvent event) {
                 if (aptTableView.getSelectionModel().isEmpty()) return;
                 selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
-                System.out.println("selectedAppointment.getId(): " + selectedAppointment.getId());
                 aptEditButton.setDisable(selectedAppointment.getCategory() == CATEGORY_HOLIDAY);
             }
         });

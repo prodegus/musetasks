@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.utils.DateTime.*;
 
 public class LessonModel {
 
@@ -97,6 +98,51 @@ public class LessonModel {
         return lessons;
     }
 
+    public static boolean lessonChangeExists(int lessonId, LocalDate date) {
+        return getLatestLessonChange(lessonId, date, date) != null;
+    }
+
+    public static LessonChange getLatestLessonChange(int lessonId, LocalDate date) {
+        return getLatestLessonChange(lessonId, FAR_PAST, date);
+    }
+
+    public static LessonChange getLatestLessonChange(int lessonId, LocalDate start, LocalDate end) {
+        ObservableList<LessonChange> changes = getLessonChangeListFromDB(lessonId, start, end);
+        if (changes.size() == 0) return null;
+        return changes.get(0);
+    }
+
+    public static ObservableList<LessonChange> getLessonChangeListFromDB(int lessonId) {
+        return getLessonChangeListFromDB(" WHERE id = " + lessonId);
+    }
+
+    public static ObservableList<LessonChange> getLessonChangeListFromDB() {
+        return getLessonChangeListFromDB("");
+    }
+
+    public static ObservableList<LessonChange> getLessonChangeListFromDB(int lessonId, LocalDate start, LocalDate end) {
+        return getLessonChangeListFromDB(" WHERE id = " + lessonId + " AND changedate BETWEEN " + toInt(start) + " AND " + toInt(end) +
+                " ORDER BY changedate DESC");
+    }
+
+    public static ObservableList<LessonChange> getLessonChangeListFromDB(String filters) {
+        ObservableList<LessonChange> lessonChanges = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM " + LESSON_CHANGE_TABLE + filters;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            while (rs.next()) {
+                LessonChange lessonChange = new LessonChange();
+                lessonChange.setAttributes(rs);
+                lessonChanges.add(lessonChange);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lessonChanges;
+    }
+
     public static Lesson getLessonFromDB(int id) {
         String sql = "SELECT * FROM " + LESSON_TABLE + " WHERE id = " + id;
         Lesson lesson = new Lesson();
@@ -112,16 +158,15 @@ public class LessonModel {
         return lesson;
     }
 
-    public static void insertLessonAppointments(int lessonId) {
-        Lesson lesson = getLessonFromDB(lessonId);
+    public static void insertLessonAppointments(Lesson lesson) {
         if (lesson == null || lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) return;
 
         if (lesson.getLessonStatus() == LESSON_STATUS_MEET) {
-            if (meetExists(lessonId)) {
+            if (meetExists(lesson.getId())) {
                 String meetExistsMessage = "Für diesen Unterricht wurde bereits ein Schnupper-Termin festgelegt.\n\n" +
                         "Termin überschreiben?";
                 if (!PopupWindow.displayYesNo(meetExistsMessage)) return;
-                delete(APPOINTMENT_TABLE, new Filter("lessonid", lessonId), new Filter("description", "Schnupper-Unterricht"));
+                delete(APPOINTMENT_TABLE, new Filter("lessonid", lesson.getId()), new Filter("description", "Schnupper-Unterricht"));
             }
 
             Appointment appointment = new Appointment();
@@ -138,11 +183,11 @@ public class LessonModel {
         }
 
         if (lesson.getLessonStatus() == LESSON_STATUS_TRIAL) {
-            if (trialExists(lessonId)) {
+            if (trialExists(lesson.getId())) {
                 String trialExistsMessage = "Für diesen Unterricht wurde bereits ein Probemonat festgelegt.\n\n" +
                         "Termine überschreiben?";
                 if (!PopupWindow.displayYesNo(trialExistsMessage)) return;
-                delete(APPOINTMENT_TABLE, new Filter("lessonid", lessonId), new Filter("description", "Probemonat"));
+                delete(APPOINTMENT_TABLE, new Filter("lessonid", lesson.getId()), new Filter("description", "Probemonat"));
             }
 
             LocalDate realStartDate = lesson.getStartDate();
@@ -180,13 +225,29 @@ public class LessonModel {
     public static void insertLesson(Lesson lesson) {
         insert(LESSON_TABLE, lesson.sqlColumns(), lesson.sqlValues());
     }
-
+    
     public static void deleteLesson(Lesson lesson) {
         delete(LESSON_TABLE, lesson.getId());
     }
 
     public static void updateLesson(Lesson lesson, int id) {
         updateMultiple(LESSON_TABLE, id, lesson.valuesToSQLUpdateString());
+    }
+
+    public static void insertLessonChange(LessonChange lessonChange) {
+        insert(LESSON_CHANGE_TABLE, lessonChange.sqlColumns(), lessonChange.sqlValues());
+    }
+
+    public static void deleteLessonChange(int lessonId, LocalDate changeDate) {
+        Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
+        Filter date = new Filter("changedate", String.valueOf(toInt(changeDate)));
+        delete(LESSON_CHANGE_TABLE, lesson, date);
+    }
+
+    public static void updateLessonChange(LessonChange lessonChange) {
+        Filter lesson = new Filter("id", String.valueOf(lessonChange.getId()));
+        Filter date = new Filter("changedate", String.valueOf(toInt(lessonChange.getChangeDate())));
+        updateMultiple(LESSON_CHANGE_TABLE, lessonChange.valuesToSQLUpdateString(), lesson, date);
     }
 
     public static int getLastLessonID() {

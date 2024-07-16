@@ -166,7 +166,6 @@ public class AddParentController implements Initializable {
             PopupWindow.displayInformation("Elternteil konnte nicht angelegt werden: \n\n" + errorMessage);
             return;
         }
-        System.out.println("child1ComboBox.getValue(): " + child1ComboBox.getValue());
         if (!editMode) {
             insertContact(newParent);
             id = findContactID(newParent);

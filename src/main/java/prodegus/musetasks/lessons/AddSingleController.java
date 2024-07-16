@@ -5,7 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
@@ -33,7 +35,10 @@ import static prodegus.musetasks.utils.DateTime.toTime;
 
 public class AddSingleController implements Initializable {
 
+    @FXML private GridPane gridPane;
     @FXML private Label titleTextField;
+    @FXML private VBox changeDateVBox;
+    @FXML private DatePicker changeDatePicker;
     @FXML private ToggleGroup aptStatusGroup;
     @FXML private RadioButton aptDraftRadioButton;
     @FXML private RadioButton aptRequestRadioButton;
@@ -63,9 +68,6 @@ public class AddSingleController implements Initializable {
     @FXML private VBox vBoxEndDate;
     @FXML private Label endDateLabel;
     @FXML private DatePicker endDatePicker;
-    @FXML private ComboBox<String> statusComboBox;
-    @FXML private DatePicker statusFromDatePicker;
-    @FXML private DatePicker statusToDatePicker;
 
     private boolean editMode;
     private int id;
@@ -79,6 +81,7 @@ public class AddSingleController implements Initializable {
     @FXML
     void confirm(ActionEvent event) {
         Lesson lesson = new Lesson();
+        LocalDate changeDate = changeDatePicker.getValue();
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
         int lessonStatus = getLessonStatus();
@@ -96,7 +99,6 @@ public class AddSingleController implements Initializable {
         String timeString = timeComboBox.getValue();
         LocalDate startDate = startDatePicker.getValue();
         LocalDate endDate = endDatePicker.getValue();
-        System.out.println("endDatePicker.getValue(): " + endDatePicker.getValue());
 
         lesson.setLessonName(lessonName);
         lesson.setCategory(category);
@@ -187,13 +189,19 @@ public class AddSingleController implements Initializable {
             insertLesson(lesson);
             student.addLessonInDB(getLastLessonID());
             student.addTeacherInDB(teacher.getId());
-            insertLessonAppointments(getLastLessonID());
-
+            insertLessonAppointments(getLessonFromDB(getLastLessonID()));
         } else {
-            updateLesson(lesson, id);
+            lesson.setId(id);
+            if (lessonChangeExists(id, changeDate)) {
+                if (PopupWindow.displayYesNo("Es existiert bereits eine Änderung zu diesem Datum. Überschreiben?"))
+                    updateLessonChange(new LessonChange(lesson, changeDate, false));
+                else return;
+            } else {
+                insertLessonChange(new LessonChange(lesson, changeDate, false));
+            }
             student.addLessonInDB(id);
             student.addTeacherInDB(teacher.getId());
-            insertLessonAppointments(id);
+            insertLessonAppointments(lesson);
         }
         stageOf(event).close();
     }
@@ -221,12 +229,8 @@ public class AddSingleController implements Initializable {
         if (aptStatusGroup.getSelectedToggle().equals(aptConfirmedRadioButton)) return LESSON_APT_STATUS_CONFIRMED;
         return 0;
     }
-
-    public void initLesson(Lesson lesson) {
-        editMode = true;
-        id = lesson.getId();
-        titleTextField.setText("Einzel-Unterricht bearbeiten");
-
+    
+    private void initValues(Lesson lesson) {
         switch (lesson.getAptStatus()) {
             case LESSON_APT_STATUS_DRAFT -> aptDraftRadioButton.setSelected(true);
             case LESSON_APT_STATUS_REQUEST -> aptRequestRadioButton.setSelected(true);
@@ -250,12 +254,35 @@ public class AddSingleController implements Initializable {
             weekdayComboBox.setValue(lesson.weekday());
         timeComboBox.setValue(lesson.getTime().toString() + " Uhr");
         startDatePicker.setValue(lesson.getStartDate());
-        if (!lesson.getEndDate().equals(LocalDate.MAX)) endDatePicker.setValue(lesson.getEndDate());
+        endDatePicker.setValue(lesson.getEndDate().equals(LocalDate.MAX) ? null : lesson.getEndDate());
+    }
+
+    public void initLesson(Lesson lesson) {
+        LessonChange latestChange = getLatestLessonChange(lesson.getId(), LocalDate.now());
+        Lesson futureLesson = latestChange == null ? lesson : latestChange.lesson();
+        changeDateVBox.setVisible(true);
+        changeDatePicker.valueProperty().addListener(e -> {
+            LessonChange currentChange = getLatestLessonChange(lesson.getId(), changeDatePicker.getValue());
+            if (currentChange != null) initValues(currentChange.lesson());
+            startDatePicker.setValue(changeDatePicker.getValue());
+        });
+        startDatePicker.setDisable(true);
+        gridPane.getRowConstraints().set(1, new RowConstraints(60));
+        gridPane.getRowConstraints().set(10, new RowConstraints(10));
+        changeDatePicker.setValue(LocalDate.now());
+        editMode = true;
+        id = futureLesson.getId();
+        titleTextField.setText("Einzel-Unterricht bearbeiten");
+
+        initValues(futureLesson);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        changeDateVBox.setVisible(false);
+        gridPane.getRowConstraints().set(1, new RowConstraints(10));
+        gridPane.getRowConstraints().set(10, new RowConstraints(60));
 
         lessonStatusGroup.selectedToggleProperty().addListener(e -> {
             Toggle selectedToggle = lessonStatusGroup.getSelectedToggle();
@@ -320,8 +347,6 @@ public class AddSingleController implements Initializable {
                 "Freitag", "Samstag", "nicht festgelegt"));
 
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
-
-        statusComboBox.setItems(FXCollections.observableArrayList(LESSON_STATUS_LIST));
 
         repeatComboBox.getSelectionModel().select(1);
         aptDraftRadioButton.setSelected(true);

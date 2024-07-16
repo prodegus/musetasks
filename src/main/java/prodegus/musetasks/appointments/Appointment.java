@@ -25,12 +25,11 @@ public class Appointment implements Comparable<Appointment> {
     public static final int CATEGORY_CUSTOM = 6;
 
     public static final int STATUS_OK = 1;
-    public static final int STATUS_CANCELLED_STUDENT = 2;
-    public static final int STATUS_CANCELLED_TEACHER = 3;
-    public static final int STATUS_DROPPED = 4;
-    public static final int STATUS_RESCHEDULED = 5;
-    public static final int STATUS_COMPENSATED = 6;
-    public static final int STATUS_CHANGED = 7;
+    public static final int STATUS_CANCELLED = 2;
+    public static final int STATUS_RESCHEDULED = 3;
+    public static final int STATUS_COMPENSATED = 4;
+    public static final int STATUS_DROPPED = 5;
+    public static final int STATUS_CHANGED = 6;
 
     private SimpleIntegerProperty id          = new SimpleIntegerProperty();
     private LocalDate             date        = LocalDate.MIN;
@@ -154,7 +153,7 @@ public class Appointment implements Comparable<Appointment> {
     }
 
     public String getDescription() {
-        return description.get();
+        return description.get() == null ? "" : description.get();
     }
 
     public SimpleStringProperty descriptionProperty() {
@@ -195,13 +194,17 @@ public class Appointment implements Comparable<Appointment> {
         if (this.getCategory() == CATEGORY_HOLIDAY) return "";
         return switch(this.getStatus()) {
             case STATUS_OK -> "Planmäßig";
-            case STATUS_CANCELLED_STUDENT, STATUS_CANCELLED_TEACHER -> "Nachholtermin offen";
-            case STATUS_DROPPED -> "Abgesagt";
+            case STATUS_CANCELLED -> "Nachholtermin offen";
             case STATUS_RESCHEDULED -> "Nachholtermin geplant";
             case STATUS_COMPENSATED -> "Nachgeholt";
-            case STATUS_CHANGED -> "Verschoben";
+            case STATUS_DROPPED -> "Abgesagt";
+            case STATUS_CHANGED -> "Planmäßig (*)";
             default -> "";
         };
+    }
+
+    public boolean isReplacement() {
+        return this.getCategory() == CATEGORY_LESSON_RESCHEDULED;
     }
 
     public String dateInfo() {

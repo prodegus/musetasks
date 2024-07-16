@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class Location {
-    public static void main(String[] args) {
-        Location location = new Location();
-        System.out.println("location.getId(): " + location.getId());
-    }
 
     private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private SimpleStringProperty name = new SimpleStringProperty();

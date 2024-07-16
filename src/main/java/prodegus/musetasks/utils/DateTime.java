@@ -25,6 +25,8 @@ public class DateTime {
     public static final List<HalfYear> halfYears = FXCollections.observableArrayList(H_2024_1, H_2024_2, H_2025_1,
             H_2025_2, H_2026_1, H_2026_2, H_2027_1, H_2027_2);
 
+    public static final LocalDate FAR_PAST = LocalDate.of(1900, 1, 1);
+
     public static HalfYear currentHalfYear() {
         LocalDate now = LocalDate.now();
         for (HalfYear halfYear : halfYears) {
@@ -35,11 +37,6 @@ public class DateTime {
 
     public static String fullDateTimeString(LocalDate date, LocalTime time) {
         return weekdayDateString(date) + " - " + time.toString() + " Uhr";
-    }
-
-    public static void main(String[] args) {
-        System.out.println("toTime(0): " + toTime(0));
-        System.out.println("toDate(0): " + toDate(0));
     }
 
     public static Date nowAsDate() {
@@ -110,6 +107,10 @@ public class DateTime {
 
     public static String asString(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    public static String asString(LocalDate date, LocalTime time) {
+        return asString(date) + ", " + asString(time);
     }
 
     public static String weekdayDateString(LocalDate date) {

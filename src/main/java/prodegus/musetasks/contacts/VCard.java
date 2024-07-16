@@ -17,10 +17,6 @@ public class VCard {
         contact.setEmail("johndoe@gmail.com");
 
         File vCard = vCard(contact, "Vater von Jack Doe");
-        System.out.println("mail_user: " + getMailUser());
-        System.out.println("mail_password: " + getMailPassword());
-        System.out.println("mail_sender: " + getMailSender());
-
 
 //        sendMail("daniel.hanelt@gmail.com", "Ohne Anhang", "Nur Text");
 //        sendMail("daniel.hanelt@gmail.com", "", "Visitenkarte", "Siehe Anhang!", getMailSender(), vCard);
