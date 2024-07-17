@@ -187,6 +187,8 @@ public class AddSingleController implements Initializable {
 
         if (!editMode) {
             insertLesson(lesson);
+            lesson.setId(getLastLessonID());
+            insertLessonChange(new LessonChange(lesson, startDate, true));
             student.addLessonInDB(getLastLessonID());
             student.addTeacherInDB(teacher.getId());
             insertLessonAppointments(getLessonFromDB(getLastLessonID()));

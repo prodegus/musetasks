@@ -12,12 +12,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
@@ -25,6 +28,7 @@ import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.AddSingleController;
 import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.lessons.LessonChange;
+import prodegus.musetasks.ui.PopupWindow;
 import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
@@ -44,6 +48,7 @@ import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.PopupWindow.displayInformation;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.utils.DateTime.*;
+import static prodegus.musetasks.utils.GridPaneUtils.removeRow;
 
 public class LessonsController implements Initializable {
 
@@ -169,17 +174,20 @@ public class LessonsController implements Initializable {
 
     @FXML
     void editLesson(ActionEvent event) {
+        editLesson(selectedLesson);
+    }
+
+    public void editLesson(Lesson lesson) {
         switch (selectedLesson.getCategory()) {
             case CATEGORY_SINGLE -> showEditSingleWindow(selectedLesson);
         }
-
     }
 
-    private void showEditSingleWindow(Lesson lesson) {
+    public void showEditSingleWindow(Lesson lesson) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addsingle.fxml"));
         Stage stage = newStage("Einzel-Unterricht bearbeiten", loader);
         AddSingleController controller = loader.getController();
-        controller.initLesson(selectedLesson);
+        controller.initLesson(lesson);
         stage.showAndWait();
         refreshLessons();
     }
@@ -301,60 +309,41 @@ public class LessonsController implements Initializable {
     public void showLessonInfo(Lesson lesson) {
         if (lesson == null) return;
         aptTableView.setItems(lesson.appointments(selectedHalfYear));
+        clearLessonChanges();
+        showLessonChanges(lesson.getId());
     }
 
     private void showLessonChanges(int lessonId) {
         List<LessonChange> changes = getLessonChangeListFromDB(lessonId);
-        if (changes.isEmpty()) {
-//            clearLessonChanges();
-            return;
-        }
+        if (changes.isEmpty()) return;
 
+        int row = 0;
         for (LessonChange change : changes) {
+            Label date = new Label(asString(change.getChangeDate()));
+            Label changeNote = new Label(change.getChangeNote());
+            changeNote.setWrapText(true);
+            Button edit = editChangeButton(change);
+            Button delete = deleteChangeButton(change);
+            HBox buttonBox = new HBox(3, edit, delete);
 
+            lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, 22, Integer.MAX_VALUE));
+            lessonChangesGridPane.addRow(row, date, changeNote, buttonBox);
+            System.out.println("LessonChange nodes added at row: " + row);
+            row++;
+
+            if (row < changes.size() * 2 - 1) {
+                lessonChangesGridPane.getRowConstraints().add(new RowConstraints(10));
+                lessonChangesGridPane.add(new Separator(), 0, row, 3, 1);
+                System.out.println("Separator added at row: " + row);
+                row++;
+            }
         }
-
-//        int row = 1;
-//        for (Student child : children) {
-//            if (child == null) continue;
-//            Label name = new Label(child.name());
-//            Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().getLessonName());
-//            Label lesson1Teacher = new Label(child.lesson1() == null ? "" : child.lesson1().teacher().name());
-//            name.setFont(new Font(14));
-//            lesson1.setFont(new Font(14));
-//            lesson1Teacher.setFont(new Font(14));
-//
-//            parentChildrenInfo.addRow(row);
-//            parentChildrenInfo.add(new Separator(), 0, row, 3, 1);
-//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(10);
-//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(10);
-//            row++;
-//
-//            parentChildrenInfo.addRow(row, name, lesson1, lesson1Teacher);
-//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
-//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
-//            row++;
-//
-//            if (child.getLessonId2() == 0) continue;
-//            Label lesson2 = new Label(child.lesson2().getLessonName());
-//            Label lesson2Teacher = new Label(child.lesson2().teacher().name());
-//            lesson2.setFont(new Font(14));
-//            lesson2Teacher.setFont(new Font(14));
-//            parentChildrenInfo.addRow(row, new Label(""), lesson2, lesson2Teacher);
-//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
-//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
-//            row++;
-//
-//            if (child.getLessonId3() == 0) continue;
-//            Label lesson3 = new Label(child.lesson3().getLessonName());
-//            Label lesson3Teacher = new Label(child.lesson3().teacher().name());
-//            lesson3.setFont(new Font(14));
-//            lesson3Teacher.setFont(new Font(14));
-//            parentChildrenInfo.addRow(row, new Label(""), lesson3, lesson3Teacher);
-//            parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
-//            parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
-//            row++;
-//        }
+    }
+    
+    private void clearLessonChanges() {
+        while (lessonChangesGridPane.getRowCount() > 0) {
+            removeRow(lessonChangesGridPane, 0);
+        }
     }
 
     private void openEditAppointmentWindow(Appointment selectedAppointment, int editMode) {
@@ -398,6 +387,28 @@ public class LessonsController implements Initializable {
         }
         tableView.getSelectionModel().select(index);
         selectedLesson = tableView.getSelectionModel().getSelectedItem();
+    }
+
+    private Button editChangeButton(LessonChange lessonChange) {
+        Button button = new Button("B");
+        button.setOnAction(e -> {
+            editLesson(lessonChange.lesson());
+        });
+        return button;
+    }
+
+    private Button deleteChangeButton(LessonChange lessonChange) {
+        Button button = new Button("L");
+        button.setOnAction(e -> {
+            if (PopupWindow.displayYesNo("Änderung löschen?")) {
+                int rowIndex = GridPane.getRowIndex((Node)e.getSource());
+                // Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "javafx.scene.layout.GridPane.getRowIndex(javafx.scene.Node)" is null
+                // at prodegus.musetasks/prodegus.musetasks.workspace.LessonsController.lambda$deleteChangeButton$2(LessonsController.java:404)
+                deleteLessonChange(lessonChange.getId(), lessonChange.getChangeDate());
+                removeRow(lessonChangesGridPane, rowIndex);
+            }
+        });
+        return button;
     }
 
 
@@ -519,4 +530,5 @@ public class LessonsController implements Initializable {
             }
         });
     }
+
 }

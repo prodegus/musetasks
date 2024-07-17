@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
-import static prodegus.musetasks.utils.DateTime.toDate;
-import static prodegus.musetasks.utils.DateTime.toInt;
+import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
+import static prodegus.musetasks.lessons.LessonModel.LESSON_STATUS_ACTIVE;
+import static prodegus.musetasks.lessons.LessonModel.getLatestLessonChange;
+import static prodegus.musetasks.utils.DateTime.*;
 
 public class LessonChange extends Lesson {
     private LocalDate changeDate = LocalDate.MIN;
@@ -125,5 +127,80 @@ public class LessonChange extends Lesson {
         values.add((this.isChangeDone()) ? "1" : "0");
         result.add(values.toString());
         return result.toString();
+    }
+
+    public String getChangeNote() {
+        LessonChange previousChange = getLatestLessonChange(this.getId(), this.getChangeDate().minusDays(1));
+        StringJoiner changeNote = new StringJoiner("\n");
+
+        if (previousChange == null) {
+            changeNote.add(this.getLessonStatus() == LESSON_STATUS_ACTIVE ? "Unterrichtsbeginn" : this.lessonStatus());
+            return changeNote.toString();
+        }
+
+        if (!previousChange.getLessonName().equals(this.getLessonName())) {
+            changeNote.add("Unterrichtsbeschreibung: " + this.getLessonName());
+        }
+        if (!previousChange.getInstrument().equals(this.getInstrument())) {
+            changeNote.add("Instrument: " + this.getInstrument());
+        }
+        if (previousChange.getTeacherId() != this.getTeacherId()) {
+            changeNote.add("Lehrer: " + this.teacher().name());
+        }
+        if (previousChange.getLocationId() != this.getLocationId()) {
+            changeNote.add("Standort: " + this.location().getName());
+        }
+        if (!previousChange.getRoom().equals(this.getRoom())) {
+            changeNote.add("Raum: " + this.getRoom());
+        }
+        if (previousChange.getRepeat() != this.getRepeat()) {
+            changeNote.add("Wiederholungsmodus: " + this.getRepeat());
+        }
+        if (previousChange.getWeekday() != this.getWeekday()) {
+            changeNote.add("Wochentag: " + this.weekday());
+        }
+        if (!previousChange.getTime().equals(this.getTime())) {
+            changeNote.add("Uhrzeit: " + asString(this.getTime()));
+        }
+        if (previousChange.getDuration() != this.getDuration()) {
+            changeNote.add("Dauer: " + this.getDuration() + " Minuten");
+        }
+        if (previousChange.getLessonStatus() != this.getLessonStatus()) {
+            changeNote.add("Status: " + this.lessonStatus());
+        }
+        if (previousChange.getAptStatus() != this.getAptStatus()) {
+            changeNote.add("Terminstatus: " + this.appointmentStatus());
+        }
+        if (previousChange.getStudentId1() != this.getStudentId1()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId1()).name());
+        }
+        if (previousChange.getStudentId2() != this.getStudentId2()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId2()).name());
+        }
+        if (previousChange.getStudentId3() != this.getStudentId3()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId3()).name());
+        }
+        if (previousChange.getStudentId4() != this.getStudentId4()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId4()).name());
+        }
+        if (previousChange.getStudentId5() != this.getStudentId5()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId5()).name());
+        }
+        if (previousChange.getStudentId6() != this.getStudentId6()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId6()).name());
+        }
+        if (previousChange.getStudentId7() != this.getStudentId7()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId7()).name());
+        }
+        if (previousChange.getStudentId8() != this.getStudentId8()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId8()).name());
+        }
+        if (previousChange.getStudentId9() != this.getStudentId9()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId9()).name());
+        }
+        if (previousChange.getStudentId10() != this.getStudentId10()) {
+            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId10()).name());
+        }
+        return changeNote.toString();
     }
 }

@@ -410,33 +410,8 @@
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="-Infinity" prefWidth="84.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="-Infinity" prefWidth="194.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="59.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="-Infinity" prefWidth="59.0" />
                                              </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="ALWAYS" />
-                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label text="15.07.2024" GridPane.columnSpan="2" GridPane.valignment="TOP">
-                                                   <font>
-                                                      <Font name="System Bold" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Unterricht angelegt (Schnupper-Termin)" wrapText="true" GridPane.columnIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <HBox spacing="3.0" GridPane.columnIndex="2" GridPane.valignment="TOP">
-                                                   <children>
-                                                      <Button minWidth="25.0" mnemonicParsing="false" text="B" />
-                                                      <Button minWidth="25.0" mnemonicParsing="false" text="L" />
-                                                   </children>
-                                                   <padding>
-                                                      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                                                   </padding>
-                                                </HBox>
-                                             </children>
                                           </GridPane>
                                        </content>
                                     </ScrollPane>
