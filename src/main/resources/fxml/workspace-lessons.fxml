@@ -399,7 +399,7 @@
                               </GridPane>
                               <VBox minWidth="343.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label text="Akte">
+                                    <Label text="Unterrichtsakte">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
@@ -412,6 +412,28 @@
                                                 <ColumnConstraints hgrow="ALWAYS" prefWidth="150.0" />
                                                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="53.0" />
                                              </columnConstraints>
+                                             <children>
+                                                <Label text="Datum">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Änderung" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Aktion" GridPane.columnIndex="2">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Separator GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                             </children>
+                                             <rowConstraints>
+                                                <RowConstraints maxHeight="17.333333333333332" minHeight="17.333333333333332" prefHeight="17.333333333333332" />
+                                                <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
+                                             </rowConstraints>
                                           </GridPane>
                                        </content>
                                     </ScrollPane>

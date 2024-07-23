@@ -322,7 +322,7 @@ public class LessonsController implements Initializable {
         List<LessonChange> changes = getLessonChangeListFromDB(lessonId);
         if (changes.isEmpty()) return;
 
-        int row = 0;
+        int row = 2;
         for (LessonChange change : changes) {
             Label date = new Label(asString(change.getChangeDate()));
             Label changeNote = new Label(change.getChangeNote());
@@ -335,10 +335,12 @@ public class LessonsController implements Initializable {
 
             lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, -1, Integer.MAX_VALUE));
             lessonChangesGridPane.addRow(row, date, changeNote, buttonBox);
-            if (row > 0) GridPane.setValignment(date, VPos.TOP);
+            GridPane.setValignment(date, VPos.TOP);
+            GridPane.setValignment(changeNote, VPos.TOP);
+            GridPane.setValignment(buttonBox, VPos.TOP);
             row++;
 
-            if (row < changes.size() * 2 - 1) {
+            if (row < changes.size() * 2 + 1) {
                 lessonChangesGridPane.getRowConstraints().add(new RowConstraints(10));
                 lessonChangesGridPane.add(new Separator(), 0, row, 3, 1);
                 row++;
@@ -347,8 +349,8 @@ public class LessonsController implements Initializable {
     }
 
     private void clearLessonChanges() {
-        while (lessonChangesGridPane.getRowCount() > 0) {
-            removeRow(lessonChangesGridPane, 0);
+        while (lessonChangesGridPane.getRowCount() > 2) {
+            removeRow(lessonChangesGridPane, 2);
         }
     }
 
@@ -406,11 +408,14 @@ public class LessonsController implements Initializable {
     private Button deleteChangeButton(LessonChange lessonChange) {
         Button button = new Button("L");
         button.setOnAction(e -> {
+            Node source = (Node) e.getSource();
+            int rowIndex = GridPane.getRowIndex(source.getParent());
+            if (rowIndex == 2) {
+                PopupWindow.displayInformation("Erster Eintrag, löschen nicht möglich. Zum Löschen des Unterrichts " +
+                        "bitte die Funktion \"Unterricht löschen\" verwenden.");
+                return;
+            }
             if (PopupWindow.displayYesNo("Änderung löschen?")) {
-                Node source = (Node) e.getSource();
-                int rowIndex = GridPane.getRowIndex(source.getParent());
-                // Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "javafx.scene.layout.GridPane.getRowIndex(javafx.scene.Node)" is null
-                // at prodegus.musetasks/prodegus.musetasks.workspace.LessonsController.lambda$deleteChangeButton$2(LessonsController.java:404)
                 deleteLessonChange(lessonChange.getId(), lessonChange.getChangeDate());
                 if(rowIndex < lessonChangesGridPane.getRowCount() - 1) removeRow(lessonChangesGridPane, rowIndex + 1);
                 removeRow(lessonChangesGridPane, rowIndex);

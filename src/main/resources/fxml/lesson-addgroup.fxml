@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.lessons.AddGroupController">
+   <children>
+      <ScrollPane fitToWidth="true" maxHeight="675.0" maxWidth="450.0" prefHeight="675.0">
+         <content>
+            <GridPane fx:id="gridPane" maxWidth="450.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox>
+                     <children>
+                        <Label fx:id="titleTextField" prefHeight="35.0" text="Gruppen-Unterricht anlegen">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <HBox />
+                     </children>
+                  </VBox>
+                  <VBox GridPane.rowIndex="3">
+                     <children>
+                        <Label text="Bezeichnung (optional)" />
+                        <TextField fx:id="lessonNameTextField" prefHeight="30.0" />
+                     </children>
+                  </VBox>
+                  <HBox spacing="20.0" GridPane.rowIndex="4">
+                     <children>
+                        <VBox minWidth="220.0">
+                           <children>
+                              <Label text="Schüler" />
+                              <HBox fx:id="studentHBox1">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox1" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton1" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox2">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox2" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton2" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox3">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox3" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton3" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox4">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox4" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton4" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox5">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox5" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton5" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox6">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox6" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton6" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox7">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox7" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton7" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox8">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox8" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton8" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox9">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox9" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton9" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="studentHBox10">
+                                 <children>
+                                    <ComboBox fx:id="studentComboBox10" editable="true" minWidth="185.0" prefHeight="30.0" prefWidth="185.0" promptText="Suchen oder auswählen" />
+                                    <Button fx:id="studentDeleteButton10" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="X">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <Button fx:id="addStudentButton" mnemonicParsing="false" prefWidth="185.0" text="Schüler hinzufügen">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Lehrer" />
+                              <ComboBox fx:id="teacherComboBox" editable="true" prefHeight="30.0" prefWidth="220.0" promptText="Suchen oder auswählen" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="20.0" GridPane.rowIndex="6">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Instrument" />
+                              <ComboBox fx:id="instrumentComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Dauer" />
+                              <ComboBox fx:id="durationComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="20.0" GridPane.rowIndex="7">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Standort" />
+                              <ComboBox fx:id="locationComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Raum" />
+                              <ComboBox fx:id="roomComboBox" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hBoxApt" spacing="10.0" GridPane.rowIndex="9">
+                     <children>
+                        <VBox fx:id="vBoxRepeat">
+                           <children>
+                              <Label text="Wiederholung" />
+                              <ComboBox fx:id="repeatComboBox" prefHeight="30.0" promptText="jede Woche" />
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox fx:id="vBoxWeekday">
+                           <children>
+                              <Label text="Wochentag" />
+                              <ComboBox fx:id="weekdayComboBox" prefHeight="30.0" promptText="montags" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="vBoxTime">
+                           <children>
+                              <Label text="Uhrzeit" />
+                              <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hBoxPeriod" spacing="10.0" GridPane.rowIndex="10">
+                     <children>
+                        <VBox fx:id="vBoxStartDate">
+                           <children>
+                              <Label fx:id="startDateLabel" text="Beginn" />
+                              <DatePicker fx:id="startDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="vBoxEndDate">
+                           <children>
+                              <Label fx:id="endDateLabel" text="Ende (optional)" />
+                              <DatePicker fx:id="endDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="40.0" GridPane.rowIndex="2">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Termin-Status">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <RadioButton fx:id="aptDraftRadioButton" mnemonicParsing="false" text="Entwurf">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="aptStatusGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="aptRequestRadioButton" mnemonicParsing="false" text="Termin angefragt" toggleGroup="$aptStatusGroup" />
+                              <RadioButton fx:id="aptConfirmedRadioButton" mnemonicParsing="false" text="Termin bestätigt" toggleGroup="$aptStatusGroup" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Unterrichts-Status">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <RadioButton fx:id="lessonStatusMeet" mnemonicParsing="false" text="Schnupper-Unterricht">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="lessonStatusGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="lessonStatusTrial" mnemonicParsing="false" text="Probemonat" toggleGroup="$lessonStatusGroup" />
+                              <RadioButton fx:id="lessonStatusActive" mnemonicParsing="false" text="Laufender Unterricht" toggleGroup="$lessonStatusGroup" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox fx:id="changeDateVBox" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Änderungen gültig ab" />
+                        <DatePicker fx:id="changeDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+      <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#confirm" text="Bestätigen" />
+            <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
