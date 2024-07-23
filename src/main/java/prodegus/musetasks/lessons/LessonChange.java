@@ -202,5 +202,6 @@ public class LessonChange extends Lesson {
             changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId10()).name());
         }
         return changeNote.toString();
+
     }
 }

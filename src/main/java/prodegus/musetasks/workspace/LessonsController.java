@@ -12,16 +12,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
 import prodegus.musetasks.contacts.Teacher;
@@ -119,6 +122,8 @@ public class LessonsController implements Initializable {
 
     @FXML
     private GridPane lessonChangesGridPane;
+
+    @FXML private ScrollPane lessonChangesScrollPane;
 
     @FXML private TableColumn<Appointment, String> aptColumnDate;
     @FXML private TableColumn<Appointment, String> aptColumnNote;
@@ -323,23 +328,24 @@ public class LessonsController implements Initializable {
             Label changeNote = new Label(change.getChangeNote());
             changeNote.setWrapText(true);
             Button edit = editChangeButton(change);
+            edit.setPrefWidth(25);
             Button delete = deleteChangeButton(change);
+            delete.setPrefWidth(25);
             HBox buttonBox = new HBox(3, edit, delete);
 
-            lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, 22, Integer.MAX_VALUE));
+            lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, -1, Integer.MAX_VALUE));
             lessonChangesGridPane.addRow(row, date, changeNote, buttonBox);
-            System.out.println("LessonChange nodes added at row: " + row);
+            if (row > 0) GridPane.setValignment(date, VPos.TOP);
             row++;
 
             if (row < changes.size() * 2 - 1) {
                 lessonChangesGridPane.getRowConstraints().add(new RowConstraints(10));
                 lessonChangesGridPane.add(new Separator(), 0, row, 3, 1);
-                System.out.println("Separator added at row: " + row);
                 row++;
             }
         }
     }
-    
+
     private void clearLessonChanges() {
         while (lessonChangesGridPane.getRowCount() > 0) {
             removeRow(lessonChangesGridPane, 0);
@@ -401,10 +407,12 @@ public class LessonsController implements Initializable {
         Button button = new Button("L");
         button.setOnAction(e -> {
             if (PopupWindow.displayYesNo("Änderung löschen?")) {
-                int rowIndex = GridPane.getRowIndex((Node)e.getSource());
+                Node source = (Node) e.getSource();
+                int rowIndex = GridPane.getRowIndex(source.getParent());
                 // Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "javafx.scene.layout.GridPane.getRowIndex(javafx.scene.Node)" is null
                 // at prodegus.musetasks/prodegus.musetasks.workspace.LessonsController.lambda$deleteChangeButton$2(LessonsController.java:404)
                 deleteLessonChange(lessonChange.getId(), lessonChange.getChangeDate());
+                if(rowIndex < lessonChangesGridPane.getRowCount() - 1) removeRow(lessonChangesGridPane, rowIndex + 1);
                 removeRow(lessonChangesGridPane, rowIndex);
             }
         });
@@ -504,6 +512,7 @@ public class LessonsController implements Initializable {
         showTableView(lessonTableView);
 
         // Initialize lesson info
+        lessonChangesScrollPane.setFitToWidth(true);
 
         // Initialize appointment TableView
         aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateInfo()));

@@ -318,7 +318,7 @@
                   </Label>
                   <StackPane>
                      <children>
-                        <HBox fx:id="singleInfo" spacing="20.0">
+                        <HBox fx:id="singleInfo" maxHeight="165.0" spacing="20.0">
                            <children>
                               <GridPane fx:id="singleInfoGridPane" minWidth="255.0" HBox.hgrow="ALWAYS">
                                  <columnConstraints>
@@ -404,13 +404,13 @@
                                           <Font name="System Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ScrollPane VBox.vgrow="ALWAYS">
+                                    <ScrollPane fx:id="lessonChangesScrollPane">
                                        <content>
-                                          <GridPane fx:id="lessonChangesGridPane">
+                                          <GridPane fx:id="lessonChangesGridPane" prefWidth="341.0">
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="-Infinity" prefWidth="84.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="-Infinity" prefWidth="194.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="-Infinity" prefWidth="59.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="70.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" prefWidth="150.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="53.0" />
                                              </columnConstraints>
                                           </GridPane>
                                        </content>

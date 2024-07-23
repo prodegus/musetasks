@@ -239,7 +239,7 @@ public class LessonModel {
     }
 
     public static void deleteLessonChange(int lessonId, LocalDate changeDate) {
-        Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
+        Filter lesson = new Filter("id", String.valueOf(lessonId));
         Filter date = new Filter("changedate", String.valueOf(toInt(changeDate)));
         delete(LESSON_CHANGE_TABLE, lesson, date);
     }
