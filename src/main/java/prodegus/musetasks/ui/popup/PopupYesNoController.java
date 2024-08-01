@@ -1,4 +1,4 @@
-package prodegus.musetasks.popup;
+package prodegus.musetasks.ui.popup;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;

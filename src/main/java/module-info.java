@@ -29,8 +29,8 @@ module prodegus.musetasks {
     opens prodegus.musetasks.workspace.cells to javafx.fxml;
     exports prodegus.musetasks.workspace.cells;
 
-    opens prodegus.musetasks.popup to javafx.fxml;
-    exports prodegus.musetasks.popup;
+    opens prodegus.musetasks.ui.popup to javafx.fxml;
+    exports prodegus.musetasks.ui.popup;
 
     opens prodegus.musetasks.lessons to javafx.fxml;
     exports prodegus.musetasks.lessons;

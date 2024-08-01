@@ -30,6 +30,7 @@ public class Appointment implements Comparable<Appointment> {
     public static final int STATUS_COMPENSATED = 4;
     public static final int STATUS_DROPPED = 5;
     public static final int STATUS_CHANGED = 6;
+    public static final int STATUS_REQUEST = 7;
 
     private SimpleIntegerProperty id          = new SimpleIntegerProperty();
     private LocalDate             date        = LocalDate.MIN;
@@ -199,6 +200,7 @@ public class Appointment implements Comparable<Appointment> {
             case STATUS_COMPENSATED -> "Nachgeholt";
             case STATUS_DROPPED -> "Abgesagt";
             case STATUS_CHANGED -> "Planmäßig (*)";
+            case STATUS_REQUEST -> "Termin angefragt";
             default -> "";
         };
     }
@@ -241,7 +243,7 @@ public class Appointment implements Comparable<Appointment> {
         if (this.getDate() != LocalDate.MIN) columns.add("date");
         if (this.getTime() != LocalTime.MAX) columns.add("time");
         if (this.getLocationId() != 0) columns.add("locationid");
-        if (!this.getRoom().isBlank()) columns.add("room");
+        if (this.getRoom() != null && !this.getRoom().isBlank()) columns.add("room");
         if (this.getDuration() != 0) columns.add("duration");
         if (this.getLessonId() != 0) columns.add("lessonid");
         if (this.getDateOld() != LocalDate.MIN) columns.add("dateold");
@@ -258,7 +260,7 @@ public class Appointment implements Comparable<Appointment> {
         if (this.getDate() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getDate())));
         if (this.getTime() != LocalTime.MAX) values.add(String.valueOf(toInt(this.getTime())));
         if (this.getLocationId() != 0) values.add(String.valueOf(this.getLocationId()));
-        if (!this.getRoom().isBlank()) values.add(this.getRoom());
+        if (this.getRoom() != null && !this.getRoom().isBlank()) values.add(this.getRoom());
         if (this.getDuration() != 0) values.add(String.valueOf(this.getDuration()));
         if (this.getLessonId() != 0) values.add(String.valueOf(this.getLessonId()));
         if (this.getDateOld() != LocalDate.MIN) values.add(String.valueOf(toInt(this.getDateOld())));
@@ -276,7 +278,7 @@ public class Appointment implements Comparable<Appointment> {
         sb.append("time        = ").append(this.getTime() == LocalTime.MAX ? "null" : toInt(this.getTime())).append(", ");
         sb.append("duration    = ").append(this.getDuration()).append(", ");
         sb.append("locationid  = ").append(this.getLocationId() == 0 ? "null" : this.getLocationId()).append(", ");
-        sb.append("room        = ").append(this.getRoom().isBlank() ? "null" : ("'" + this.getRoom() +"'")).append(", ");
+        sb.append("room        = ").append(this.getRoom() == null || this.getRoom().isBlank() ? "null" : ("'" + this.getRoom() +"'")).append(", ");
         sb.append("lessonid    = ").append(this.getLessonId() == 0 ? "null" : this.getLessonId()).append(", ");
         sb.append("dateold     = ").append(this.getDateOld() == LocalDate.MIN ? "null" : toInt(this.getDateOld())).append(", ");
         sb.append("category    = ").append(this.getCategory()).append(", ");

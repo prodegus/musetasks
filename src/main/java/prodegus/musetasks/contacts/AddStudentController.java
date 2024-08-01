@@ -11,11 +11,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import prodegus.musetasks.school.Location;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.ParentListCellFormal;
 import prodegus.musetasks.workspace.cells.StringListCell;
-import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -27,7 +26,6 @@ import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
 import static prodegus.musetasks.contacts.ParentModel.parentStringConverterFormal;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
 import static prodegus.musetasks.school.LocationModel.fromString;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
@@ -53,9 +51,6 @@ public class AddStudentController implements Initializable {
     @FXML private ComboBox<String> instrument1ComboBox;
     @FXML private ComboBox<String> instrument2ComboBox;
     @FXML private ComboBox<String> instrument3ComboBox;
-    @FXML private ComboBox<Teacher> teacher1ComboBox;
-    @FXML private ComboBox<Teacher> teacher2ComboBox;
-    @FXML private ComboBox<Teacher> teacher3ComboBox;
 
     @FXML private GridPane communicationForm;
     @FXML private TextField phoneTextField;
@@ -113,9 +108,6 @@ public class AddStudentController implements Initializable {
         String statusTo = "";
         Parent parent1 = parent1ComboBox.getValue();
         Parent parent2 = parent2ComboBox.getValue();
-        Teacher teacher1 = teacher1ComboBox.getValue();
-        Teacher teacher2 = teacher2ComboBox.getValue();
-        Teacher teacher3 = teacher3ComboBox.getValue();
 
         if (lastname.isBlank()) {
             invalidData = true;
@@ -173,9 +165,6 @@ public class AddStudentController implements Initializable {
         newStudent.setStatusTo(statusTo);
         if (parent1 != null) newStudent.setParentId1(parent1.getId());
         if (parent2 != null) newStudent.setParentId2(parent2.getId());
-        if (teacher1 != null) newStudent.setTeacherId1(teacher1.getId());
-        if (teacher2 != null) newStudent.setTeacherId2(teacher2.getId());
-        if (teacher3 != null) newStudent.setTeacherId3(teacher3.getId());
 
         if (invalidData) {
             PopupWindow.displayInformation("Schüler konnte nicht angelegt werden: \n\n" + errorMessage);
@@ -312,9 +301,6 @@ public class AddStudentController implements Initializable {
         if (!student.getInstrument1().isBlank()) instrument1ComboBox.setValue(student.getInstrument1());
         if (!student.getInstrument2().isBlank()) instrument2ComboBox.setValue(student.getInstrument2());
         if (!student.getInstrument3().isBlank()) instrument3ComboBox.setValue(student.getInstrument3());
-        if (student.getTeacherId1() != 0) teacher1ComboBox.setValue(student.teacher1());
-        if (student.getTeacherId2() != 0) teacher2ComboBox.setValue(student.teacher2());
-        if (student.getTeacherId3() != 0) teacher3ComboBox.setValue(student.teacher3());
         phoneTextField.setText(student.getPhone());
         emailTextField.setText(student.getEmail());
         zoomCheckBox.setSelected(!student.getZoom().isEmpty());
@@ -346,18 +332,6 @@ public class AddStudentController implements Initializable {
         locationComboBox.setItems(SCHOOL_LOCATIONS);
         locationComboBox.setCellFactory(string -> new LocationListCell());
         locationComboBox.setConverter(locationStringConverter);
-
-        teacher1ComboBox.setItems(teachers);
-        teacher1ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
-        teacher1ComboBox.setConverter(teacherStringConverterFormal);
-
-        teacher2ComboBox.setItems(teachers);
-        teacher2ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
-        teacher2ComboBox.setConverter(teacherStringConverterFormal);
-
-        teacher3ComboBox.setItems(teachers);
-        teacher3ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
-        teacher3ComboBox.setConverter(teacherStringConverterFormal);
 
         parent1ComboBox.setItems(parents);
         parent1ComboBox.setCellFactory(parent -> new ParentListCellFormal());

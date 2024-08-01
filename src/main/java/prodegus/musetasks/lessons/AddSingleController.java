@@ -1,6 +1,7 @@
 package prodegus.musetasks.lessons;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,10 +10,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.school.Location;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.workspace.cells.LocationListCell;
 import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.StudentListCell;
@@ -20,6 +22,8 @@ import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.StudentModel.*;
@@ -61,6 +65,7 @@ public class AddSingleController implements Initializable {
     @FXML private ComboBox<String> weekdayComboBox;
     @FXML private VBox vBoxTime;
     @FXML private ComboBox<String> timeComboBox;
+    @FXML private Button editCustomAptsButton;
     @FXML private HBox hBoxPeriod;
     @FXML private VBox vBoxStartDate;
     @FXML private Label startDateLabel;
@@ -71,15 +76,21 @@ public class AddSingleController implements Initializable {
 
     private boolean editMode;
     private int id;
+    private final ObservableList<Appointment> customAppointments = FXCollections.observableArrayList();
 
+    @FXML
+    void editCustomApts(ActionEvent event) {
+        Lesson lesson = fromInputValues();
+        if (lesson == null) return;
+        customAppointments.setAll(CustomAptWindow.customAppointments(lesson));
+    }
 
     @FXML
     void cancel(ActionEvent event) {
         stageOf(event).close();
     }
 
-    @FXML
-    void confirm(ActionEvent event) {
+    Lesson fromInputValues() {
         Lesson lesson = new Lesson();
         LocalDate changeDate = changeDatePicker.getValue();
         boolean invalidData = false;
@@ -98,9 +109,15 @@ public class AddSingleController implements Initializable {
         int weekday = weekdayComboBox.getSelectionModel().getSelectedIndex();
         String timeString = timeComboBox.getValue();
         LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
+        LocalDate endDate = repeat == REPEAT_OFF ? startDate : endDatePicker.getValue();
 
-        lesson.setLessonName(lessonName);
+        if (editMode) lesson.setId(id);
+
+        if (lessonStatus == 0 || aptStatus == 0) {
+            invalidData = true;
+            errorMessage.append(" - Bitte Termin- und Unterrichts-Status angeben\n");
+        }
+
         lesson.setCategory(category);
 
         boolean draft = aptStatus == LESSON_APT_STATUS_DRAFT;
@@ -149,51 +166,84 @@ public class AddSingleController implements Initializable {
             lesson.setRepeat(repeat);
         }
 
-        if (weekday < 1 && repeat != REPEAT_OFF) {
-            invalidData = true;
-            errorMessage.append("- Bitte Wochentag auswählen\n");
-        } else {
-            lesson.setWeekday(weekday);
-        }
-
-        if (timeComboBox.getSelectionModel().isEmpty()) {
-            invalidData = true;
-            errorMessage.append("- Bitte Uhrzeit angeben\n");
-        } else {
-            lesson.setTime(toTime(timeString));
-        }
-
-        if (startDate == null) {
+        if (startDate == null && repeat != REPEAT_CUSTOM) {
             invalidData = !draft;
             errorMessage.append(draft ? "" : "- Bitte gültiges Start-Datum eingeben\n");
         } else {
             lesson.setStartDate(startDate);
         }
 
-        if (endDate == null && getLessonStatus() == LESSON_STATUS_TRIAL) {
-            invalidData = true;
-            errorMessage.append("- Bitte End-Datum für den Probemonat angeben");
-        } else {
-            lesson.setEndDate(endDate == null ? LocalDate.MAX : endDate);
+        if (repeat != REPEAT_OFF && repeat != REPEAT_CUSTOM) {
+            if (weekday < 1) {
+                invalidData = true;
+                errorMessage.append("- Bitte Wochentag auswählen\n");
+            } else {
+                lesson.setWeekday(weekday);
+            }
+
+            if (timeComboBox.getSelectionModel().isEmpty()) {
+                invalidData = true;
+                errorMessage.append("- Bitte Uhrzeit angeben\n");
+            } else {
+                lesson.setTime(toTime(timeString));
+            }
+
+            if (endDate == null && lessonStatus != LESSON_STATUS_MEET) {
+                invalidData = true;
+                String regular = "- Bitte unter \"Termine eintragen bis\" angeben, bis zu welchem Datum die " +
+                        "Unterrichtstermine in den Plan eingetragen werden sollen\n";
+                String trial = "- Bitte Ende des Probemonats angeben\n";
+                errorMessage.append(lessonStatus == LESSON_STATUS_ACTIVE ? regular : trial);
+            } else {
+                lesson.setEndDate(endDate);
+            }
         }
 
         lesson.setLessonStatus(lessonStatus);
         lesson.setAptStatus(aptStatus);
 
+        lesson.setLessonName(lessonName.isBlank() ? lesson.createLessonName() : lessonName);
+
         if (invalidData) {
-            PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" + errorMessage);
-            return;
+            PopupWindow.displayInformation("Fehlende Angaben: \n\n" + errorMessage);
+            return null;
         }
+
+
+        return lesson;
+    }
+
+    @FXML
+    void confirm(ActionEvent event) {
+       Lesson lesson = fromInputValues();
+       if (lesson == null) return;
+
+       LocalDate startDate = startDatePicker.getValue();
+       Student student = studentComboBox.getValue();
+       LocalDate changeDate = changeDatePicker.getValue();
+
+       if (customAppointments.size() > 0) {
+           startDate = customAppointments.get(0).getDate();
+           lesson.setStartDate(customAppointments.get(0).getDate());
+           changeDate = customAppointments.get(0).getDate();
+           lesson.setTime(toTime(2359));
+       }
+
+       if (collidingLesson(lesson, lesson.getStartDate()) != null) {
+           PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" +
+                   "- Raumkollision mit: " + collidingLesson(lesson, lesson.getStartDate()).getLessonName() + "\n");
+           return;
+       }
+
+
 
         if (!editMode) {
             insertLesson(lesson);
             lesson.setId(getLastLessonID());
             insertLessonChange(new LessonChange(lesson, startDate, true));
             student.addLessonInDB(getLastLessonID());
-            student.addTeacherInDB(teacher.getId());
-            insertLessonAppointments(getLessonFromDB(getLastLessonID()));
+            insertLessonAppointments(getLessonFromDB(getLastLessonID()), customAppointments);
         } else {
-            lesson.setId(id);
             if (lessonChangeExists(id, changeDate)) {
                 if (PopupWindow.displayYesNo("Es existiert bereits eine Änderung zu diesem Datum. Überschreiben?"))
                     updateLessonChange(new LessonChange(lesson, changeDate, false));
@@ -202,23 +252,14 @@ public class AddSingleController implements Initializable {
                 insertLessonChange(new LessonChange(lesson, changeDate, false));
             }
             student.addLessonInDB(id);
-            student.addTeacherInDB(teacher.getId());
-            insertLessonAppointments(lesson);
+            insertLessonAppointments(lesson, customAppointments);
         }
+
         stageOf(event).close();
     }
 
-    private String createLessonName(String studentName, String instrument, String durationMinutes, boolean draft) {
-        if (!lessonNameTextField.getText().isBlank()) return lessonNameTextField.getText();
-        StringBuilder lessonName = new StringBuilder();
-        if (draft) lessonName.append("[Entwurf] ");
-        lessonName.append(studentName);
-        lessonName.append(" (");
-        lessonName.append(String.join(", ", instrument, "Einzel", durationMinutes + "min)"));
-        return lessonName.toString();
-    }
-
     private int getLessonStatus() {
+        if (lessonStatusGroup.getSelectedToggle() == null) return 0;
         if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusMeet)) return LESSON_STATUS_MEET;
         if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusTrial)) return LESSON_STATUS_TRIAL;
         if (lessonStatusGroup.getSelectedToggle().equals(lessonStatusActive)) return LESSON_STATUS_ACTIVE;
@@ -226,6 +267,7 @@ public class AddSingleController implements Initializable {
     }
 
     private int getAppointmentStatus() {
+        if (aptStatusGroup.getSelectedToggle() == null) return 0;
         if (aptStatusGroup.getSelectedToggle().equals(aptDraftRadioButton)) return LESSON_APT_STATUS_DRAFT;
         if (aptStatusGroup.getSelectedToggle().equals(aptRequestRadioButton)) return LESSON_APT_STATUS_REQUEST;
         if (aptStatusGroup.getSelectedToggle().equals(aptConfirmedRadioButton)) return LESSON_APT_STATUS_CONFIRMED;
@@ -291,25 +333,20 @@ public class AddSingleController implements Initializable {
             if (selectedToggle.equals(lessonStatusMeet)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_OFF);
                 weekdayComboBox.getSelectionModel().select(WEEKDAY_NO_SELECTION);
-                startDateLabel.setText("Schnupper-Termin");
                 hBoxApt.getChildren().setAll(vBoxStartDate, vBoxTime);
-                hBoxPeriod.getChildren().clear();
+                startDateLabel.setText("Schnupper-Termin");
             }
             if (selectedToggle.equals(lessonStatusTrial)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
                 weekdayComboBox.getSelectionModel().select(editMode ? getLessonFromDB(id).getWeekday() : 0);
-                startDateLabel.setText("Probemonat von:");
-                endDateLabel.setText("bis:");
-                hBoxApt.getChildren().setAll(vBoxRepeat, vBoxWeekday, vBoxTime);
-                hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
+                startDateLabel.setText("Probemonat von");
+                endDateLabel.setText("bis");
             }
             if (selectedToggle.equals(lessonStatusActive)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
                 weekdayComboBox.getSelectionModel().select(0);
-                startDateLabel.setText("Beginn:");
-                endDateLabel.setText("Ende (optional):");
-                hBoxApt.getChildren().setAll(vBoxRepeat, vBoxWeekday, vBoxTime);
-                hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
+                startDateLabel.setText("Beginn");
+                endDateLabel.setText("Termine eintragen bis");
             }
         });
 
@@ -337,8 +374,25 @@ public class AddSingleController implements Initializable {
                 -> roomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
 
         repeatComboBox.setItems(FXCollections.observableArrayList("auswählen", "jede Woche", "alle 2 Wochen", "alle 3 Wochen",
-                "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin"));
+                "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin", "individuelle Termine"));
         repeatComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (repeatComboBox.getSelectionModel().getSelectedIndex()) {
+                case REPEAT_OFF -> {
+                    hBoxApt.getChildren().setAll(vBoxRepeat, vBoxStartDate, vBoxTime);
+                    hBoxPeriod.getChildren().clear();
+                    startDateLabel.setText("Termin");
+                }
+                case REPEAT_CUSTOM -> {
+                    hBoxApt.getChildren().setAll(vBoxRepeat, editCustomAptsButton);
+                    hBoxPeriod.getChildren().clear();
+                }
+                default -> {
+                    hBoxApt.getChildren().setAll(vBoxRepeat, vBoxWeekday, vBoxTime);
+                    hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
+                }
+            }
+
+
             boolean repeatOff = repeatComboBox.getValue().equals("einmaliger Termin");
             weekdayComboBox.setDisable(repeatOff);
             startDateLabel.setText(repeatOff ? "Datum" : "Beginn");
@@ -351,7 +405,5 @@ public class AddSingleController implements Initializable {
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
 
         repeatComboBox.getSelectionModel().select(1);
-        aptDraftRadioButton.setSelected(true);
-        lessonStatusMeet.setSelected(true);
     }
 }

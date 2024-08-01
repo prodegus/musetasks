@@ -370,17 +370,39 @@ public class Lesson {
         return getTeacherFromDB(getTeacherId());
     }
 
-    public ObservableList<Appointment> appointments(HalfYear halfYear) {
-        return this.appointments(halfYear.getStart(), halfYear.getEnd());
+    public String createLessonName() {
+        StringBuilder lessonName = new StringBuilder();
+        System.out.println("this.getLessonStatus(): " + this.getLessonStatus());
+        if (this.getAptStatus() == LESSON_APT_STATUS_DRAFT) lessonName.append("[Entwurf] ");
+        if (this.getAptStatus() == LESSON_APT_STATUS_REQUEST) lessonName.append("[Vorschlag] ");
+        if (this.getCategory() == CATEGORY_SINGLE) {
+            lessonName.append(getStudentFromDB(this.getStudentId1()).name());
+            lessonName.append(" (");
+            lessonName.append(String.join(", ", this.getInstrument(), "Einzel", this.getDuration() + " min)"));
+        } else {
+            String category = switch(this.getCategory()) {
+                case CATEGORY_GROUP -> "Gruppe";
+                case CATEGORY_COURSE -> "Kurs";
+                case CATEGORY_WORKGROUP -> "AG";
+                default -> "";
+            };
+            int i = 1;
+            for (Lesson lesson : getLessonListFromDB()) {
+                if (lesson.getCategory() == this.getCategory() && lesson.getInstrument().equals(this.getInstrument())) i++;
+            }
+            lessonName.append(this.getInstrument()).append(" - ").append(category).append(" ").append(i);
+            lessonName.append(" (").append(this.getDuration()).append(" min)");
+        }
+
+        return lessonName.toString();
     }
 
-    public ObservableList<Appointment> appointments(LocalDate startDate, LocalDate endDate) {
+    public ObservableList<Appointment> appointments() {
         ObservableList<Appointment> list = FXCollections.observableArrayList();
-        LocalDate realStartDate = startDate.isBefore(this.getStartDate()) ? this.getStartDate() : startDate;
-        LocalDate realEndDate = endDate == LocalDate.MIN || endDate.isAfter(this.getEndDate()) ? this.getEndDate() : endDate;
+        LocalDate realStartDate = this.getStartDate();
+        LocalDate realEndDate = this.getEndDate();
         Holiday currentHoliday = null;
 
-        list.addAll(getLessonAppointmentsFromDB(this.getId(), startDate, endDate));
         while (realStartDate.getDayOfWeek().getValue() != this.getWeekday())
             realStartDate = realStartDate.plusDays(1);
 
@@ -390,12 +412,10 @@ public class Lesson {
             if (holiday != null) {
                 if (currentHoliday == null || !holiday.getDescription().equals(currentHoliday.getDescription())) {
                     currentHoliday = holiday;
-                    list.add(createHolidayAppointment(currentHoliday));
+                    Appointment holidayAppointment = createHolidayAppointment(currentHoliday);
+                    holidayAppointment.setLessonId(this.getId());
+                    list.add(holidayAppointment);
                 }
-                continue;
-            }
-
-            if (isChanged(this, date)) {
                 continue;
             }
 
@@ -424,7 +444,7 @@ public class Lesson {
         appointment.setDuration(this.getDuration());
         appointment.setLessonId(this.getId());
         appointment.setCategory(CATEGORY_LESSON_REGULAR);
-        appointment.setStatus(STATUS_OK);
+        appointment.setStatus(this.getAptStatus() == LESSON_APT_STATUS_REQUEST ? STATUS_REQUEST : STATUS_OK);
         return appointment;
     }
 
@@ -451,7 +471,7 @@ public class Lesson {
     }
 
     public String locationRoom() {
-        return this.location().getName() + "(" + this.getRoom() + ")";
+        return this.location().getName() + " (" + this.getRoom() + ")";
     }
 
     public String regularAppointment() {
@@ -469,7 +489,7 @@ public class Lesson {
     }
 
     public String studentsNamesString() {
-        return String.join(", ", studentsNames());
+        return String.join("\n", studentsNames());
     }
 
     public String category() {

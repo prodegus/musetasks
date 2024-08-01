@@ -26,7 +26,7 @@ package prodegus.musetasks.workspace;
         import javafx.stage.Stage;
         import prodegus.musetasks.contacts.*;
         import prodegus.musetasks.mail.NewMailController;
-        import prodegus.musetasks.ui.PopupWindow;
+        import prodegus.musetasks.ui.popup.PopupWindow;
         import prodegus.musetasks.workspace.cells.StringListCell;
         import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 

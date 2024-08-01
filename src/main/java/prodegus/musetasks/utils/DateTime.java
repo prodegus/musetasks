@@ -2,6 +2,7 @@ package prodegus.musetasks.utils;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.DatePicker;
+import prodegus.musetasks.lessons.Lesson;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class DateTime {
             H_2025_2, H_2026_1, H_2026_2, H_2027_1, H_2027_2);
 
     public static final LocalDate FAR_PAST = LocalDate.of(1900, 1, 1);
+    public static final LocalDate FAR_FUTURE = LocalDate.of(2100, 1, 1);
 
     public static HalfYear currentHalfYear() {
         LocalDate now = LocalDate.now();
@@ -110,7 +112,7 @@ public class DateTime {
     }
 
     public static String asString(LocalDate date, LocalTime time) {
-        return asString(date) + ", " + asString(time);
+        return asString(date) + ", " + asString(time) + " Uhr";
     }
 
     public static String weekdayDateString(LocalDate date) {

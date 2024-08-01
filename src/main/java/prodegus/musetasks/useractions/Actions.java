@@ -11,7 +11,7 @@ public class Actions {
 
     public static void processLessonChanges() {
         for (LessonChange lessonChange : getLessonChangeListFromDB()) {
-            if (lessonChange.getChangeDate().isBefore(LocalDate.now()) && !lessonChange.isChangeDone()) {
+            if (!lessonChange.isChangeDone() && lessonChange.getChangeDate().isBefore(LocalDate.now())) {
                 updateLesson(lessonChange.lesson(), lessonChange.getId());
                 lessonChange.setChangeDone(true);
                 updateLessonChange(lessonChange);

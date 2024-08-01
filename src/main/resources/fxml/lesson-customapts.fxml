@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.lessons.CustomAptController">
+   <children>
+      <VBox>
+         <children>
+            <Label fx:id="titleTextField" prefHeight="35.0" text="Termine">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="lessonTitle" text="Gitarre - Workshop 2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <ScrollPane fx:id="aptScrollPane" prefHeight="400.0" prefWidth="200.0">
+         <content>
+            <VBox>
+               <children>
+                  <VBox fx:id="aptVBox" spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="1. Termin:" />
+                              <DatePicker prefWidth="100.0" promptText="Datum" />
+                              <ComboBox editable="true" prefWidth="92.0" promptText="08:40 Uhr" />
+                              <Button mnemonicParsing="false" prefWidth="25.0" text="X" />
+                              <Label text="Hinweis: Feiertag (1. Weihnachtsfeiertag)" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="1. Termin:" />
+                              <DatePicker prefWidth="100.0" promptText="31.12.2024" />
+                              <ComboBox editable="true" prefWidth="92.0" promptText="Uhrzeit" />
+                              <Button mnemonicParsing="false" prefWidth="25.0" text="X" />
+                              <Label text="Hinweis: Feiertag (1. Weihnachtsfeiertag)" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="52.0" />
+                        <Button mnemonicParsing="false" onAction="#addRow" prefWidth="202.0" text="Termin hinzufügen" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#confirmAppointments" prefWidth="80.0" text="Bestätigen" />
+            <Button mnemonicParsing="false" onAction="#cancel" prefWidth="80.0" text="Abbrechen" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+   </padding>
+</VBox>

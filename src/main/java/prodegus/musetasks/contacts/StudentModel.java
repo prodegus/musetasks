@@ -6,6 +6,8 @@ import javafx.util.StringConverter;
 import prodegus.musetasks.database.Filter;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static prodegus.musetasks.database.Database.*;
 
@@ -92,6 +94,50 @@ public class StudentModel {
             throw new RuntimeException(e);
         }
         return student;
+    }
+
+    public static List<Student> studentsAdded(List<Student> oldStudents, List<Student> newStudents) {
+        List<Student> studentsAdded = new ArrayList<>();
+        List<Integer> oldIds = new ArrayList<>();
+        List<Integer> newIds = new ArrayList<>();
+
+        for (Student student : oldStudents) {
+            oldIds.add(student.getId());
+        }
+
+        for (Student student : newStudents) {
+            newIds.add(student.getId());
+        }
+
+        newIds.removeAll(oldIds);
+
+        for (Integer id : newIds) {
+            studentsAdded.add(getStudentFromDB(id));
+        }
+
+        return studentsAdded;
+    }
+
+    public static List<Student> studentsRemoved(List<Student> oldStudents, List<Student> newStudents) {
+        List<Student> studentsRemoved = new ArrayList<>();
+        List<Integer> oldIds = new ArrayList<>();
+        List<Integer> newIds = new ArrayList<>();
+
+        for (Student student : oldStudents) {
+            oldIds.add(student.getId());
+        }
+
+        for (Student student : newStudents) {
+            newIds.add(student.getId());
+        }
+
+        oldIds.removeAll(newIds);
+
+        for (Integer id : oldIds) {
+            studentsRemoved.add(getStudentFromDB(id));
+        }
+
+        return studentsRemoved;
     }
 
 }

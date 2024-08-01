@@ -3,14 +3,18 @@ package prodegus.musetasks.lessons;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import prodegus.musetasks.appointments.Appointment;
+import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.database.Filter;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.database.PeriodFilter;
+import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
@@ -102,8 +106,12 @@ public class LessonModel {
         return getLatestLessonChange(lessonId, date, date) != null;
     }
 
-    public static LessonChange getLatestLessonChange(int lessonId, LocalDate date) {
-        return getLatestLessonChange(lessonId, FAR_PAST, date);
+    public static LessonChange getLatestLessonChange(int lessonId) {
+        return getLatestLessonChange(lessonId, FAR_PAST, FAR_FUTURE);
+    }
+
+    public static LessonChange getLatestLessonChange(int lessonId, LocalDate untilDate) {
+        return getLatestLessonChange(lessonId, FAR_PAST, untilDate);
     }
 
     public static LessonChange getLatestLessonChange(int lessonId, LocalDate start, LocalDate end) {
@@ -123,6 +131,16 @@ public class LessonModel {
     public static ObservableList<LessonChange> getLessonChangeListFromDB(int lessonId, LocalDate start, LocalDate end) {
         return getLessonChangeListFromDB(" WHERE id = " + lessonId + " AND changedate BETWEEN " + toInt(start) + " AND " + toInt(end) +
                 " ORDER BY changedate DESC");
+    }
+
+    public static LessonChange getEarliestLessonChange(int lessonId) {
+        return getLessonChangeListFromDB(" WHERE id = " + lessonId + " AND changedate > " + toInt(FAR_PAST) +
+                " ORDER BY changedate ASC").get(0);
+    }
+
+    public static LessonChange getEarliestLessonChange(int lessonId, LocalDate start) {
+        return getLessonChangeListFromDB(" WHERE id = " + lessonId + " AND changedate > " + toInt(start) +
+                " ORDER BY changedate ASC").get(0);
     }
 
     public static ObservableList<LessonChange> getLessonChangeListFromDB(String filters) {
@@ -158,6 +176,17 @@ public class LessonModel {
         return lesson;
     }
 
+    public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments) {
+        if (appointments == null) {
+            insertLessonAppointments(lesson);
+            return;
+        }
+        for (Appointment appointment : appointments) {
+            appointment.setLessonId(lesson.getId());
+            insert(appointment);
+        }
+    }
+
     public static void insertLessonAppointments(Lesson lesson) {
         if (lesson == null || lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) return;
 
@@ -177,7 +206,7 @@ public class LessonModel {
             appointment.setDuration(lesson.getDuration());
             appointment.setLessonId(lesson.getId());
             appointment.setCategory(CATEGORY_LESSON_MEET);
-            appointment.setStatus(STATUS_OK);
+            appointment.setStatus(lesson.getAptStatus() == LESSON_APT_STATUS_REQUEST ? STATUS_REQUEST : STATUS_OK);
             appointment.setDescription("Schnupper-Unterricht");
             insert(appointment);
         }
@@ -203,35 +232,69 @@ public class LessonModel {
                 appointment.setDuration(lesson.getDuration());
                 appointment.setLessonId(lesson.getId());
                 appointment.setCategory(CATEGORY_LESSON_TRIAL);
-                appointment.setStatus(STATUS_OK);
+                appointment.setStatus(lesson.getAptStatus() == LESSON_APT_STATUS_REQUEST ? STATUS_REQUEST : STATUS_OK);
                 appointment.setDescription("Probemonat");
                 insert(appointment);
             }
+        }
+
+        if (lesson.getLessonStatus() == LESSON_STATUS_ACTIVE) {
+            if (activeLessonsExist(lesson.getId(), lesson.getStartDate(), lesson.getEndDate())) {
+                String activeLessonsExistMessage = "Für diesen Unterricht wurden bereits Termine festgelegt.\n\n" +
+                        "Termine überschreiben?";
+                if (!PopupWindow.displayYesNo(activeLessonsExistMessage)) return;
+
+                Filter lessonFilter = new Filter("lessonid", String.valueOf(lesson.getId()));
+                Filter active = new Filter("category", CATEGORY_LESSON_REGULAR);
+                Filter holiday = new Filter("category", CATEGORY_HOLIDAY);
+                Filter period = new PeriodFilter("date", lesson.getStartDate(), lesson.getEndDate());
+
+                delete(APPOINTMENT_TABLE, lessonFilter, active, period);
+                delete(APPOINTMENT_TABLE, lessonFilter, holiday, period);
+            }
+
+            for (Appointment appointment : lesson.appointments()) {
+                insert(appointment);
+            }
+
         }
     }
 
     public static boolean trialExists(int lessonId) {
         Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
-        Filter trial = new Filter("description", "Probemonat");
+        Filter trial = new Filter("category", CATEGORY_LESSON_TRIAL);
         return !queryInteger("id", APPOINTMENT_TABLE, lesson, trial).isEmpty();
     }
 
     public static boolean meetExists(int lessonId) {
         Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
-        Filter trial = new Filter("description", "Schnupper-Unterricht");
+        Filter trial = new Filter("category", CATEGORY_LESSON_MEET);
         return !queryInteger("id", APPOINTMENT_TABLE, lesson, trial).isEmpty();
+    }
+
+    public static boolean activeLessonsExist(int lessonId, LocalDate startDate, LocalDate endDate) {
+        Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
+        Filter active = new Filter("category", CATEGORY_LESSON_REGULAR);
+        Filter period = new PeriodFilter("date", startDate, endDate);
+        return !queryInteger("id", APPOINTMENT_TABLE, lesson, active, period).isEmpty();
     }
 
     public static void insertLesson(Lesson lesson) {
         insert(LESSON_TABLE, lesson.sqlColumns(), lesson.sqlValues());
     }
     
-    public static void deleteLesson(Lesson lesson) {
+    public static void deleteLessonFromDB(Lesson lesson) {
         delete(LESSON_TABLE, lesson.getId());
     }
 
     public static void updateLesson(Lesson lesson, int id) {
+        Lesson oldLesson = getLessonFromDB(id);
+        List<Student> removedStudents = oldLesson.students();
+        removedStudents.removeAll(lesson.students());
         updateMultiple(LESSON_TABLE, id, lesson.valuesToSQLUpdateString());
+        for (Student student : removedStudents) {
+            student.removeLessonInDB(id);
+        }
     }
 
     public static void insertLessonChange(LessonChange lessonChange) {
@@ -265,6 +328,35 @@ public class LessonModel {
         }
 
         return id;
+    }
+
+    public static Lesson collidingLesson(Lesson lesson, LocalDate startDate) {
+        for (Lesson lesson2 : getLessonListFromDB()) {
+            if (lesson2.getId() == lesson.getId()) continue;
+            Lesson currentLesson2 = getLatestLessonChange(lesson2.getId(), startDate); // Fehler: currentLesson2 wird null
+            if (currentLesson2 == null) currentLesson2 = getEarliestLessonChange(lesson2.getId(), startDate);
+            if (appointmentsOverlap(lesson, currentLesson2)) return currentLesson2;
+        }
+        return null;
+    }
+
+    public static boolean appointmentsOverlap(Lesson lesson1, Lesson lesson2) {
+        if (lesson1.getId() == lesson2.getId()) return false;
+
+        String locationRoom1 = lesson1.locationRoom();
+        String locationRoom2 = lesson2.locationRoom();
+
+        int weekday1 = lesson1.getWeekday();
+        LocalTime time1 = lesson1.getTime();
+        int duration1 = lesson1.getDuration();
+
+        int weekday2 = lesson2.getWeekday();
+        LocalTime time2 = lesson2.getTime();
+        int duration2 = lesson2.getDuration();
+
+        if (!locationRoom1.equals(locationRoom2)) return false;
+        if (weekday1 != weekday2) return false;
+        return !time1.plusMinutes(duration1 - 1).isBefore(time2) && !time2.plusMinutes(duration2 - 1).isBefore(time1);
     }
 
 }

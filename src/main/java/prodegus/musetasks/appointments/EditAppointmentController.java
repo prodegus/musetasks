@@ -1,6 +1,5 @@
 package prodegus.musetasks.appointments;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,14 +9,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.school.Location;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.workspace.cells.LocationListCell;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
 
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
@@ -238,8 +236,6 @@ public class EditAppointmentController implements Initializable {
                 reasonLabel.setText("Grund der Absage");
                 editReasonComboBox.setItems(FXCollections.observableArrayList("Kurzfristige Absage (Schüler)",
                         "Krankheit (Schüler)", "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
-                newAptHBox.setDisable(true);
-                newRoomVBox.setDisable(true);
                 rescheduleCheckBox.setVisible(false);
             }
             case EDIT_MODE_RESCHEDULE -> {
@@ -247,13 +243,12 @@ public class EditAppointmentController implements Initializable {
                 reasonLabel.setText("Grund der Absage");
                 editReasonComboBox.setItems(FXCollections.observableArrayList("Krankheit (Schüler)",
                         "Krankheit (Lehrer)", "Sonstige Gründe (Schüler)", "Sonstige Gründe (Lehrer)"));
-                newAptHBox.setDisable(false);
-                newRoomVBox.setDisable(false);
             }
             case EDIT_MODE_CHANGE -> {
                 titleTextField.setText("Termin bearbeiten");
                 reasonLabel.setText("Grund der Änderung");
                 editReasonComboBox.setItems(FXCollections.observableArrayList("Individuelle Terminänderung", "Raumwechsel"));
+                rescheduleCheckBox.setVisible(false);
                 newAptHBox.setDisable(false);
                 newRoomVBox.setDisable(false);
             }
@@ -294,6 +289,7 @@ public class EditAppointmentController implements Initializable {
             newRoomVBox.setDisable(!rescheduleCheckBox.isSelected());
         });
 
+        rescheduleCheckBox.setSelected(false);
         newAptHBox.setDisable(true);
         newRoomVBox.setDisable(true);
 

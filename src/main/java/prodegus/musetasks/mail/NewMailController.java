@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.io.File;
 import java.net.URL;

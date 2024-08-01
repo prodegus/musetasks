@@ -4,12 +4,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import prodegus.musetasks.lessons.Lesson;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.StringJoiner;
+import java.util.*;
 
+import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.contacts.ContactModel.updateContact;
 import static prodegus.musetasks.lessons.LessonModel.getLessonFromDB;
 import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
@@ -27,9 +28,6 @@ public class Student extends Contact {
     private SimpleStringProperty  statusTo    = new SimpleStringProperty();
     private SimpleIntegerProperty parentId1   = new SimpleIntegerProperty();
     private SimpleIntegerProperty parentId2   = new SimpleIntegerProperty();
-    private SimpleIntegerProperty teacherId1  = new SimpleIntegerProperty();
-    private SimpleIntegerProperty teacherId2  = new SimpleIntegerProperty();
-    private SimpleIntegerProperty teacherId3  = new SimpleIntegerProperty();
     private SimpleIntegerProperty lessonId1   = new SimpleIntegerProperty();
     private SimpleIntegerProperty lessonId2   = new SimpleIntegerProperty();
     private SimpleIntegerProperty lessonId3   = new SimpleIntegerProperty();
@@ -143,39 +141,18 @@ public class Student extends Contact {
     }
 
     public int getTeacherId1() {
-        return teacherId1.get();
-    }
-
-    public SimpleIntegerProperty teacherId1Property() {
-        return teacherId1;
-    }
-
-    public void setTeacherId1(int teacherId1) {
-        this.teacherId1.set(teacherId1);
+        if (this.teachers().isEmpty()) return 0;
+        return this.teachers().get(0).getId();
     }
 
     public int getTeacherId2() {
-        return teacherId2.get();
-    }
-
-    public SimpleIntegerProperty teacherId2Property() {
-        return teacherId2;
-    }
-
-    public void setTeacherId2(int teacherId2) {
-        this.teacherId2.set(teacherId2);
+        if (this.teachers().size() < 2) return 0;
+        return this.teachers().get(1).getId();
     }
 
     public int getTeacherId3() {
-        return teacherId3.get();
-    }
-
-    public SimpleIntegerProperty teacherId3Property() {
-        return teacherId3;
-    }
-
-    public void setTeacherId3(int teacherId3) {
-        this.teacherId3.set(teacherId3);
+        if (this.teachers().size() < 3) return 0;
+        return this.teachers().get(2).getId();
     }
 
     public int getLessonId1() {
@@ -246,6 +223,14 @@ public class Student extends Contact {
         return getLessonFromDB(getLessonId3());
     }
 
+    public List<Lesson> lessons() {
+        List<Lesson> lessons = new ArrayList<>();
+        if (this.getLessonId1() != 0) lessons.add(getLessonFromDB(this.getLessonId1()));
+        if (this.getLessonId2() != 0) lessons.add(getLessonFromDB(this.getLessonId2()));
+        if (this.getLessonId3() != 0) lessons.add(getLessonFromDB(this.getLessonId3()));
+        return lessons;
+    }
+
     public void setAttributes(ResultSet rs) throws SQLException {
         super.setAttributes(rs);
         this.setInstrument1(string(rs.getString("instrument1")));
@@ -257,9 +242,6 @@ public class Student extends Contact {
         this.setStatusTo(string(rs.getString("statusto")));
         this.setParentId1(rs.getInt("parentid1"));
         this.setParentId2(rs.getInt("parentid2"));
-        this.setTeacherId1(rs.getInt("teacherid1"));
-        this.setTeacherId2(rs.getInt("teacherid2"));
-        this.setTeacherId3(rs.getInt("teacherid3"));
         this.setLessonId1(rs.getInt("lessonid1"));
         this.setLessonId2(rs.getInt("lessonid2"));
         this.setLessonId3(rs.getInt("lessonid3"));
@@ -276,9 +258,6 @@ public class Student extends Contact {
         sb.append("statusto    = '").append(this.getStatusTo()).append("', ");
         sb.append("parentid1   = ").append(this.getParentId1() == 0 ? "null" : this.getParentId1()).append(", ");
         sb.append("parentid2   = ").append(this.getParentId2() == 0 ? "null" : this.getParentId2()).append(", ");
-        sb.append("teacherid1  = ").append(this.getTeacherId1() == 0 ? "null" : this.getTeacherId1()).append(", ");
-        sb.append("teacherid2  = ").append(this.getTeacherId2() == 0 ? "null" : this.getTeacherId2()).append(", ");
-        sb.append("teacherid3  = ").append(this.getTeacherId3() == 0 ? "null" : this.getTeacherId3()).append(", ");
         sb.append("lessonid1   = ").append(this.getLessonId1() == 0 ? "null" : this.getLessonId1()).append(", ");
         sb.append("lessonid2   = ").append(this.getLessonId2() == 0 ? "null" : this.getLessonId2()).append(", ");
         sb.append("lessonid3   = ").append(this.getLessonId3() == 0 ? "null" : this.getLessonId3());
@@ -298,9 +277,6 @@ public class Student extends Contact {
         if (!this.getStatusTo().isBlank()) columns.add("statusto");
         if (this.getParentId1() != 0) columns.add("parentid1");
         if (this.getParentId2() != 0) columns.add("parentid2");
-        if (this.getTeacherId1() != 0) columns.add("teacherid1");
-        if (this.getTeacherId2() != 0) columns.add("teacherid2");
-        if (this.getTeacherId3() != 0) columns.add("teacherid3");
         if (this.getLessonId1() != 0) columns.add("lessonid1");
         if (this.getLessonId2() != 0) columns.add("lessonid2");
         if (this.getLessonId3() != 0) columns.add("lessonid3");
@@ -321,14 +297,19 @@ public class Student extends Contact {
         if (!this.getStatusTo().isBlank()) values.add(this.getStatusTo());
         if (this.getParentId1() != 0) values.add(String.valueOf(this.getParentId1()));
         if (this.getParentId2() != 0) values.add(String.valueOf(this.getParentId2()));
-        if (this.getTeacherId1() != 0) values.add(String.valueOf(this.getTeacherId1()));
-        if (this.getTeacherId2() != 0) values.add(String.valueOf(this.getTeacherId2()));
-        if (this.getTeacherId3() != 0) values.add(String.valueOf(this.getTeacherId3()));
         if (this.getLessonId1() != 0) values.add(String.valueOf(this.getLessonId1()));
         if (this.getLessonId2() != 0) values.add(String.valueOf(this.getLessonId2()));
         if (this.getLessonId3() != 0) values.add(String.valueOf(this.getLessonId3()));
         if (!values.toString().isEmpty()) result.add(values.toString());
         return result.toString();
+    }
+
+    public List<Teacher> teachers() {
+        List<Teacher> teachers = new ArrayList<Teacher>();
+        for (Lesson lesson : this.lessons()) {
+            if (!this.lessons().contains(lesson.teacher())) teachers.add(lesson.teacher());
+        }
+        return teachers;
     }
 
     public String ageAndBirthday() {
@@ -467,22 +448,12 @@ public class Student extends Contact {
         PopupWindow.displayInformation("Einem Schüler können maximal drei Unterrichte zugewiesen werden!");
     }
 
-    public void addTeacherInDB(int teacherId) {
-        if (this.hasTeacher(teacherId)) return;
+    public void removeLessonInDB(int lessonId) {
+        if (!this.hasLesson(lessonId)) return;
 
-        if (this.getTeacherId1() == 0) {
-            updateContact(this, "teacherid1", teacherId);
-            return;
-        }
-        if (this.getTeacherId2() == 0) {
-            updateContact(this, "teacherid2", teacherId);
-            return;
-        }
-        if (this.getTeacherId3() == 0) {
-            updateContact(this, "teacherid3", teacherId);
-            return;
-        }
-        PopupWindow.displayInformation("Einem Schüler können maximal drei Lehrer zugewiesen werden!");
+        if (this.getLessonId1() == lessonId) setToNull(CONTACT_TABLE, this.id(), "lessonid1");
+        if (this.getLessonId2() == lessonId) setToNull(CONTACT_TABLE, this.id(), "lessonid2");
+        if (this.getLessonId3() == lessonId) setToNull(CONTACT_TABLE, this.id(), "lessonid3");
     }
 
     public boolean hasTeacher(int teacherId) {

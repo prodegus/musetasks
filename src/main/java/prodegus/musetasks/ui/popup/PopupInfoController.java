@@ -1,12 +1,8 @@
-package prodegus.musetasks.popup;
+package prodegus.musetasks.ui.popup;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 

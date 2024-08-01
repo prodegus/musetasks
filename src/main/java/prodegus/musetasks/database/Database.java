@@ -370,9 +370,6 @@ public class Database {
         ArrayList<String> sqlStrings = new ArrayList<>();
         sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid1  INTEGER REFERENCES mtparents(id) ON DELETE SET NULL");
         sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN parentid2  INTEGER REFERENCES mtparents(id) ON DELETE SET NULL");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid1 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid2 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
-        sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN teacherid3 INTEGER REFERENCES mtteachers(id) ON DELETE SET NULL");
         sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid1  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
         sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid2  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
         sqlStrings.add("ALTER TABLE mtstudents ADD COLUMN lessonid3  INTEGER REFERENCES mtlessons(id) ON DELETE SET NULL");
@@ -414,6 +411,17 @@ public class Database {
 
     public static void update(String table, String id, String column, String newValue) {
         String sql = "UPDATE " + table + " SET " + column + " = '" + newValue + "' WHERE id = " + id;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static void setToNull(String table, String id, String column) {
+        String sql = "UPDATE " + table + " SET " + column + " = null WHERE id = " + id;
 
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {

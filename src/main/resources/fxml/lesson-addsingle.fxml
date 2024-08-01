@@ -123,6 +123,11 @@
                         <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
                      </children>
                   </VBox>
+                  <Button fx:id="editCustomAptsButton" mnemonicParsing="false" onAction="#editCustomApts" prefHeight="30.0" text="Termine anzeigen / ändern">
+                     <HBox.margin>
+                        <Insets top="17.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
             <HBox fx:id="hBoxPeriod" spacing="10.0" GridPane.rowIndex="9">
@@ -135,7 +140,7 @@
                   </VBox>
                   <VBox fx:id="vBoxEndDate">
                      <children>
-                        <Label fx:id="endDateLabel" text="Ende (optional)" />
+                        <Label fx:id="endDateLabel" text="Termine eintragen bis" />
                         <DatePicker fx:id="endDatePicker" editable="false" prefHeight="30.0" prefWidth="120.0" />
                      </children>
                   </VBox>

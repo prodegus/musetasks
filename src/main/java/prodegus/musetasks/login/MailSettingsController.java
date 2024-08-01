@@ -4,9 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 
-import static prodegus.musetasks.database.Database.createUser;
 import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.mail.TLSEmail.confirmMail;
 import static prodegus.musetasks.ui.StageFactories.stageOf;

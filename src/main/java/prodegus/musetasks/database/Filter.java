@@ -14,6 +14,11 @@ public class Filter {
         this.value = String.valueOf(value);
     }
 
+    public Filter() {
+        this.key = null;
+        this.value = null;
+    }
+
     public String toSQLString() {
         return key +  " = '" + value + "'";
     }

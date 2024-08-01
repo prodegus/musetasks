@@ -5,10 +5,7 @@ import prodegus.musetasks.database.Filter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
@@ -169,5 +166,18 @@ public class Teacher extends Contact {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Teacher teacher) {
+            return teacher.getId() == this.getId();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId();
     }
 }

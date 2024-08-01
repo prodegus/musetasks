@@ -1,16 +1,7 @@
-package prodegus.musetasks.ui;
+package prodegus.musetasks.ui.popup;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import prodegus.musetasks.popup.PopupInfoController;
-import prodegus.musetasks.popup.PopupYesNoController;
 
 import static prodegus.musetasks.ui.StageFactories.newStage;
 

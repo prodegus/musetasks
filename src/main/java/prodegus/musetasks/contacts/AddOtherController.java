@@ -7,9 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import prodegus.musetasks.school.Location;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.workspace.cells.LocationListCell;
-import prodegus.musetasks.workspace.cells.StringListCell;
 
 import java.net.URL;
 import java.time.LocalDateTime;

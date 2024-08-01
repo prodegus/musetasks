@@ -17,6 +17,7 @@ import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.school.SchoolModel.getInstrumentListFromDB;
+import static prodegus.musetasks.useractions.Actions.processLessonChanges;
 
 public class WorkspaceController implements Initializable {
 
@@ -52,6 +53,8 @@ public class WorkspaceController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // process changes
+        processLessonChanges();
 
         // Initialize instruments
         SCHOOL_INSTRUMENTS.setAll(getInstrumentListFromDB());

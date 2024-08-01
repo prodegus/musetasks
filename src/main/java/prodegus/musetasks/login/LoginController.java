@@ -1,7 +1,6 @@
 package prodegus.musetasks.login;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +14,7 @@ import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.school.Holiday;
-import prodegus.musetasks.school.Location;
-import prodegus.musetasks.ui.PopupWindow;
+import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -27,7 +25,6 @@ import static prodegus.musetasks.contacts.ContactModel.insertContact;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.school.HolidayModel.insertHoliday;
-import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.ui.StageFactories.*;
 
 public class LoginController implements Initializable {
@@ -247,9 +244,29 @@ public class LoginController implements Initializable {
         dummyStudent.setStatusTo("");
         insertContact(dummyStudent);
 
+        dummyStudent.setLastName("Müller");
+        dummyStudent.setFirstName("Tim");
+        dummyStudent.setInstrument1("Klavier");
+        insertContact(dummyStudent);
+
+        dummyStudent.setLastName("Brutalo");
+        dummyStudent.setFirstName("Bob");
+        dummyStudent.setInstrument1("Schlagzeug");
+        insertContact(dummyStudent);
+
+        dummyStudent.setLastName("Buffay");
+        dummyStudent.setFirstName("Phoebe");
+        dummyStudent.setInstrument1("E-Bass");
+        insertContact(dummyStudent);
+
+        dummyStudent.setLastName("Wackelstein");
+        dummyStudent.setFirstName("Jonas");
+        dummyStudent.setInstrument1("Gesang");
+        insertContact(dummyStudent);
+
         Teacher dummyTeacher = new Teacher();
-        dummyTeacher.setFirstName("Max");
-        dummyTeacher.setLastName("Muster");
+        dummyTeacher.setFirstName("John");
+        dummyTeacher.setLastName("Frusciante");
         dummyTeacher.setCategory(CATEGORY_TEACHER);
         dummyTeacher.setLocation("");
         dummyTeacher.setStreet("");
@@ -266,6 +283,21 @@ public class LoginController implements Initializable {
         dummyTeacher.setStatus("");
         dummyTeacher.setStatusFrom("");
         dummyTeacher.setStatusTo("");
+        insertContact(dummyTeacher);
+
+        dummyTeacher.setFirstName("Flea");
+        dummyTeacher.setLastName("Fly");
+        dummyTeacher.setInstruments("E-Bass");
+        insertContact(dummyTeacher);
+
+        dummyTeacher.setFirstName("Chad");
+        dummyTeacher.setLastName("Smith");
+        dummyTeacher.setInstruments("Schlagzeug");
+        insertContact(dummyTeacher);
+
+        dummyTeacher.setFirstName("Anthony");
+        dummyTeacher.setLastName("Kiedis");
+        dummyTeacher.setInstruments("Gesang");
         insertContact(dummyTeacher);
     }
 

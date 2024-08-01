@@ -2,15 +2,17 @@ package prodegus.musetasks.lessons;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import prodegus.musetasks.contacts.Student;
+import prodegus.musetasks.contacts.StudentModel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.StringJoiner;
 
-import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
-import static prodegus.musetasks.lessons.LessonModel.LESSON_STATUS_ACTIVE;
-import static prodegus.musetasks.lessons.LessonModel.getLatestLessonChange;
+import static prodegus.musetasks.contacts.StudentModel.*;
+import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.utils.DateTime.*;
 
 public class LessonChange extends Lesson {
@@ -138,6 +140,14 @@ public class LessonChange extends Lesson {
             return changeNote.toString();
         }
 
+        if (this.getLessonStatus() == LESSON_STATUS_TRIAL) {
+            changeNote.add("Probemonat bis " + asString(this.getEndDate()));
+            return changeNote.toString();
+        }
+
+        List<Student> removedStudents = studentsRemoved(previousChange.students(), this.students());
+        List<Student> newStudents = studentsAdded(previousChange.students(), this.students());
+
         if (!previousChange.getLessonName().equals(this.getLessonName())) {
             changeNote.add("Unterrichtsbeschreibung: " + this.getLessonName());
         }
@@ -171,37 +181,24 @@ public class LessonChange extends Lesson {
         if (previousChange.getAptStatus() != this.getAptStatus()) {
             changeNote.add("Terminstatus: " + this.appointmentStatus());
         }
-        if (previousChange.getStudentId1() != this.getStudentId1()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId1()).name());
+        if (previousChange.getEndDate() != this.getEndDate()) {
+            changeNote.add("Verlängert bis " + asString(this.getEndDate()));
         }
-        if (previousChange.getStudentId2() != this.getStudentId2()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId2()).name());
+        if (removedStudents.size() > 0) {
+            StringJoiner oldNames = new StringJoiner(", ");
+            for (Student student : removedStudents) {
+                oldNames.add(student.name());
+            }
+            changeNote.add("Schüler entfernt: " + oldNames);
         }
-        if (previousChange.getStudentId3() != this.getStudentId3()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId3()).name());
+        if (newStudents.size() > 0) {
+            StringJoiner newNames = new StringJoiner(", ");
+            for (Student student : newStudents) {
+                newNames.add(student.name());
+            }
+            changeNote.add("Schüler hinzugefügt: " + newNames);
         }
-        if (previousChange.getStudentId4() != this.getStudentId4()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId4()).name());
-        }
-        if (previousChange.getStudentId5() != this.getStudentId5()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId5()).name());
-        }
-        if (previousChange.getStudentId6() != this.getStudentId6()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId6()).name());
-        }
-        if (previousChange.getStudentId7() != this.getStudentId7()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId7()).name());
-        }
-        if (previousChange.getStudentId8() != this.getStudentId8()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId8()).name());
-        }
-        if (previousChange.getStudentId9() != this.getStudentId9()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId9()).name());
-        }
-        if (previousChange.getStudentId10() != this.getStudentId10()) {
-            changeNote.add("Neuer Schüler: " + getStudentFromDB(this.getStudentId10()).name());
-        }
+        
         return changeNote.toString();
-
     }
 }

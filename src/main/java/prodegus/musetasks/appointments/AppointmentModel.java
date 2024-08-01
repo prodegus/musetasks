@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.utils.HalfYear;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,6 +34,10 @@ public class AppointmentModel {
             throw new RuntimeException(e);
         }
         return appointments;
+    }
+
+    public static ObservableList<Appointment> getLessonAppointmentsFromDB(int lessonId, HalfYear halfYear) {
+        return getLessonAppointmentsFromDB(lessonId, halfYear.getStart(), halfYear.getEnd());
     }
 
     public static ObservableList<Appointment> getLessonAppointmentsFromDB(int lessonId, LocalDate startDate, LocalDate endDate) {
@@ -115,7 +120,7 @@ public class AppointmentModel {
         Database.insert(APPOINTMENT_TABLE, appointment.sqlColumns(), appointment.sqlValues());
     }
 
-    public static void delete(Appointment appointment) {
+    public static void deleteApppointmentFromDB(Appointment appointment) {
         Database.delete(APPOINTMENT_TABLE, appointment.getId());
     }
 
