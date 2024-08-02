@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
 import static prodegus.musetasks.contacts.ParentModel.parentStringConverterFormal;
+import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.school.LocationModel.fromString;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
@@ -77,7 +78,7 @@ public class AddStudentController implements Initializable {
 
     @FXML
     void submitStudentData(ActionEvent event) {
-        Student newStudent = new Student();
+        Student newStudent = (editMode ? getStudentFromDB(id) : new Student());
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
         LocalDateTime now = LocalDateTime.now();

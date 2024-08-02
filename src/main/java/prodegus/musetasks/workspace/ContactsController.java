@@ -855,23 +855,50 @@ public class ContactsController implements Initializable {
         selectedStudent = getStudentFromDB(contact.getId());
 
         switchInfoArea(studentInfo);
+        clearStudentInfo();
         studentAge.setText(selectedStudent.ageAndBirthday());
         studentInstruments.setText(selectedStudent.instruments());
-        studentLesson1Name.setText(selectedStudent.lesson1Name());
-        studentLesson1Time.setText(selectedStudent.lesson1Time());
-        studentLesson1Weekday.setText(selectedStudent.lesson1Weekday());
-        studentLesson2Name.setText(selectedStudent.lesson2Name());
-        studentLesson2Time.setText(selectedStudent.lesson2Time());
-        studentLesson2Weekday.setText(selectedStudent.lesson2Weekday());
-        studentLesson3Name.setText(selectedStudent.lesson3Name());
-        studentLesson3Time.setText(selectedStudent.lesson3Time());
-        studentLesson3Weekday.setText(selectedStudent.lesson3Weekday());
+        if (selectedStudent.lesson1() != null) {
+            studentLesson1Weekday.setText(selectedStudent.lesson1().getRepeat() == REPEAT_CUSTOM ? "Indiv. Termine" : selectedStudent.lesson1Weekday());
+            studentLesson1Time.setText(selectedStudent.lesson1().getRepeat() == REPEAT_CUSTOM ? "" : selectedStudent.lesson1Time());
+            studentLesson1Name.setText(selectedStudent.lesson1().shortName());
+        }
+        if (selectedStudent.lesson2() != null) {
+            studentLesson2Weekday.setText(selectedStudent.lesson2().getRepeat() == REPEAT_CUSTOM ? "Indiv. Termine" : selectedStudent.lesson2Weekday());
+            studentLesson2Time.setText(selectedStudent.lesson2().getRepeat() == REPEAT_CUSTOM ? "" : selectedStudent.lesson2Time());
+            studentLesson2Name.setText(selectedStudent.lesson2().shortName());
+        }
+        if (selectedStudent.lesson3() != null) {
+            studentLesson3Weekday.setText(selectedStudent.lesson3().getRepeat() == REPEAT_CUSTOM ? "Indiv. Termine" : selectedStudent.lesson3Weekday());
+            studentLesson3Time.setText(selectedStudent.lesson3().getRepeat() == REPEAT_CUSTOM ? "" : selectedStudent.lesson3Time());
+            studentLesson3Name.setText(selectedStudent.lesson3().shortName());
+        }
         studentLocation.setText(selectedStudent.getLocation());
         studentParents.setText(selectedStudent.parentsNames());
         studentStatusDate.setText(selectedStudent.status());
         studentTeacher1.setText(selectedStudent.teacher1Name());
         studentTeacher2.setText(selectedStudent.teacher2Name());
         studentTeacher3.setText(selectedStudent.teacher3Name());
+    }
+
+    private void clearStudentInfo() {
+        studentAge.setText("");
+        studentInstruments.setText("");
+        studentLesson1Weekday.setText("");
+        studentLesson1Time.setText("");
+        studentLesson1Name.setText("");
+        studentLesson2Weekday.setText("");
+        studentLesson2Time.setText("");
+        studentLesson2Name.setText("");
+        studentLesson3Weekday.setText("");
+        studentLesson3Time.setText("");
+        studentLesson3Name.setText("");
+        studentLocation.setText("");
+        studentParents.setText("");
+        studentStatusDate.setText("");
+        studentTeacher1.setText("");
+        studentTeacher2.setText("");
+        studentTeacher3.setText("");
     }
 
     private void showParentInfo(Contact contact) {
@@ -897,7 +924,7 @@ public class ContactsController implements Initializable {
         for (Student child : children) {
             if (child == null) continue;
             Label name = new Label(child.name());
-            Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().getLessonName());
+            Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().shortName());
             Label lesson1Teacher = new Label(child.lesson1() == null ? "" : child.lesson1().teacher().name());
             name.setFont(new Font(14));
             lesson1.setFont(new Font(14));
@@ -915,7 +942,7 @@ public class ContactsController implements Initializable {
             row++;
 
             if (child.getLessonId2() == 0) continue;
-            Label lesson2 = new Label(child.lesson2().getLessonName());
+            Label lesson2 = new Label(child.lesson2().shortName());
             Label lesson2Teacher = new Label(child.lesson2().teacher().name());
             lesson2.setFont(new Font(14));
             lesson2Teacher.setFont(new Font(14));
@@ -925,7 +952,7 @@ public class ContactsController implements Initializable {
             row++;
 
             if (child.getLessonId3() == 0) continue;
-            Label lesson3 = new Label(child.lesson3().getLessonName());
+            Label lesson3 = new Label(child.lesson3().shortName());
             Label lesson3Teacher = new Label(child.lesson3().teacher().name());
             lesson3.setFont(new Font(14));
             lesson3Teacher.setFont(new Font(14));

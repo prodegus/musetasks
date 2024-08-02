@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.lessons.LessonModel.CATEGORY_SINGLE;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.Strings.string;
 
@@ -146,7 +147,7 @@ public class Teacher extends Contact {
     public String weekdayLocation(int weekday) {
         StringJoiner locations = new StringJoiner(", ");
         Filter teacherFilter = new Filter("teacherid", this.id());
-        Filter weekdayFilter = new Filter("weekday", String.valueOf(weekday));
+        Filter weekdayFilter = new Filter("weekday", weekday);
         HashSet<Integer> results = new LinkedHashSet<>(
                 queryInteger("locationid", LESSON_TABLE, teacherFilter, weekdayFilter));
         if (results.size() == 0) return "-";
@@ -157,7 +158,7 @@ public class Teacher extends Contact {
     }
 
     public int numberOfStudents() {
-        Filter categoryFilter = new Filter("category", "Einzelunterricht");
+        Filter categoryFilter = new Filter("category", CATEGORY_SINGLE);
         Filter teacherFilter = new Filter("teacherid", this.id());
         List<Integer> results = queryInteger("id", LESSON_TABLE, categoryFilter, teacherFilter);
         return results.size();

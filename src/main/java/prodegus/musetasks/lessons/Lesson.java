@@ -638,4 +638,8 @@ public class Lesson {
         return sb.toString();
     }
 
+    public String shortName() {
+        if (this.getCategory() == CATEGORY_SINGLE) return this.getInstrument() + " (Einzel, " + this.getDuration() + " min)";
+        return this.getLessonName();
+    }
 }

@@ -334,7 +334,7 @@ public class LessonModel {
         for (Lesson lesson2 : getLessonListFromDB()) {
             if (lesson2.getId() == lesson.getId()) continue;
             Lesson currentLesson2 = getLatestLessonChange(lesson2.getId(), startDate); // Fehler: currentLesson2 wird null
-            if (currentLesson2 == null) currentLesson2 = getEarliestLessonChange(lesson2.getId(), startDate);
+            if (currentLesson2 == null) currentLesson2 = getEarliestLessonChange(lesson2.getId());
             if (appointmentsOverlap(lesson, currentLesson2)) return currentLesson2;
         }
         return null;
