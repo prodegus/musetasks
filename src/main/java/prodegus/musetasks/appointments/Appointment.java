@@ -3,6 +3,7 @@ package prodegus.musetasks.appointments;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.school.Location;
 
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.StringJoiner;
 
+import static prodegus.musetasks.lessons.LessonModel.LESSON_APT_STATUS_REQUEST;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
@@ -199,7 +201,7 @@ public class Appointment implements Comparable<Appointment> {
             case STATUS_RESCHEDULED -> "Nachholtermin geplant";
             case STATUS_COMPENSATED -> "Nachgeholt";
             case STATUS_DROPPED -> "Abgesagt";
-            case STATUS_CHANGED -> "Planmäßig (*)";
+            case STATUS_CHANGED -> "Planmäßig *";
             case STATUS_REQUEST -> "Termin angefragt";
             default -> "";
         };
@@ -221,6 +223,19 @@ public class Appointment implements Comparable<Appointment> {
     public String timeInfo() {
         if (this.getCategory() == CATEGORY_HOLIDAY) return "";
         return String.join(" - ", asString(this.getTime()), asString(this.getTime().plusMinutes(this.getDuration())));
+    }
+
+    public String locationRoom() {
+        return this.location().getName() + " (" + this.getRoom() + ")";
+    }
+
+    public void setAttributesFromLesson(Lesson lesson) {
+        if (lesson == null) return;
+        if (lesson.getId() != 0) this.setLessonId(lesson.getId());
+        this.setLocationId(lesson.getLocationId());
+        this.setRoom(lesson.getRoom());
+        this.setDuration(lesson.getDuration());
+        this.setStatus(lesson.getAptStatus() == LESSON_APT_STATUS_REQUEST ? STATUS_REQUEST : STATUS_OK);
     }
 
     public void setAttributes(ResultSet rs) throws SQLException {
@@ -292,5 +307,23 @@ public class Appointment implements Comparable<Appointment> {
     public int compareTo(Appointment o) {
         if (this.getDate() == null || o.getDate() == null) return 0;
         return getDate().compareTo(o.getDate());
+    }
+
+    @Override public boolean equals(Object o) {
+        if (o.getClass() != this.getClass()) return false;
+        Appointment appointment2 = (Appointment) o;
+        // id is ignored
+        if (!this.getDate().equals(appointment2.getDate())) return false;
+        if (!this.getTime().equals(appointment2.getTime())) return false;
+        if (this.getLocationId() != appointment2.getLocationId()) return false;
+        if (this.getRoom() == null ^ appointment2.getRoom() == null) return false;
+        if (this.getRoom() != null && !this.getRoom().equals(appointment2.getRoom())) return false;
+        if (this.getDuration() != appointment2.getDuration()) return false;
+        if (this.getLessonId() != appointment2.getLessonId()) return false;
+        if (!this.getDateOld().equals(appointment2.getDateOld())) return false;
+        if (this.getCategory() != appointment2.getCategory()) return false;
+        if (this.getStatus() != appointment2.getStatus()) return false;
+        if (!this.getDescription().equals(appointment2.getDescription())) return false;
+        return true;
     }
 }

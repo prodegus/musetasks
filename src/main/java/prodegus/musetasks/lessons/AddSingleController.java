@@ -26,6 +26,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
 import static prodegus.musetasks.contacts.StudentModel.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
@@ -34,8 +35,9 @@ import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
-import static prodegus.musetasks.utils.DateTime.times;
-import static prodegus.musetasks.utils.DateTime.toTime;
+import static prodegus.musetasks.utils.DateTime.*;
+import static prodegus.musetasks.utils.Nodes.hide;
+import static prodegus.musetasks.utils.Nodes.show;
 
 public class AddSingleController implements Initializable {
 
@@ -52,6 +54,7 @@ public class AddSingleController implements Initializable {
     @FXML private RadioButton lessonStatusTrial;
     @FXML private RadioButton lessonStatusActive;
     @FXML private TextField lessonNameTextField;
+
     @FXML private ComboBox<Student> studentComboBox;
     @FXML private ComboBox<Teacher> teacherComboBox;
     @FXML private ComboBox<String> instrumentComboBox;
@@ -82,7 +85,8 @@ public class AddSingleController implements Initializable {
     void editCustomApts(ActionEvent event) {
         Lesson lesson = fromInputValues();
         if (lesson == null) return;
-        customAppointments.setAll(CustomAptWindow.customAppointments(lesson));
+        List<Appointment> newAppointments = CustomAptWindow.customAppointments(lesson);
+        if (newAppointments != null) customAppointments.setAll(newAppointments);
     }
 
     @FXML
@@ -92,7 +96,6 @@ public class AddSingleController implements Initializable {
 
     Lesson fromInputValues() {
         Lesson lesson = new Lesson();
-        LocalDate changeDate = changeDatePicker.getValue();
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
         int lessonStatus = getLessonStatus();
@@ -127,18 +130,25 @@ public class AddSingleController implements Initializable {
             errorMessage.append("- Bitte Schüler auswählen\n");
         } else {
             lesson.setStudentId1(student.getId());
+            if (student.getContactEmail().isBlank()) {
+                invalidData = true;
+                errorMessage.append("- Schüler " + student.name() + "besitzt keine Kontakt-E-Mail-Adresse\n");
+            } else {
+                lesson.setStudentId1(student.getId());
+            }
         }
 
+
         if (teacher == null) {
-            invalidData = !draft;
-            errorMessage.append(draft ? "" : "- Bitte Lehrer auswählen\n");
+            invalidData = true;
+            errorMessage.append("- Bitte Lehrer auswählen\n");
         } else {
             lesson.setTeacherId(teacher.getId());
         }
 
         if (instrument.equals("Kein Instrument")) {
-            invalidData = !draft;
-            errorMessage.append(draft ? "" : "- Bitte Instrument auswählen\n");
+            invalidData = true;
+            errorMessage.append("- Bitte Instrument auswählen\n");
         } else {
             lesson.setInstrument(instrument);
         }
@@ -188,7 +198,7 @@ public class AddSingleController implements Initializable {
                 lesson.setTime(toTime(timeString));
             }
 
-            if (endDate == null && lessonStatus != LESSON_STATUS_MEET) {
+            if (endDate == null) {
                 invalidData = true;
                 String regular = "- Bitte unter \"Termine eintragen bis\" angeben, bis zu welchem Datum die " +
                         "Unterrichtstermine in den Plan eingetragen werden sollen\n";
@@ -205,54 +215,66 @@ public class AddSingleController implements Initializable {
         lesson.setLessonName(lessonName.isBlank() ? lesson.createLessonName() : lessonName);
 
         if (invalidData) {
-            PopupWindow.displayInformation("Fehlende Angaben: \n\n" + errorMessage);
+            PopupWindow.displayInformation("Fehlende Angaben:\n\n" + errorMessage);
             return null;
         }
-
 
         return lesson;
     }
 
     @FXML
     void confirm(ActionEvent event) {
-       Lesson lesson = fromInputValues();
-       if (lesson == null) return;
+        Lesson lesson = fromInputValues();
+        if (lesson == null) return;
 
-       LocalDate startDate = startDatePicker.getValue();
-       Student student = studentComboBox.getValue();
-       LocalDate changeDate = changeDatePicker.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        Student student = studentComboBox.getValue();
+        LocalDate changeDate = changeDatePicker.getValue();
 
-       if (customAppointments.size() > 0) {
-           startDate = customAppointments.get(0).getDate();
-           lesson.setStartDate(customAppointments.get(0).getDate());
-           changeDate = customAppointments.get(0).getDate();
-           lesson.setTime(toTime(2359));
-       }
+        if (customAppointments.size() > 0) {
+            startDate = customAppointments.sorted().get(0).getDate();
+            lesson.setStartDate(startDate);
+            lesson.setTime(toTime(2359));
+        } else if (lesson.getRepeat() == REPEAT_CUSTOM && lesson.getAptStatus() != LESSON_APT_STATUS_DRAFT) {
+            PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden:\n\n" +
+                    "- Bitte mindestens einen Termin eintragen");
+            return;
+        }
 
-       if (collidingLesson(lesson, lesson.getStartDate()) != null) {
-           PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" +
-                   "- Raumkollision mit: " + collidingLesson(lesson, lesson.getStartDate()).getLessonName() + "\n");
-           return;
-       }
-
-
+        if (collidingLesson(lesson, startDate) != null) {
+            PopupWindow.displayInformation("Unterricht konnte nicht angelegt werden: \n\n" +
+                    "- Raumkollision mit: " + collidingLesson(lesson, lesson.getStartDate()).getLessonName() + "\n");
+            return;
+        }
 
         if (!editMode) {
             insertLesson(lesson);
+            if (lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) {
+                stageOf(event).close();
+                return;
+            }
             lesson.setId(getLastLessonID());
             insertLessonChange(new LessonChange(lesson, startDate, true));
             student.addLessonInDB(getLastLessonID());
             insertLessonAppointments(getLessonFromDB(getLastLessonID()), customAppointments);
         } else {
-            if (lessonChangeExists(id, changeDate)) {
-                if (PopupWindow.displayYesNo("Es existiert bereits eine Änderung zu diesem Datum. Überschreiben?"))
-                    updateLessonChange(new LessonChange(lesson, changeDate, false));
-                else return;
-            } else {
-                insertLessonChange(new LessonChange(lesson, changeDate, false));
+            lesson.setId(id);
+            if (realChanges(lesson, getLatestLessonChange(id, changeDate))) {
+                if (lessonChangeExists(id, changeDate)) {
+                    if (PopupWindow.displayYesNo("Es existiert bereits eine Änderung zu diesem Datum. Überschreiben?"))
+                        updateLessonChange(new LessonChange(lesson, changeDate, false));
+                    else return;
+                } else {
+                    insertLessonChange(new LessonChange(lesson, changeDate, false));
+                }
             }
+            if (lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) {
+                stageOf(event).close();
+                return;
+            }
+
             student.addLessonInDB(id);
-            insertLessonAppointments(lesson, customAppointments);
+            insertLessonAppointments(lesson, customAppointments, changeDate);
         }
 
         stageOf(event).close();
@@ -294,6 +316,7 @@ public class AddSingleController implements Initializable {
         durationComboBox.setValue(lesson.durationString());
         locationComboBox.setValue(lesson.location());
         roomComboBox.setValue(lesson.getRoom());
+        repeatComboBox.getSelectionModel().select(lesson.getRepeat());
         if (lesson.getRepeat() != REPEAT_OFF && lesson.getRepeat() != REPEAT_CUSTOM && lesson.getWeekday() != 0)
             weekdayComboBox.setValue(lesson.weekday());
         timeComboBox.setValue(lesson.getTime().toString() + " Uhr");
@@ -302,18 +325,17 @@ public class AddSingleController implements Initializable {
     }
 
     public void initLesson(Lesson lesson) {
-        LessonChange latestChange = getLatestLessonChange(lesson.getId(), LocalDate.now());
+        LessonChange latestChange = getLatestLessonChange(lesson.getId());
         Lesson futureLesson = latestChange == null ? lesson : latestChange.lesson();
-        changeDateVBox.setVisible(true);
+        show(changeDateVBox);
         changeDatePicker.valueProperty().addListener(e -> {
             LessonChange currentChange = getLatestLessonChange(lesson.getId(), changeDatePicker.getValue());
             if (currentChange != null) initValues(currentChange.lesson());
-            startDatePicker.setValue(changeDatePicker.getValue());
         });
-        startDatePicker.setDisable(true);
+        if (getLessonChangeListFromDB(lesson.getId()).size() > 1) startDatePicker.setDisable(true);
         gridPane.getRowConstraints().set(1, new RowConstraints(60));
         gridPane.getRowConstraints().set(10, new RowConstraints(10));
-        changeDatePicker.setValue(LocalDate.now());
+        changeDatePicker.setValue(latestChange == null ? lesson.getStartDate() : latestChange.getChangeDate());
         editMode = true;
         id = futureLesson.getId();
         titleTextField.setText("Einzel-Unterricht bearbeiten");
@@ -324,7 +346,7 @@ public class AddSingleController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        changeDateVBox.setVisible(false);
+        hide(changeDateVBox);
         gridPane.getRowConstraints().set(1, new RowConstraints(10));
         gridPane.getRowConstraints().set(10, new RowConstraints(60));
 
@@ -332,19 +354,20 @@ public class AddSingleController implements Initializable {
             Toggle selectedToggle = lessonStatusGroup.getSelectedToggle();
             if (selectedToggle.equals(lessonStatusMeet)) {
                 repeatComboBox.getSelectionModel().select(REPEAT_OFF);
-                weekdayComboBox.getSelectionModel().select(WEEKDAY_NO_SELECTION);
                 hBoxApt.getChildren().setAll(vBoxStartDate, vBoxTime);
                 startDateLabel.setText("Schnupper-Termin");
             }
             if (selectedToggle.equals(lessonStatusTrial)) {
-                repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
-                weekdayComboBox.getSelectionModel().select(editMode ? getLessonFromDB(id).getWeekday() : 0);
+                if (repeatComboBox.getSelectionModel().getSelectedIndex() == REPEAT_OFF) {
+                    repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
+                }
                 startDateLabel.setText("Probemonat von");
                 endDateLabel.setText("bis");
             }
             if (selectedToggle.equals(lessonStatusActive)) {
-                repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
-                weekdayComboBox.getSelectionModel().select(0);
+                if (repeatComboBox.getSelectionModel().getSelectedIndex() == REPEAT_OFF) {
+                    repeatComboBox.getSelectionModel().select(REPEAT_WEEKLY);
+                }
                 startDateLabel.setText("Beginn");
                 endDateLabel.setText("Termine eintragen bis");
             }
@@ -379,6 +402,7 @@ public class AddSingleController implements Initializable {
             switch (repeatComboBox.getSelectionModel().getSelectedIndex()) {
                 case REPEAT_OFF -> {
                     hBoxApt.getChildren().setAll(vBoxRepeat, vBoxStartDate, vBoxTime);
+                    weekdayComboBox.getSelectionModel().select(WEEKDAY_NO_SELECTION);
                     hBoxPeriod.getChildren().clear();
                     startDateLabel.setText("Termin");
                 }
@@ -391,12 +415,6 @@ public class AddSingleController implements Initializable {
                     hBoxPeriod.getChildren().setAll(vBoxStartDate, vBoxEndDate);
                 }
             }
-
-
-            boolean repeatOff = repeatComboBox.getValue().equals("einmaliger Termin");
-            weekdayComboBox.setDisable(repeatOff);
-            startDateLabel.setText(repeatOff ? "Datum" : "Beginn");
-            endDatePicker.setDisable(repeatOff);
         });
 
         weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",

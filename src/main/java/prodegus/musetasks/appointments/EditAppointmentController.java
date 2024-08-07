@@ -3,11 +3,15 @@ package prodegus.musetasks.appointments;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.mail.NewMailController;
 import prodegus.musetasks.school.Location;
 import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.workspace.cells.LocationListCell;
@@ -16,13 +20,19 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
-import static prodegus.musetasks.lessons.LessonModel.REPEAT_OFF;
-import static prodegus.musetasks.lessons.LessonModel.getLessonFromDB;
+import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
+import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
+import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.mail.EmailUtil.errorMail;
+import static prodegus.musetasks.mail.TLSEmail.sendMail;
+import static prodegus.musetasks.mail.Templates.*;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.DateTime.*;
 
@@ -30,6 +40,7 @@ public class EditAppointmentController implements Initializable {
 
     @FXML private Label titleTextField;
     @FXML private Label oldDateTimeLabel;
+    @FXML private Label lessonCategoryLabel;
     @FXML private Label studentNameLabel;
     @FXML private Label instrumentLabel;
     @FXML private Label locationRoomLabel;
@@ -46,6 +57,7 @@ public class EditAppointmentController implements Initializable {
     @FXML private ComboBox<Location> newLocationComboBox;
     @FXML private ComboBox<String> newRoomComboBox;
     @FXML private CheckBox informNoneCheckBox;
+    @FXML private CheckBox informContactCheckBox;
     @FXML private CheckBox informParentsCheckBox;
     @FXML private CheckBox informStudentsCheckBox;
     @FXML private CheckBox informTeacherCheckBox;
@@ -117,6 +129,9 @@ public class EditAppointmentController implements Initializable {
 
     @FXML
     void confirm(ActionEvent event) {
+        String mailTo = "";
+        String mailSubject = "";
+        String mailMessage = "";
 
         boolean invalidData = false;
         StringBuilder errorMessage = new StringBuilder();
@@ -147,23 +162,18 @@ public class EditAppointmentController implements Initializable {
             oldAppointment.setStatus(STATUS_DROPPED);
             oldAppointment.setDescription(reason + ", wird nicht nachgeholt");
             oldAppointment.setDateOld(oldAppointment.getDate());
-
-            if (oldAppointment.getId() != 0) {
-                update(oldAppointment, oldAppointment.getId());
-            } else {
-                insert(oldAppointment);
-            }
+            update(oldAppointment, oldAppointment.getId());
+            mailSubject = "Unterricht abgesagt: " + fullDateTimeString(oldAppointment.getDate(), oldAppointment.getTime());
+            mailMessage = lessonDropped(oldAppointment, reason);
         }
 
         if (editMode == EDIT_MODE_RESCHEDULE) {
             oldAppointment.setStatus(reschedule ? STATUS_RESCHEDULED : STATUS_CANCELLED);
             oldAppointment.setDescription(reason + (reschedule ? ", Nachholtermin: " + asString(newDate, newTime) : ""));
             oldAppointment.setDateOld(oldAppointment.getDate());
-            if (oldAppointment.getId() != 0) {
-                update(oldAppointment, oldAppointment.getId());
-            } else {
-                insert(oldAppointment);
-            }
+            update(oldAppointment, oldAppointment.getId());
+            mailSubject = "Unterricht abgesagt: " + fullDateTimeString(oldAppointment.getDate(), oldAppointment.getTime());
+            mailMessage = lessonToReschedule(oldAppointment, reason);
 
             if (reschedule) {
                 Appointment newAppointment = new Appointment();
@@ -189,6 +199,7 @@ public class EditAppointmentController implements Initializable {
                 }
 
                 insert(newAppointment);
+                mailMessage = lessonRescheduled(oldAppointment, newAppointment, reason);
             }
 
         }
@@ -206,27 +217,74 @@ public class EditAppointmentController implements Initializable {
             oldAppointment.setRoom(newRoom == null ? "" : newRoom);
             oldAppointment.setDuration(newDuration);
             if (!oldAppointment.isReplacement()) oldAppointment.setDateOld(appointmentToEdit.getDate());
-            if (oldAppointment.getDescription().isBlank()) oldAppointment.setDescription(reason);
+            String oldNote = oldAppointment.getDescription();
+            oldAppointment.setDescription(reason + (oldNote.isBlank() ? "" : ", " + oldNote));
+
             if (invalidData) {
                 PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n" + errorMessage);
                 return;
             }
 
-            if (oldAppointment.getId() != 0) {
-                update(oldAppointment, oldAppointment.getId());
-                if (oldAppointment.isReplacement()) {
-                    Appointment originalApt = findRegularAppointment(lesson, oldAppointment.getDateOld());
-                    String originalDescription = originalApt.getDescription();
-                    int length = originalDescription.length();
-                    originalApt.setDescription(originalDescription.substring(0, length - 17) + asString(newDate, newTime));
-                    update(originalApt, originalApt.getId());
-                }
-            } else {
-                insert(oldAppointment);
+            fullDateTimeString(oldAppointment.getDate(), oldAppointment.getTime());
+            update(oldAppointment, oldAppointment.getId());
+            mailSubject = "Änderung zum Termin: " + fullDateTimeString(oldAppointment.getDate(), oldAppointment.getTime());
+            mailMessage = lessonChanged(appointmentToEdit, oldAppointment);
+
+            if (oldAppointment.isReplacement()) {
+                Appointment originalApt = findRegularAppointment(lesson, oldAppointment.getDateOld());
+                String originalDescription = originalApt.getDescription();
+                int length = originalDescription.length();
+                originalApt.setDescription(originalDescription.substring(0, length - 17) + asString(newDate, newTime));
+                update(originalApt, originalApt.getId());
             }
+
+        }
+
+        if (mailRequired()) {
+            StringJoiner recipients = new StringJoiner(", ");
+
+            if (informContactCheckBox.isSelected()) {
+                for (Student student : lesson.students()) {
+                    if (student.getContactEmail().equals("keine Angabe")) {
+                        sendMail(errorMail, "E-Mail an " + student.name() + " konnte nicht gesendet werden", "Inhalt der Mail:\n\n" + mailMessage);
+                    } else {
+                        recipients.add(student.getContactEmail());
+                    }
+                }
+            }
+
+            if (informParentsCheckBox.isSelected()) {
+                for (Student student : lesson.students()) {
+                    if (student.getParentId1() != 0) recipients.add(getParentFromDB(student.getParentId1()).getEmail());
+                    if (student.getParentId2() != 0) recipients.add(getParentFromDB(student.getParentId2()).getEmail());
+                }
+            }
+
+            if (informStudentsCheckBox.isSelected()) {
+                for (Student student : lesson.students()) {
+                    recipients.add(student.getEmail());
+                }
+            }
+
+            if (informTeacherCheckBox.isSelected()) {
+                recipients.add(getTeacherFromDB(lesson.getTeacherId()).getEmail());
+            }
+
+            mailTo = recipients.toString();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+            Stage stage = newStage("Neue E-Mail", loader);
+            NewMailController controller = loader.getController();
+            controller.init(mailTo, mailSubject, mailMessage);
+            stage.showAndWait();
         }
 
         stageOf(event).close();
+    }
+
+    private boolean mailRequired() {
+        return informContactCheckBox.isSelected() || informParentsCheckBox.isSelected() ||
+                informStudentsCheckBox.isSelected() || informTeacherCheckBox.isSelected();
     }
 
     public void initAppointment(Appointment appointment) {
@@ -259,14 +317,15 @@ public class EditAppointmentController implements Initializable {
         LocalDate oldDate = appointment.getDate();
         LocalTime oldTime = appointment.getTime();
         oldDateTimeLabel.setText(fullDateTimeString(oldDate, oldTime)
-                + (appointment.getCategory() == CATEGORY_LESSON_RESCHEDULED ? "(Nachholtermin für " + appointment.getDateOld() + ")" : ""));
+                + (appointment.getCategory() == CATEGORY_LESSON_RESCHEDULED ? " (Nachholtermin für " + asString(appointment.getDateOld()) + ")" : ""));
+        lessonCategoryLabel.setText(lesson.category());
         studentNameLabel.setText(lesson.studentsNamesString());
         instrumentLabel.setText(lesson.getInstrument());
-        locationRoomLabel.setText(lesson.locationRoom());
+        locationRoomLabel.setText(appointment.locationRoom());
         teacherLabel.setText(lesson.teacher().name());
-        regularAptLabel.setText(lesson.getRepeat() == REPEAT_OFF ? "nicht festgelegt" : lesson.regularAppointment());
+        regularAptLabel.setText(lesson.regularAppointment());
         newDatePicker.setValue(appointment.getDate());
-        newTimeComboBox.setValue(lesson.getTime().toString() + " Uhr");
+        newTimeComboBox.setValue(appointment.getTime().toString() + " Uhr");
         newDurationComboBox.setValue(switch(appointment.getDuration()) {
             case 30 -> "30 Minuten";
             case 45 -> "45 Minuten";
@@ -323,5 +382,8 @@ public class EditAppointmentController implements Initializable {
         informParentsCheckBox.setOnAction(event -> informNoneCheckBox.setSelected(false));
         informStudentsCheckBox.setOnAction(event -> informNoneCheckBox.setSelected(false));
         informTeacherCheckBox.setOnAction(event -> informNoneCheckBox.setSelected(false));
+        informContactCheckBox.setOnAction(event -> informNoneCheckBox.setSelected(false));
+
+        informNoneCheckBox.setSelected(true);
     }
 }

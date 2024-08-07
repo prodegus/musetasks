@@ -37,12 +37,13 @@ import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
-import static prodegus.musetasks.appointments.AppointmentModel.deleteApppointmentFromDB;
+import static prodegus.musetasks.appointments.AppointmentModel.deleteAppointmentFromDB;
 import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
 import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
@@ -56,6 +57,9 @@ import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.GridPaneUtils.removeRow;
 
 public class LessonsController implements Initializable {
+
+    @FXML private SplitPane lessonListView;
+    @FXML private HBox lessonCalendarView;
 
     @FXML private TableView<Lesson> lessonTableView;
     @FXML private TableColumn<Lesson, Boolean> selectColumn;
@@ -127,7 +131,6 @@ public class LessonsController implements Initializable {
     @FXML private MenuButton aptEditButton;
     @FXML private Button aptForwardButton;
 
-
     private final ObservableList<Lesson> lessons = FXCollections.observableArrayList();
     private final FilteredList<Lesson> filteredLessons = new FilteredList<>(lessons, lesson -> true);
     private final SortedList<Lesson> sortableLessons = new SortedList<>(filteredLessons);
@@ -135,6 +138,7 @@ public class LessonsController implements Initializable {
     private Appointment selectedAppointment;
     private TableView<? extends Lesson> selectedTableView;
     private HalfYear selectedHalfYear;
+    private ContextMenu aptContextMenu;
 
     private final InvalidationListener lessonSearchListener = new InvalidationListener() {
         @Override
@@ -151,6 +155,16 @@ public class LessonsController implements Initializable {
             }
         }
     };
+
+    @FXML void switchToListView(ActionEvent event) {
+        lessonCalendarView.setVisible(false);
+        lessonListView.setVisible(true);
+    }
+
+    @FXML void switchToCalendarView(ActionEvent event) {
+        lessonListView.setVisible(false);
+        lessonCalendarView.setVisible(true);
+    }
 
     @FXML void addAptButtonClicked(ActionEvent event) {
         if (selectedLesson.getStartDate().isAfter(selectedHalfYear.getEnd())) {
@@ -187,7 +201,7 @@ public class LessonsController implements Initializable {
     public void editLesson(Lesson lesson) {
         switch (selectedLesson.getCategory()) {
             case CATEGORY_SINGLE -> showEditSingleWindow(selectedLesson);
-            case CATEGORY_GROUP -> showEditGroupWindow(selectedLesson);
+            case CATEGORY_GROUP, CATEGORY_COURSE, CATEGORY_WORKGROUP -> showEditGroupWindow(selectedLesson);
         }
     }
 
@@ -202,7 +216,7 @@ public class LessonsController implements Initializable {
 
     public void showEditGroupWindow(Lesson lesson) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addgroup.fxml"));
-        Stage stage = newStage("Einzel-Unterricht bearbeiten", loader);
+        Stage stage = newStage(lesson.category() + " bearbeiten", loader);
         AddGroupController controller = loader.getController();
         controller.initLesson(lesson);
         stage.showAndWait();
@@ -215,7 +229,7 @@ public class LessonsController implements Initializable {
         if (PopupWindow.displayYesNo("Der Unterricht \"" + selectedLesson.getLessonName() + "\" sowie alle " +
                 "zugehörigen Termine werden gelöscht.\n\nFortfahren?")) {
             for (Appointment appointment : getLessonAppointmentsFromDB(selectedLesson.getId())) {
-                deleteApppointmentFromDB(appointment);
+                deleteAppointmentFromDB(appointment);
             }
             for (LessonChange change : getLessonChangeListFromDB(selectedLesson.getId())) {
                 deleteLessonChange(selectedLesson.getId(), change.getChangeDate());
@@ -257,16 +271,20 @@ public class LessonsController implements Initializable {
 
     @FXML
     void showAddCourseWindow(ActionEvent event) {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addcourse.fxml"));
-//        Stage stage = newStage("Kurs/Workshop anlegen", loader);
-//        stage.showAndWait();
-//        refreshLessons();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addgroup.fxml"));
+        Stage stage = newStage("Kurs/Workshop anlegen", loader);
+        AddGroupController controller = loader.getController();
+        controller.init(CATEGORY_COURSE);
+        stage.showAndWait();
+        refreshLessons();
     }
 
     @FXML
     void showAddGroupWindow(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addgroup.fxml"));
         Stage stage = newStage("Gruppen-Unterricht anlegen", loader);
+        AddGroupController controller = loader.getController();
+        controller.init(CATEGORY_GROUP);
         stage.showAndWait();
         refreshLessons();
     }
@@ -281,10 +299,12 @@ public class LessonsController implements Initializable {
 
     @FXML
     void showAddWorkgroupWindow(ActionEvent event) {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addworkgroup.fxml"));
-//        Stage stage = newStage("AG anlegen", loader);
-//        stage.showAndWait();
-//        refreshLessons();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/lesson-addgroup.fxml"));
+        Stage stage = newStage("AG anlegen", loader);
+        AddGroupController controller = loader.getController();
+        controller.init(CATEGORY_WORKGROUP);
+        stage.showAndWait();
+        refreshLessons();
     }
 
     @FXML
@@ -413,8 +433,11 @@ public class LessonsController implements Initializable {
         showLessonInfo(selectedLesson);
     }
 
-    private void refreshAppointments() {
-        if (selectedLesson == null) return;
+    public void refreshAppointments() {
+        if (selectedLesson == null) {
+            return;
+        }
+
         LessonChange earliestChange = getEarliestLessonChange(selectedLesson.getId());
         LessonChange latestChange = getLatestLessonChange(selectedLesson.getId());
 
@@ -442,7 +465,8 @@ public class LessonsController implements Initializable {
 
         aptTableView.setVisible(true);
         noAptInfoBox.setVisible(false);
-        aptTableView.setItems(getLessonAppointmentsFromDB(selectedLesson.getId(), selectedHalfYear));
+        aptTableView.setItems(getLessonAppointmentsFromDB(selectedLesson.getId(), selectedHalfYear).sorted());
+        aptTableView.refresh();
     }
 
     private void showTableView(TableView<? extends Lesson> tableView) {
@@ -609,14 +633,27 @@ public class LessonsController implements Initializable {
 
         aptLabel.setText("Termine im 1. Halbjahr 2024:");
 
+        MenuItem item1 = new MenuItem("Termin absagen (ohne Ersatz)");
+        MenuItem item2 = new MenuItem("Termin absagen (mit Ersatz)");
+        MenuItem item3 = new MenuItem("Termin ändern");
+        item1.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_DROPPED));
+        item2.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_RESCHEDULE));
+        item3.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_CHANGE));
+        aptContextMenu = new ContextMenu(item1, item2, item3);
+        aptContextMenu.setAutoHide(true);
 
-        aptTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (aptTableView.getSelectionModel().isEmpty()) return;
-                selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
-                aptEditButton.setDisable(selectedAppointment.getCategory() == CATEGORY_HOLIDAY);
-            }
+        aptTableView.setOnMouseClicked(event -> {
+            aptContextMenu.hide();
+            if (aptTableView.getSelectionModel().isEmpty()) return;
+            selectedAppointment = aptTableView.getSelectionModel().getSelectedItem();
+            aptEditButton.setDisable(selectedAppointment.getCategory() == CATEGORY_HOLIDAY);
+        });
+
+        aptTableView.setOnContextMenuRequested(event -> {
+            if (aptTableView.getSelectionModel().isEmpty() || selectedAppointment.getCategory() == CATEGORY_HOLIDAY ||
+                    event.getY() < 24.0) return;
+
+            aptContextMenu.show(aptTableView, event.getScreenX(), event.getScreenY());
         });
     }
 

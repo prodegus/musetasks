@@ -42,7 +42,8 @@ public class DBSelectController {
             case "createButton" -> {
                 dbFile = fileChooser.showSaveDialog(source.getScene().getWindow());
                 if (dbFile == null) return;
-                dbPath = dbFile.getAbsolutePath() + ".db";
+                boolean hasSuffix = dbFile.getAbsolutePath().endsWith(".db");
+                dbPath = dbFile.getAbsolutePath() + (hasSuffix ? "" : ".db");
                 createUserTable(dbPath);
                 createStudentTable(dbPath);
                 createTeacherTable(dbPath);

@@ -38,7 +38,7 @@ public class DateTime {
     }
 
     public static String fullDateTimeString(LocalDate date, LocalTime time) {
-        return weekdayDateString(date) + " - " + time.toString() + " Uhr";
+        return weekdayDateString(date) + ", " + time.toString() + " Uhr";
     }
 
     public static Date nowAsDate() {
@@ -83,6 +83,7 @@ public class DateTime {
     }
 
     public static int toInt(LocalTime time) {
+        if (time == LocalTime.MAX) return 2359;
         return Integer.parseInt(time.toString().replaceAll("[^0-9]", ""));
     }
 
@@ -104,6 +105,8 @@ public class DateTime {
     }
 
     public static int toInt(LocalDate date) {
+        if (date == LocalDate.MIN) return 19000101;
+        if (date == LocalDate.MAX) return 21000101;
         return Integer.parseInt(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
 

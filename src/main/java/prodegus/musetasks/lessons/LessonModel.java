@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static prodegus.musetasks.appointments.Appointment.*;
@@ -176,19 +178,46 @@ public class LessonModel {
         return lesson;
     }
 
+    public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments, LocalDate changeDate) {
+        if (appointments == null) {
+            insertLessonAppointments(lesson);
+            return;
+        }
+
+        List<Appointment> oldLessonAppointments = getLessonAppointmentsFromDB(lesson.getId());
+        List<Integer> newIds = new ArrayList<>();
+        for (Appointment newAppointment : appointments) newIds.add(newAppointment.getId());
+
+        if (oldLessonAppointments.size() > 0) {
+            for (Appointment oldAppointment : oldLessonAppointments) {
+                if (oldAppointment.getCategory() == CATEGORY_LESSON_RESCHEDULED && oldAppointment.getDateOld().isBefore(changeDate)) continue;
+                if (!newIds.contains(oldAppointment.getId())) deleteAppointmentFromDB(oldAppointment);
+            }
+        }
+
+        for (Appointment appointment : appointments) {
+            Lesson currentLesson = getLatestLessonChange(lesson.getId(), appointment.getDate());
+            appointment.setAttributesFromLesson(currentLesson);
+            insertOrUpdate(appointment);
+        }
+    }
+
     public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments) {
         if (appointments == null) {
             insertLessonAppointments(lesson);
             return;
         }
+
         for (Appointment appointment : appointments) {
-            appointment.setLessonId(lesson.getId());
-            insert(appointment);
+            Lesson currentLesson = getLatestLessonChange(lesson.getId(), appointment.getDate());
+            appointment.setAttributesFromLesson(currentLesson);
+            insertOrUpdate(appointment);
         }
     }
 
     public static void insertLessonAppointments(Lesson lesson) {
         if (lesson == null || lesson.getAptStatus() == LESSON_APT_STATUS_DRAFT) return;
+        if (lesson.getRepeat() == REPEAT_CUSTOM) return;
 
         if (lesson.getLessonStatus() == LESSON_STATUS_MEET) {
             if (meetExists(lesson.getId())) {
@@ -240,7 +269,7 @@ public class LessonModel {
 
         if (lesson.getLessonStatus() == LESSON_STATUS_ACTIVE) {
             if (activeLessonsExist(lesson.getId(), lesson.getStartDate(), lesson.getEndDate())) {
-                String activeLessonsExistMessage = "Für diesen Unterricht wurden bereits Termine festgelegt.\n\n" +
+                String activeLessonsExistMessage = "Für diesen Zeitraum wurden bereits Termine festgelegt.\n\n" +
                         "Termine überschreiben?";
                 if (!PopupWindow.displayYesNo(activeLessonsExistMessage)) return;
 
@@ -357,6 +386,72 @@ public class LessonModel {
         if (!locationRoom1.equals(locationRoom2)) return false;
         if (weekday1 != weekday2) return false;
         return !time1.plusMinutes(duration1 - 1).isBefore(time2) && !time2.plusMinutes(duration2 - 1).isBefore(time1);
+    }
+
+    public static boolean equals(Lesson lesson1, Lesson lesson2) {
+        if (lesson1.getId() != lesson2.getId()) return false;
+        if (!lesson1.getLessonName().equals(lesson2.getLessonName())) return false;
+        if (lesson1.getCategory() != lesson2.getCategory()) return false;
+        if (!lesson1.getInstrument().equals(lesson2.getInstrument())) return false;
+        if (lesson1.getTeacherId() != lesson2.getTeacherId()) return false;
+        if (lesson1.getLocationId() != lesson2.getLocationId()) return false;
+        if (!lesson1.getRoom().equals(lesson2.getRoom())) return false;
+        if (lesson1.getRepeat() != lesson2.getRepeat()) return false;
+        if (lesson1.getWeekday() != lesson2.getWeekday()) return false;
+        if (!lesson1.getTime().equals(lesson2.getTime())) return false;
+        if (lesson1.getDuration() != lesson2.getDuration()) return false;
+        if (!lesson1.getStartDate().equals(lesson2.getStartDate())) return false;
+        if (!lesson1.getEndDate().equals(lesson2.getEndDate())) return false;
+        if (lesson1.getLessonStatus() != lesson2.getLessonStatus()) return false;
+        if (lesson1.getAptStatus() != lesson2.getAptStatus()) return false;
+        if (lesson1.getStudentId1() != lesson2.getStudentId1()) return false;
+        if (lesson1.getStudentId2() != lesson2.getStudentId2()) return false;
+        if (lesson1.getStudentId3() != lesson2.getStudentId3()) return false;
+        if (lesson1.getStudentId4() != lesson2.getStudentId4()) return false;
+        if (lesson1.getStudentId5() != lesson2.getStudentId5()) return false;
+        if (lesson1.getStudentId6() != lesson2.getStudentId6()) return false;
+        if (lesson1.getStudentId7() != lesson2.getStudentId7()) return false;
+        if (lesson1.getStudentId8() != lesson2.getStudentId8()) return false;
+        if (lesson1.getStudentId9() != lesson2.getStudentId9()) return false;
+        if (lesson1.getStudentId10() != lesson2.getStudentId10()) return false;
+        return true;
+    }
+
+    public static List<String> changes(Lesson lesson1, Lesson lesson2) {
+        List<String> changes = new ArrayList<>();
+        if (lesson1.getId() != lesson2.getId()) changes.add("id");
+        if (!lesson1.getLessonName().equals(lesson2.getLessonName())) changes.add("lessonName");
+        if (lesson1.getCategory() != lesson2.getCategory()) changes.add("category");
+        if (!lesson1.getInstrument().equals(lesson2.getInstrument())) changes.add("instrument");
+        if (lesson1.getTeacherId() != lesson2.getTeacherId()) changes.add("teacherId");
+        if (lesson1.getLocationId() != lesson2.getLocationId()) changes.add("locationId");
+        if (!lesson1.getRoom().equals(lesson2.getRoom())) changes.add("room");
+        if (lesson1.getRepeat() != lesson2.getRepeat()) changes.add("repeat");
+        if (lesson1.getWeekday() != lesson2.getWeekday()) changes.add("weekday");
+        if (!lesson1.getTime().equals(lesson2.getTime())) changes.add("time");
+        if (lesson1.getDuration() != lesson2.getDuration()) changes.add("duration");
+        if (!lesson1.getStartDate().equals(lesson2.getStartDate())) changes.add("startDate");
+        if (!lesson1.getEndDate().equals(lesson2.getEndDate())) changes.add("endDate");
+        if (lesson1.getLessonStatus() != lesson2.getLessonStatus()) changes.add("lessonStatus");
+        if (lesson1.getAptStatus() != lesson2.getAptStatus()) changes.add("aptStatus");
+        if (lesson1.getStudentId1() != lesson2.getStudentId1()) changes.add("studentId1");
+        if (lesson1.getStudentId2() != lesson2.getStudentId2()) changes.add("studentId2");
+        if (lesson1.getStudentId3() != lesson2.getStudentId3()) changes.add("studentId3");
+        if (lesson1.getStudentId4() != lesson2.getStudentId4()) changes.add("studentId4");
+        if (lesson1.getStudentId5() != lesson2.getStudentId5()) changes.add("studentId5");
+        if (lesson1.getStudentId6() != lesson2.getStudentId6()) changes.add("studentId6");
+        if (lesson1.getStudentId7() != lesson2.getStudentId7()) changes.add("studentId7");
+        if (lesson1.getStudentId8() != lesson2.getStudentId8()) changes.add("studentId8");
+        if (lesson1.getStudentId9() != lesson2.getStudentId9()) changes.add("studentId9");
+        if (lesson1.getStudentId10() != lesson2.getStudentId10()) changes.add("studentId10");
+        return changes;
+    }
+
+    public static boolean realChanges(Lesson lesson1, Lesson lesson2) {
+        List<String> changes = changes(lesson1, lesson2);
+        changes.remove("startDate");
+        changes.remove("endDate");
+        return changes.size() > 0;
     }
 
 }

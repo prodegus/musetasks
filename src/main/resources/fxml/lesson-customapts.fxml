@@ -19,7 +19,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="lessonTitle" text="Gitarre - Workshop 2">
+            <Label fx:id="lessonTitle">
                <font>
                   <Font size="14.0" />
                </font>

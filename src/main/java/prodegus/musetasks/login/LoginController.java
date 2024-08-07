@@ -242,6 +242,7 @@ public class LoginController implements Initializable {
         dummyStudent.setStatus("");
         dummyStudent.setStatusFrom("");
         dummyStudent.setStatusTo("");
+        dummyStudent.setContactEmail("keine Angabe");
         insertContact(dummyStudent);
 
         dummyStudent.setLastName("Müller");

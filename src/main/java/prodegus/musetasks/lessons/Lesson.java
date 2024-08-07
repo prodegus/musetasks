@@ -372,7 +372,6 @@ public class Lesson {
 
     public String createLessonName() {
         StringBuilder lessonName = new StringBuilder();
-        System.out.println("this.getLessonStatus(): " + this.getLessonStatus());
         if (this.getAptStatus() == LESSON_APT_STATUS_DRAFT) lessonName.append("[Entwurf] ");
         if (this.getAptStatus() == LESSON_APT_STATUS_REQUEST) lessonName.append("[Vorschlag] ");
         if (this.getCategory() == CATEGORY_SINGLE) {
@@ -399,6 +398,11 @@ public class Lesson {
 
     public ObservableList<Appointment> appointments() {
         ObservableList<Appointment> list = FXCollections.observableArrayList();
+        if (this.getRepeat() == REPEAT_CUSTOM) return list;
+        if (this.getRepeat() == REPEAT_OFF) {
+            this.addAppointment(list, startDate);
+            return list;
+        }
         LocalDate realStartDate = this.getStartDate();
         LocalDate realEndDate = this.getEndDate();
         Holiday currentHoliday = null;
@@ -406,7 +410,7 @@ public class Lesson {
         while (realStartDate.getDayOfWeek().getValue() != this.getWeekday())
             realStartDate = realStartDate.plusDays(1);
 
-        for (LocalDate date = realStartDate; !date.isAfter(realEndDate); date = date.plusWeeks(1)) {
+        for (LocalDate date = realStartDate; !date.isAfter(realEndDate); date = date.plusWeeks(this.getRepeat())) {
             Holiday holiday = getHoliday(date);
 
             if (holiday != null) {
@@ -475,6 +479,7 @@ public class Lesson {
     }
 
     public String regularAppointment() {
+        if (this.getRepeat() == REPEAT_OFF || this.getRepeat() == REPEAT_CUSTOM) return "individuell";
         return String.join(" ", this.weekday(), this.getTime().toString());
     }
 

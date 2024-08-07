@@ -20,6 +20,8 @@ import jakarta.mail.internet.MimeMultipart;
 
 public class EmailUtil {
 
+	public static final String errorMail = "testnutzer59@outlook.com";
+
 	public static String code =
 			"package prodegus.musetasks.mail;\n" +
 					"\n" +

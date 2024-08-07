@@ -3,8 +3,6 @@ package prodegus.musetasks.lessons;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
-import prodegus.musetasks.ui.popup.PopupWindow;
-import prodegus.musetasks.ui.popup.PopupYesNoController;
 
 import java.util.List;
 

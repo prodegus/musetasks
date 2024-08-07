@@ -41,7 +41,7 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Einzel-Unterricht">
+                        <Label fx:id="lessonCategoryLabel" alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Einzel-Unterricht">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -156,18 +156,33 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox spacing="20.0" GridPane.rowIndex="8">
+            <HBox spacing="30.0" GridPane.rowIndex="8">
                <children>
-                  <Label text="Beteiligte informieren:" />
                   <VBox>
                      <children>
+                        <Label text="Beteiligte informieren:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
                         <CheckBox fx:id="informNoneCheckBox" mnemonicParsing="false" text="Keine" />
-                        <CheckBox fx:id="informParentsCheckBox" mnemonicParsing="false" text="Eltern" />
-                        <CheckBox fx:id="informStudentsCheckBox" mnemonicParsing="false" text="Schüler" />
-                        <CheckBox fx:id="informTeacherCheckBox" mnemonicParsing="false" text="Lehrer" />
+                        <CheckBox fx:id="informContactCheckBox" mnemonicParsing="false" text="Kontakt-Adressen" wrapText="true" />
                         <CheckBox fx:id="informAllCheckBox" mnemonicParsing="false" text="Alle" />
                      </children>
                   </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="individuell:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <CheckBox fx:id="informParentsCheckBox" mnemonicParsing="false" text="Eltern" />
+                        <CheckBox fx:id="informStudentsCheckBox" mnemonicParsing="false" text="Schüler" />
+                        <CheckBox fx:id="informTeacherCheckBox" mnemonicParsing="false" text="Lehrer" />
+                     </children>
+                  </VBox>
+                  <VBox />
                </children>
             </HBox>
             <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="9">

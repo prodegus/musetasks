@@ -19,18 +19,19 @@ import static prodegus.musetasks.utils.Strings.string;
 
 public class Student extends Contact {
 
-    private SimpleStringProperty  instrument1 = new SimpleStringProperty();
-    private SimpleStringProperty  instrument2 = new SimpleStringProperty();
-    private SimpleStringProperty  instrument3 = new SimpleStringProperty();
-    private SimpleBooleanProperty prospective = new SimpleBooleanProperty();
-    private SimpleStringProperty  status      = new SimpleStringProperty();
-    private SimpleStringProperty  statusFrom  = new SimpleStringProperty();
-    private SimpleStringProperty  statusTo    = new SimpleStringProperty();
-    private SimpleIntegerProperty parentId1   = new SimpleIntegerProperty();
-    private SimpleIntegerProperty parentId2   = new SimpleIntegerProperty();
-    private SimpleIntegerProperty lessonId1   = new SimpleIntegerProperty();
-    private SimpleIntegerProperty lessonId2   = new SimpleIntegerProperty();
-    private SimpleIntegerProperty lessonId3   = new SimpleIntegerProperty();
+    private SimpleStringProperty  instrument1  = new SimpleStringProperty();
+    private SimpleStringProperty  instrument2  = new SimpleStringProperty();
+    private SimpleStringProperty  instrument3  = new SimpleStringProperty();
+    private SimpleBooleanProperty prospective  = new SimpleBooleanProperty();
+    private SimpleStringProperty  status       = new SimpleStringProperty();
+    private SimpleStringProperty  statusFrom   = new SimpleStringProperty();
+    private SimpleStringProperty  statusTo     = new SimpleStringProperty();
+    private SimpleStringProperty  contactEmail = new SimpleStringProperty();
+    private SimpleIntegerProperty parentId1    = new SimpleIntegerProperty();
+    private SimpleIntegerProperty parentId2    = new SimpleIntegerProperty();
+    private SimpleIntegerProperty lessonId1    = new SimpleIntegerProperty();
+    private SimpleIntegerProperty lessonId2    = new SimpleIntegerProperty();
+    private SimpleIntegerProperty lessonId3    = new SimpleIntegerProperty();
 
     public String getInstrument1() {
         return instrument1.get();
@@ -114,6 +115,18 @@ public class Student extends Contact {
 
     public void setStatusTo(String statusTo) {
         this.statusTo.set(statusTo);
+    }
+
+    public String getContactEmail() {
+        return contactEmail.get();
+    }
+
+    public SimpleStringProperty contactEmailProperty() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail.set(contactEmail);
     }
 
     public int getParentId1() {
@@ -240,6 +253,7 @@ public class Student extends Contact {
         this.setStatus(string(rs.getString("status")));
         this.setStatusFrom(string(rs.getString("statusfrom")));
         this.setStatusTo(string(rs.getString("statusto")));
+        this.setContactEmail(rs.getString("contactemail"));
         this.setParentId1(rs.getInt("parentid1"));
         this.setParentId2(rs.getInt("parentid2"));
         this.setLessonId1(rs.getInt("lessonid1"));
@@ -249,18 +263,19 @@ public class Student extends Contact {
 
     public String valuesToSQLUpdateString() {
         StringBuilder sb = new StringBuilder(super.valuesToSQLUpdateString()).append(", ");
-        sb.append("instrument1 = '").append(this.getInstrument1()).append("', ");
-        sb.append("instrument2 = '").append(this.getInstrument2()).append("', ");
-        sb.append("instrument3 = '").append(this.getInstrument3()).append("', ");
-        sb.append("prospective = ").append(this.getProspective() ? "1" : "0").append(", ");
-        sb.append("status      = '").append(this.getStatus()).append("', ");
-        sb.append("statusfrom  = '").append(this.getStatusFrom()).append("', ");
-        sb.append("statusto    = '").append(this.getStatusTo()).append("', ");
-        sb.append("parentid1   = ").append(this.getParentId1() == 0 ? "null" : this.getParentId1()).append(", ");
-        sb.append("parentid2   = ").append(this.getParentId2() == 0 ? "null" : this.getParentId2()).append(", ");
-        sb.append("lessonid1   = ").append(this.getLessonId1() == 0 ? "null" : this.getLessonId1()).append(", ");
-        sb.append("lessonid2   = ").append(this.getLessonId2() == 0 ? "null" : this.getLessonId2()).append(", ");
-        sb.append("lessonid3   = ").append(this.getLessonId3() == 0 ? "null" : this.getLessonId3());
+        sb.append("instrument1  = '").append(this.getInstrument1()).append("', ");
+        sb.append("instrument2  = '").append(this.getInstrument2()).append("', ");
+        sb.append("instrument3  = '").append(this.getInstrument3()).append("', ");
+        sb.append("prospective  = ").append(this.getProspective() ? "1" : "0").append(", ");
+        sb.append("status       = '").append(this.getStatus()).append("', ");
+        sb.append("statusfrom   = '").append(this.getStatusFrom()).append("', ");
+        sb.append("statusto     = '").append(this.getStatusTo()).append("', ");
+        sb.append("contactemail = '").append(this.getContactEmail()).append("', ");
+        sb.append("parentid1    = ").append(this.getParentId1() == 0 ? "null" : this.getParentId1()).append(", ");
+        sb.append("parentid2    = ").append(this.getParentId2() == 0 ? "null" : this.getParentId2()).append(", ");
+        sb.append("lessonid1    = ").append(this.getLessonId1() == 0 ? "null" : this.getLessonId1()).append(", ");
+        sb.append("lessonid2    = ").append(this.getLessonId2() == 0 ? "null" : this.getLessonId2()).append(", ");
+        sb.append("lessonid3    = ").append(this.getLessonId3() == 0 ? "null" : this.getLessonId3());
         return sb.toString();
     }
 
@@ -275,6 +290,7 @@ public class Student extends Contact {
         if (!this.getStatus().isBlank()) columns.add("status");
         if (!this.getStatusFrom().isBlank()) columns.add("statusfrom");
         if (!this.getStatusTo().isBlank()) columns.add("statusto");
+        if (!this.getContactEmail().isBlank()) columns.add("contactemail");
         if (this.getParentId1() != 0) columns.add("parentid1");
         if (this.getParentId2() != 0) columns.add("parentid2");
         if (this.getLessonId1() != 0) columns.add("lessonid1");
@@ -295,6 +311,7 @@ public class Student extends Contact {
         if (!this.getStatus().isBlank()) values.add(this.getStatus());
         if (!this.getStatusFrom().isBlank()) values.add(this.getStatusFrom());
         if (!this.getStatusTo().isBlank()) values.add(this.getStatusTo());
+        if (!this.getContactEmail().isBlank()) values.add(this.getContactEmail());
         if (this.getParentId1() != 0) values.add(String.valueOf(this.getParentId1()));
         if (this.getParentId2() != 0) values.add(String.valueOf(this.getParentId2()));
         if (this.getLessonId1() != 0) values.add(String.valueOf(this.getLessonId1()));
@@ -473,6 +490,4 @@ public class Student extends Contact {
                 this.getTeacherId2() == teacher.getId() ||
                 this.getTeacherId3() == teacher.getId();
     }
-
-
 }

@@ -1,5 +1,6 @@
 package prodegus.musetasks.contacts;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,23 +55,24 @@ public class AddStudentController implements Initializable {
     @FXML private ComboBox<String> instrument3ComboBox;
 
     @FXML private GridPane communicationForm;
+    @FXML private Label parent1Label;
+    @FXML private ComboBox<Parent> parent1ComboBox;
+    @FXML private Button newParent1Button;
+    @FXML private VBox parent2VBox;
+    @FXML private ComboBox<Parent> parent2ComboBox;
+    @FXML private Button newParent2Button;
     @FXML private TextField phoneTextField;
     @FXML private TextField emailTextField;
     @FXML private CheckBox zoomCheckBox;
     @FXML private ComboBox<String> zoomComboBox;
     @FXML private CheckBox skypeCheckBox;
     @FXML private ComboBox<String> skypeComboBox;
+    @FXML private ComboBox<String> contactMailComboBox;
     @FXML private TextArea notesTextArea;
-    @FXML private VBox parent2VBox;
-    @FXML private ComboBox<Parent> parent1ComboBox;
-    @FXML private ComboBox<Parent> parent2ComboBox;
-    @FXML private Label parent1Label;
     @FXML private Button backButton;
     @FXML private Button cancelButton;
     @FXML private Button cancelButton2;
     @FXML private Button confirmButton;
-    @FXML private Button newParent1Button;
-    @FXML private Button newParent2Button;
     @FXML private Button toContactFormButton;
 
     private boolean editMode;
@@ -97,6 +99,7 @@ public class AddStudentController implements Initializable {
         String email = emailTextField.getText();
         String zoom = zoomComboBox.getSelectionModel().isEmpty() ? "" : zoomComboBox.getValue();
         String skype = skypeComboBox.getSelectionModel().isEmpty() ? "" : skypeComboBox.getValue();
+        String contactMail = contactMailComboBox.getSelectionModel().isEmpty() ? "" : contactMailComboBox.getValue();
         String birthDate = birthDatePicker.getEditor().getText();
         String notesInput = notesTextArea.getText();
         String notes = notesInput.isBlank() ? "" : timestamp + "\n" + notesInput;
@@ -141,6 +144,12 @@ public class AddStudentController implements Initializable {
         newStudent.setEmail(email);
         newStudent.setZoom(zoom);
         newStudent.setSkype(skype);
+
+        if (contactMail.isBlank()) {
+            invalidData = true;
+            errorMessage.append("- Bitte Kontakt-E-Mail-Adresse auswählen");
+        }
+        newStudent.setContactEmail(contactMail);
 
         if (isInvalidBirthDate(birthDate)) {
             invalidData = true;
@@ -308,6 +317,7 @@ public class AddStudentController implements Initializable {
         zoomComboBox.setValue(student.getZoom());
         skypeCheckBox.setSelected(!student.getSkype().isEmpty());
         skypeComboBox.setValue(student.getSkype());
+        contactMailComboBox.setValue(student.getContactEmail());
         if (student.getParentId1() != 0) parent1ComboBox.setValue(student.parent1());
         if (student.getParentId2() != 0) parent2ComboBox.setValue(student.parent2());
         notesTextArea.setText(student.getNotes());
@@ -315,8 +325,19 @@ public class AddStudentController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<Teacher> teachers = getTeacherListFromDB();
         ObservableList<Parent> parents = getParentListFromDB();
+
+        contactMailComboBox.setOnMouseClicked(e -> {
+            ObservableList<String> email = FXCollections.observableArrayList();
+            if (parent1ComboBox.getValue() != null && !parent1ComboBox.getValue().getEmail().isBlank())
+                email.add(parent1ComboBox.getValue().getEmail());
+            if (parent2ComboBox.getValue() != null && !parent2ComboBox.getValue().getEmail().isBlank())
+                email.add(parent2ComboBox.getValue().getEmail());
+            if (!emailTextField.getText().isBlank())
+                email.add(emailTextField.getText());
+            email.add("keine Angabe");
+            contactMailComboBox.setItems(email);
+        });
 
         studentDataForm.setVisible(true);
         communicationForm.setVisible(false);
@@ -341,6 +362,8 @@ public class AddStudentController implements Initializable {
         parent2ComboBox.setItems(parents);
         parent2ComboBox.setCellFactory(parent -> new ParentListCellFormal());
         parent2ComboBox.setConverter(parentStringConverterFormal);
+
+
     }
 
 }

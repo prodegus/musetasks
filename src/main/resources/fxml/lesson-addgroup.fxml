@@ -50,7 +50,7 @@
                   </VBox>
                   <VBox minHeight="60.0" GridPane.rowIndex="3">
                      <children>
-                        <Label text="Bezeichnung (optional)" />
+                        <Label fx:id="lessonNameLabel" text="Bezeichnung (optional)" />
                         <TextField fx:id="lessonNameTextField" prefHeight="30.0" />
                      </children>
                      <GridPane.margin>
@@ -245,6 +245,11 @@
                               <ComboBox fx:id="timeComboBox" editable="true" prefHeight="30.0" prefWidth="100.0" />
                            </children>
                         </VBox>
+                        <Button fx:id="editCustomAptsButton" mnemonicParsing="false" onAction="#editCustomApts" prefHeight="30.0" text="Termine anzeigen / ändern">
+                           <HBox.margin>
+                              <Insets top="17.0" />
+                           </HBox.margin>
+                        </Button>
                      </children>
                   </HBox>
                   <HBox fx:id="hBoxPeriod" spacing="10.0" GridPane.rowIndex="10">

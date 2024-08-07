@@ -160,13 +160,14 @@ public class Database {
         String sql =
                 "CREATE TABLE " + STUDENT_TABLE + " (" +
                 CONTACT_COLUMNS + ", " +
-                "    instrument1 TEXT," +
-                "    instrument2 TEXT," +
-                "    instrument3 TEXT," +
-                "    prospective INTEGER," +
-                "    status      TEXT," +
-                "    statusfrom  TEXT," +
-                "    statusto    TEXT" +
+                "    instrument1  TEXT," +
+                "    instrument2  TEXT," +
+                "    instrument3  TEXT," +
+                "    prospective  INTEGER," +
+                "    status       TEXT," +
+                "    statusfrom   TEXT," +
+                "    statusto     TEXT," +
+                "    contactemail TEXT" +
                 ")";
 
         try (Connection conn = connect(dbPath);
