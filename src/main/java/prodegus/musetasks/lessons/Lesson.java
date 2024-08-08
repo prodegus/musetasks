@@ -520,6 +520,14 @@ public class Lesson {
         return LESSON_APT_STATUS_LIST.get(this.getAptStatus());
     }
 
+    public boolean hasAppointment(LocalDate date) {
+        return getLessonAppointmentsFromDB(this.getId(), date).size() > 0;
+    }
+
+    public boolean hasAppointment(LocalDate from, LocalDate to) {
+        return getLessonAppointmentsFromDB(this.getId(), from, to).size() > 0;
+    }
+
     public void setAttributes(ResultSet rs) throws SQLException {
 
         this.setId(rs.getInt("id"));

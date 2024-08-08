@@ -29,210 +29,232 @@
 
 <HBox prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.workspace.LessonsController">
    <children>
+      <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
+         <children>
+            <ToggleButton fx:id="viewAllToggle" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsAll" prefHeight="45.0" prefWidth="180.0" text="Alle">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="lessonFilterToggles" />
+               </toggleGroup>
+            </ToggleButton>
+            <ToggleButton alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsToday" prefHeight="45.0" prefWidth="180.0" text="Heute" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="lessonToggleLocation1" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation1" prefHeight="45.0" prefWidth="180.0" text="Standort 1" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="lessonToggleLocation2" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation2" prefHeight="45.0" prefWidth="180.0" text="Standort 2" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </ToggleButton>
+            <ToggleButton fx:id="lessonToggleLocation3" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation3" prefHeight="45.0" prefWidth="180.0" text="Standort 3" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="lessonToggleLocation4" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation4" prefHeight="45.0" prefWidth="180.0" text="Standort 4" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </ToggleButton>
+            <ToggleButton fx:id="lessonToggleLocation5" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation5" prefHeight="45.0" prefWidth="180.0" text="Standort 5" toggleGroup="$lessonFilterToggles">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </ToggleButton>
+            <MenuButton fx:id="lessonTeacherMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="Lehrer">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </MenuButton>
+            <MenuButton fx:id="lessonInstrumentMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="Instrument">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </MenuButton>
+            <TitledPane fx:id="filterPane" animated="false" prefWidth="180.0" text=" Filter auswählen">
+               <content>
+                  <ScrollPane hbarPolicy="NEVER">
+                     <content>
+                        <VBox minWidth="178.0">
+                           <padding>
+                              <Insets bottom="0" left="0" right="0" top="0" />
+                           </padding>
+                           <children>
+                              <TitledPane animated="false" expanded="false" text="Standort">
+                                 <content>
+                                    <VBox prefWidth="100.0" spacing="5.0">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <children>
+                                          <CheckBox fx:id="filterLocation1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 1" />
+                                          <CheckBox fx:id="filterLocation2" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 2" />
+                                          <CheckBox fx:id="filterLocation3" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 3" />
+                                          <CheckBox fx:id="filterLocation4" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 4" />
+                                          <CheckBox fx:id="filterLocation5" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 5" />
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" expanded="false" text="Lehrer">
+                                 <content>
+                                    <VBox prefWidth="100.0" spacing="5.0">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterTeacher1" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterTeacher1ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterTeacher2" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterTeacher2ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterTeacher3" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterTeacher3ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" expanded="false" text="Instrument">
+                                 <content>
+                                    <VBox prefWidth="100.0" spacing="5.0">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterInstrument1" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterInstrument1ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterInstrument2" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterInstrument2ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                             <children>
+                                                <CheckBox fx:id="filterInstrument3" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
+                                                <ComboBox fx:id="filterInstrument3ComboBox" prefWidth="130.0" promptText="auswählen" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" expanded="false" text="Unterrichtsart">
+                                 <content>
+                                    <VBox prefWidth="100.0" spacing="5.0">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <children>
+                                          <CheckBox fx:id="filterCatSingle" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Einzelunterricht" />
+                                          <CheckBox fx:id="filterCatGroup" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Gruppenunterricht" />
+                                          <CheckBox fx:id="filterCatCourse" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Kurs/Workshop" />
+                                          <CheckBox fx:id="filterCatWorkGroup" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="AG" />
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" expanded="false" text="Zeitraum">
+                                 <content>
+                                    <VBox prefWidth="100.0" spacing="10.0">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <children>
+                                          <CheckBox fx:id="filterTimeToday" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Heute" />
+                                          <VBox>
+                                             <children>
+                                                <CheckBox fx:id="filterTimeDate" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Datum:" />
+                                                <HBox alignment="CENTER_RIGHT">
+                                                   <children>
+                                                      <DatePicker fx:id="filterTimeDatePicker" prefHeight="27.0" prefWidth="140.0" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <CheckBox fx:id="filterTimeSpan" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#viewLessonsFiltered" text="Zeitraum von:" />
+                                                <HBox alignment="CENTER_RIGHT">
+                                                   <children>
+                                                      <VBox>
+                                                         <children>
+                                                            <DatePicker fx:id="filterTimeSpanFrom" prefHeight="27.0" prefWidth="140.0" />
+                                                            <Label text="bis:" />
+                                                            <DatePicker fx:id="filterTimeSpanTo" prefHeight="27.0" prefWidth="140.0" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TitledPane>
+            <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
       <StackPane HBox.hgrow="ALWAYS">
          <children>
-            <SplitPane fx:id="lessonListView" dividerPositions="0.55" visible="false">
+            <SplitPane fx:id="lessonListView" dividerPositions="0.55">
                <items>
                   <HBox>
                      <children>
-                        <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
-                           <children>
-                              <ToggleButton fx:id="lessonToggleToday" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsToday" prefHeight="45.0" prefWidth="180.0" selected="true" text="#  Heute">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="contactCategoryToggle1" />
-                                 </toggleGroup>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation1" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation1" prefHeight="45.0" prefWidth="180.0" text="#  Standort 1" toggleGroup="$contactCategoryToggle1">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation2" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation2" prefHeight="45.0" prefWidth="180.0" text="#  Standort 2" toggleGroup="$contactCategoryToggle1">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation3" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation3" prefHeight="45.0" prefWidth="180.0" text="#  Standort 3" toggleGroup="$contactCategoryToggle1">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" />
-                                 </VBox.margin>
-                              </ToggleButton>
-                              <MenuButton fx:id="lessonTeacherMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="#  Lehrer">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </MenuButton>
-                              <MenuButton fx:id="lessonInstrumentMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="#  Instrument">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Action 1" />
-                                    <MenuItem mnemonicParsing="false" text="Action 2" />
-                                 </items>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" />
-                                 </VBox.margin>
-                              </MenuButton>
-                              <TitledPane fx:id="filterPane" animated="false" prefWidth="180.0" text=" Filter auswählen">
-                                 <content>
-                                    <ScrollPane hbarPolicy="NEVER">
-                                       <content>
-                                          <VBox minWidth="178.0">
-                                             <padding>
-                                                <Insets bottom="0" left="0" right="0" top="0" />
-                                             </padding>
-                                             <children>
-                                                <TitledPane animated="false" expanded="false" text="Standort">
-                                                   <content>
-                                                      <VBox prefWidth="100.0" spacing="5.0">
-                                                         <padding>
-                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                         </padding>
-                                                         <children>
-                                                            <CheckBox fx:id="filterLocation1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 1" />
-                                                            <CheckBox fx:id="filterLocation2" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 2" />
-                                                            <CheckBox fx:id="filterLocation3" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 3" />
-                                                         </children>
-                                                      </VBox>
-                                                   </content>
-                                                </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Lehrer">
-                                                   <content>
-                                                      <VBox prefWidth="100.0" spacing="5.0">
-                                                         <padding>
-                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                         </padding>
-                                                         <children>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterTeacher1" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterTeacher1ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterTeacher2" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterTeacher2ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterTeacher3" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterTeacher3ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                         </children>
-                                                      </VBox>
-                                                   </content>
-                                                </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Instrument">
-                                                   <content>
-                                                      <VBox prefWidth="100.0" spacing="5.0">
-                                                         <padding>
-                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                         </padding>
-                                                         <children>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterInstrument1" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterInstrument1ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterInstrument2" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterInstrument2ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                               <children>
-                                                                  <CheckBox fx:id="filterInstrument3" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                                  <ComboBox fx:id="filterInstrument3ComboBox" prefWidth="130.0" promptText="auswählen" />
-                                                               </children>
-                                                            </HBox>
-                                                         </children>
-                                                      </VBox>
-                                                   </content>
-                                                </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Unterrichtsart">
-                                                   <content>
-                                                      <VBox prefWidth="100.0" spacing="5.0">
-                                                         <padding>
-                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                         </padding>
-                                                         <children>
-                                                            <CheckBox fx:id="filterCatSingle" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Einzelunterricht" />
-                                                            <CheckBox fx:id="filterCatGroup" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Gruppenunterricht" />
-                                                            <CheckBox fx:id="filterCatCourse" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Kurs/Workshop" />
-                                                            <CheckBox fx:id="filterCatWorkGroup" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="AG" />
-                                                         </children>
-                                                      </VBox>
-                                                   </content>
-                                                </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Zeitraum">
-                                                   <content>
-                                                      <VBox prefWidth="100.0" spacing="10.0">
-                                                         <padding>
-                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                         </padding>
-                                                         <children>
-                                                            <CheckBox fx:id="filterTimeToday" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Heute" />
-                                                            <VBox>
-                                                               <children>
-                                                                  <CheckBox fx:id="filterTimeDate" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Datum:" />
-                                                                  <HBox alignment="CENTER_RIGHT">
-                                                                     <children>
-                                                                        <DatePicker fx:id="filterTimeDatePicker" prefHeight="27.0" prefWidth="140.0" />
-                                                                     </children>
-                                                                  </HBox>
-                                                               </children>
-                                                            </VBox>
-                                                            <VBox>
-                                                               <children>
-                                                                  <CheckBox fx:id="filterTimeSpan" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#viewLessonsFiltered" text="Zeitraum von:" />
-                                                                  <HBox alignment="CENTER_RIGHT">
-                                                                     <children>
-                                                                        <VBox>
-                                                                           <children>
-                                                                              <DatePicker fx:id="filterTimeSpanFrom" prefHeight="27.0" prefWidth="140.0" />
-                                                                              <Label text="bis:" />
-                                                                              <DatePicker fx:id="filterTimeSpanTo" prefHeight="27.0" prefWidth="140.0" />
-                                                                           </children>
-                                                                        </VBox>
-                                                                     </children>
-                                                                  </HBox>
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
-                                                      </VBox>
-                                                   </content>
-                                                </TitledPane>
-                                             </children>
-                                          </VBox>
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TitledPane>
-                              <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
                         <VBox prefHeight="800.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
                               <HBox>
@@ -541,206 +563,8 @@
                   </VBox>
                </items>
             </SplitPane>
-            <HBox fx:id="lessonCalendarView">
+            <HBox fx:id="lessonCalendarView" visible="false">
                <children>
-                  <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
-                     <children>
-                        <ToggleButton fx:id="lessonToggleToday1" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsToday" prefHeight="45.0" prefWidth="180.0" selected="true" text="#  Heute">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="contactCategoryToggle11" />
-                           </toggleGroup>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </ToggleButton>
-                        <ToggleButton fx:id="lessonToggleLocation11" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation1" prefHeight="45.0" prefWidth="180.0" text="#  Standort 1" toggleGroup="$contactCategoryToggle11">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </ToggleButton>
-                        <ToggleButton fx:id="lessonToggleLocation21" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation2" prefHeight="45.0" prefWidth="180.0" text="#  Standort 2" toggleGroup="$contactCategoryToggle11">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </ToggleButton>
-                        <ToggleButton fx:id="lessonToggleLocation31" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation3" prefHeight="45.0" prefWidth="180.0" text="#  Standort 3" toggleGroup="$contactCategoryToggle11">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" />
-                           </VBox.margin>
-                        </ToggleButton>
-                        <MenuButton fx:id="lessonTeacherMenuButton1" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="#  Lehrer">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </MenuButton>
-                        <MenuButton fx:id="lessonInstrumentMenuButton1" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="#  Instrument">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="Action 1" />
-                              <MenuItem mnemonicParsing="false" text="Action 2" />
-                           </items>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" />
-                           </VBox.margin>
-                        </MenuButton>
-                        <TitledPane fx:id="filterPane1" animated="false" prefWidth="180.0" text=" Filter auswählen">
-                           <content>
-                              <ScrollPane hbarPolicy="NEVER">
-                                 <content>
-                                    <VBox minWidth="178.0">
-                                       <padding>
-                                          <Insets bottom="0" left="0" right="0" top="0" />
-                                       </padding>
-                                       <children>
-                                          <TitledPane animated="false" expanded="false" text="Standort">
-                                             <content>
-                                                <VBox prefWidth="100.0" spacing="5.0">
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding>
-                                                   <children>
-                                                      <CheckBox fx:id="filterLocation11" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 1" />
-                                                      <CheckBox fx:id="filterLocation21" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 2" />
-                                                      <CheckBox fx:id="filterLocation31" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Standort 3" />
-                                                   </children>
-                                                </VBox>
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" expanded="false" text="Lehrer">
-                                             <content>
-                                                <VBox prefWidth="100.0" spacing="5.0">
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding>
-                                                   <children>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterTeacher11" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterTeacher1ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterTeacher21" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterTeacher2ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterTeacher31" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterTeacher3ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" expanded="false" text="Instrument">
-                                             <content>
-                                                <VBox prefWidth="100.0" spacing="5.0">
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding>
-                                                   <children>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterInstrument11" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterInstrument1ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterInstrument21" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterInstrument2ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                         <children>
-                                                            <CheckBox fx:id="filterInstrument31" disable="true" mnemonicParsing="false" onAction="#viewLessonsFiltered" />
-                                                            <ComboBox fx:id="filterInstrument3ComboBox1" prefWidth="130.0" promptText="auswählen" />
-                                                         </children>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" expanded="false" text="Unterrichtsart">
-                                             <content>
-                                                <VBox prefWidth="100.0" spacing="5.0">
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding>
-                                                   <children>
-                                                      <CheckBox fx:id="filterCatSingle1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Einzelunterricht" />
-                                                      <CheckBox fx:id="filterCatGroup1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Gruppenunterricht" />
-                                                      <CheckBox fx:id="filterCatCourse1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Kurs/Workshop" />
-                                                      <CheckBox fx:id="filterCatWorkGroup1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="AG" />
-                                                   </children>
-                                                </VBox>
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" expanded="false" text="Zeitraum">
-                                             <content>
-                                                <VBox prefWidth="100.0" spacing="10.0">
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding>
-                                                   <children>
-                                                      <CheckBox fx:id="filterTimeToday1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Heute" />
-                                                      <VBox>
-                                                         <children>
-                                                            <CheckBox fx:id="filterTimeDate1" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Datum:" />
-                                                            <HBox alignment="CENTER_RIGHT">
-                                                               <children>
-                                                                  <DatePicker fx:id="filterTimeDatePicker1" prefHeight="27.0" prefWidth="140.0" />
-                                                               </children>
-                                                            </HBox>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox>
-                                                         <children>
-                                                            <CheckBox fx:id="filterTimeSpan1" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#viewLessonsFiltered" text="Zeitraum von:" />
-                                                            <HBox alignment="CENTER_RIGHT">
-                                                               <children>
-                                                                  <VBox>
-                                                                     <children>
-                                                                        <DatePicker fx:id="filterTimeSpanFrom1" prefHeight="27.0" prefWidth="140.0" />
-                                                                        <Label text="bis:" />
-                                                                        <DatePicker fx:id="filterTimeSpanTo1" prefHeight="27.0" prefWidth="140.0" />
-                                                                     </children>
-                                                                  </VBox>
-                                                               </children>
-                                                            </HBox>
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                             </content>
-                                          </TitledPane>
-                                       </children>
-                                    </VBox>
-                                 </content>
-                              </ScrollPane>
-                           </content>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </TitledPane>
-                        <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Button>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </VBox>
                   <VBox prefHeight="800.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
                         <HBox>
@@ -773,7 +597,7 @@
                            <content>
                               <StackPane alignment="TOP_LEFT">
                                  <children>
-                                    <VBox>
+                                    <VBox fx:id="background">
                                        <children>
                                           <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
                                           <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />

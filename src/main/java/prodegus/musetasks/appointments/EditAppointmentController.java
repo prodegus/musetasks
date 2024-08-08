@@ -319,7 +319,7 @@ public class EditAppointmentController implements Initializable {
         oldDateTimeLabel.setText(fullDateTimeString(oldDate, oldTime)
                 + (appointment.getCategory() == CATEGORY_LESSON_RESCHEDULED ? " (Nachholtermin für " + asString(appointment.getDateOld()) + ")" : ""));
         lessonCategoryLabel.setText(lesson.category());
-        studentNameLabel.setText(lesson.studentsNamesString());
+        studentNameLabel.setText(String.join(", ", lesson.studentsNames()));
         instrumentLabel.setText(lesson.getInstrument());
         locationRoomLabel.setText(appointment.locationRoom());
         teacherLabel.setText(lesson.teacher().name());

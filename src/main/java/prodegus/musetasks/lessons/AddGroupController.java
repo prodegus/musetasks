@@ -453,7 +453,7 @@ public class AddGroupController implements Initializable {
 
     public void initLesson(Lesson lesson) {
         init(lesson.getCategory());
-        LessonChange latestChange = getLatestLessonChange(lesson.getId(), LocalDate.now());
+        LessonChange latestChange = getLatestLessonChange(lesson.getId());
         Lesson futureLesson = latestChange == null ? lesson : latestChange.lesson();
         show(changeDateVBox);
         changeDatePicker.valueProperty().addListener(e -> {

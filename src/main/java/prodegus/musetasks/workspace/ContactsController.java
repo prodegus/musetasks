@@ -51,6 +51,7 @@ package prodegus.musetasks.workspace;
         import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
         import static prodegus.musetasks.ui.StageFactories.newStage;
         import static prodegus.musetasks.ui.StageFactories.stageOf;
+        import static prodegus.musetasks.utils.Nodes.getAllNodes;
 
 public class ContactsController implements Initializable {
 
@@ -622,9 +623,7 @@ public class ContactsController implements Initializable {
 
     @FXML
     void viewFilteredContacts(ActionEvent event) {
-        for (Toggle toggle : contactCategoryToggle.getToggles()) {
-            toggle.setSelected(false);
-        }
+        for (Toggle toggle : contactCategoryToggle.getToggles()) toggle.setSelected(false);
         contacts.setAll(getContactListFromDB());
         replaceSearchListener(contactSearchListener);
         contactTableView.getSortOrder().setAll(nameColumn);
@@ -834,20 +833,6 @@ public class ContactsController implements Initializable {
             case CATEGORY_TEACHER -> showTeacherInfo(contact);
             case CATEGORY_PARENT, CATEGORY_PROSPECTIVE_PARENT -> showParentInfo(contact);
             case CATEGORY_OTHER -> showOtherInfo(contact);
-        }
-    }
-
-    public static ArrayList<Node> getAllNodes(javafx.scene.Parent root) {
-        ArrayList<Node> nodes = new ArrayList<Node>();
-        addAllDescendants(root, nodes);
-        return nodes;
-    }
-
-    private static void addAllDescendants(javafx.scene.Parent parent, ArrayList<Node> nodes) {
-        for (Node node : parent.getChildrenUnmodifiable()) {
-            nodes.add(node);
-            if (node instanceof javafx.scene.Parent)
-                addAllDescendants((javafx.scene.Parent)node, nodes);
         }
     }
 

@@ -32,8 +32,16 @@ public class AppointmentModel {
     }
 
     public static ObservableList<Appointment> getAppointmentListFromDB() {
+        return getAppointmentListFromDB("");
+    }
+
+    public static ObservableList<Appointment> getAppointmentListFromDB(LocalDate date) {
+        return getAppointmentListFromDB(" WHERE date = " + toInt(LocalDate.now()));
+    }
+
+    public static ObservableList<Appointment> getAppointmentListFromDB(String filter) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM " + APPOINTMENT_TABLE;
+        String sql = "SELECT * FROM " + APPOINTMENT_TABLE + filter;
 
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
@@ -51,6 +59,10 @@ public class AppointmentModel {
 
     public static ObservableList<Appointment> getLessonAppointmentsFromDB(int lessonId, HalfYear halfYear) {
         return getLessonAppointmentsFromDB(lessonId, halfYear.getStart(), halfYear.getEnd());
+    }
+
+    public static ObservableList<Appointment> getLessonAppointmentsFromDB(int lessonId, LocalDate date) {
+        return getAppointmentListFromDB(" WHERE lessonid = " + lessonId + " AND date = " + toInt(date));
     }
 
     public static ObservableList<Appointment> getLessonAppointmentsFromDB(int lessonId, LocalDate startDate, LocalDate endDate) {

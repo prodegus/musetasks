@@ -136,8 +136,7 @@ public class LessonModel {
     }
 
     public static LessonChange getEarliestLessonChange(int lessonId) {
-        return getLessonChangeListFromDB(" WHERE id = " + lessonId + " AND changedate > " + toInt(FAR_PAST) +
-                " ORDER BY changedate ASC").get(0);
+        return getLessonChangeListFromDB(" WHERE id = " + lessonId + " ORDER BY changedate ASC").get(0);
     }
 
     public static LessonChange getEarliestLessonChange(int lessonId, LocalDate start) {

@@ -73,7 +73,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="studentNameLabel" GridPane.columnIndex="1">
+                  <Label fx:id="studentNameLabel" GridPane.columnIndex="1" GridPane.columnSpan="3">
                      <font>
                         <Font size="14.0" />
                      </font>

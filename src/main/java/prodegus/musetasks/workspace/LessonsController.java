@@ -37,14 +37,15 @@ import prodegus.musetasks.workspace.cells.StringListCell;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static prodegus.musetasks.appointments.Appointment.CATEGORY_HOLIDAY;
-import static prodegus.musetasks.appointments.AppointmentModel.deleteAppointmentFromDB;
-import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
+import static prodegus.musetasks.appointments.Appointment.*;
+import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
@@ -55,11 +56,59 @@ import static prodegus.musetasks.ui.popup.PopupWindow.displayInformation;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.GridPaneUtils.removeRow;
+import static prodegus.musetasks.utils.Nodes.getAllNodes;
+import static prodegus.musetasks.utils.Nodes.hide;
 
 public class LessonsController implements Initializable {
 
     @FXML private SplitPane lessonListView;
     @FXML private HBox lessonCalendarView;
+
+    @FXML private ToggleGroup lessonFilterToggles;
+    @FXML private ToggleButton viewAllToggle;
+    @FXML private ToggleButton lessonToggleLocation1;
+    @FXML private ToggleButton lessonToggleLocation2;
+    @FXML private ToggleButton lessonToggleLocation3;
+    @FXML private ToggleButton lessonToggleLocation4;
+    @FXML private ToggleButton lessonToggleLocation5;
+    private final List<ToggleButton> lessonTogglesLocation = FXCollections.observableArrayList();
+    @FXML private MenuButton lessonTeacherMenuButton;
+    @FXML private MenuButton lessonInstrumentMenuButton;
+
+    @FXML private TitledPane filterPane;
+
+    @FXML private CheckBox filterLocation1;
+    @FXML private CheckBox filterLocation2;
+    @FXML private CheckBox filterLocation3;
+    @FXML private CheckBox filterLocation4;
+    @FXML private CheckBox filterLocation5;
+    private final List<CheckBox> filterLocationCheckBoxes = FXCollections.observableArrayList();
+
+    @FXML private CheckBox filterTeacher1;
+    @FXML private ComboBox<Teacher> filterTeacher1ComboBox;
+    @FXML private CheckBox filterTeacher2;
+    @FXML private ComboBox<Teacher> filterTeacher2ComboBox;
+    @FXML private CheckBox filterTeacher3;
+    @FXML private ComboBox<Teacher> filterTeacher3ComboBox;
+
+    @FXML private CheckBox filterInstrument1;
+    @FXML private ComboBox<String> filterInstrument1ComboBox;
+    @FXML private CheckBox filterInstrument2;
+    @FXML private ComboBox<String> filterInstrument2ComboBox;
+    @FXML private CheckBox filterInstrument3;
+    @FXML private ComboBox<String> filterInstrument3ComboBox;
+
+    @FXML private CheckBox filterCatSingle;
+    @FXML private CheckBox filterCatGroup;
+    @FXML private CheckBox filterCatCourse;
+    @FXML private CheckBox filterCatWorkGroup;
+
+    @FXML private CheckBox filterTimeToday;
+    @FXML private CheckBox filterTimeDate;
+    @FXML private DatePicker filterTimeDatePicker;
+    @FXML private CheckBox filterTimeSpan;
+    @FXML private DatePicker filterTimeSpanFrom;
+    @FXML private DatePicker filterTimeSpanTo;
 
     @FXML private TableView<Lesson> lessonTableView;
     @FXML private TableColumn<Lesson, Boolean> selectColumn;
@@ -71,39 +120,7 @@ public class LessonsController implements Initializable {
 
     @FXML private CheckBox selectAllCheckBox;
 
-    @FXML private CheckBox filterCatCourse;
-    @FXML private CheckBox filterCatGroup;
-    @FXML private CheckBox filterCatSingle;
-    @FXML private CheckBox filterCatWorkGroup;
-    @FXML private CheckBox filterInstrument1;
-    @FXML private ComboBox<String> filterInstrument1ComboBox;
-    @FXML private CheckBox filterInstrument2;
-    @FXML private ComboBox<String> filterInstrument2ComboBox;
-    @FXML private CheckBox filterInstrument3;
-    @FXML private ComboBox<String> filterInstrument3ComboBox;
-    @FXML private CheckBox filterLocation1;
-    @FXML private CheckBox filterLocation2;
-    @FXML private CheckBox filterLocation3;
-    @FXML private TitledPane filterPane;
-    @FXML private CheckBox filterTeacher1;
-    @FXML private ComboBox<Teacher> filterTeacher1ComboBox;
-    @FXML private CheckBox filterTeacher2;
-    @FXML private ComboBox<Teacher> filterTeacher2ComboBox;
-    @FXML private CheckBox filterTeacher3;
-    @FXML private ComboBox<Teacher> filterTeacher3ComboBox;
-    @FXML private CheckBox filterTimeDate;
-    @FXML private DatePicker filterTimeDatePicker;
-    @FXML private CheckBox filterTimeSpan;
-    @FXML private DatePicker filterTimeSpanFrom;
-    @FXML private DatePicker filterTimeSpanTo;
-    @FXML private CheckBox filterTimeToday;
-    @FXML private MenuButton lessonInstrumentMenuButton;
     @FXML private TextField lessonSearchBar;
-    @FXML private MenuButton lessonTeacherMenuButton;
-    @FXML private ToggleButton lessonToggleLocation1;
-    @FXML private ToggleButton lessonToggleLocation2;
-    @FXML private ToggleButton lessonToggleLocation3;
-    @FXML private ToggleButton lessonToggleToday;
 
     @FXML private Label lessonInfoTitle;
     @FXML private Label lessonInfoSubtitle;
@@ -308,8 +325,119 @@ public class LessonsController implements Initializable {
     }
 
     @FXML
-    void resetFilter(ActionEvent event) {
+    void viewLessonsAll(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+    }
 
+    @FXML
+    void viewLessonsToday(ActionEvent event) {
+        List<Integer> lessonIds = new ArrayList<>();
+        for (Appointment appointment : getAppointmentListFromDB(LocalDate.now())) {
+            if (appointment.getCategory() != CATEGORY_HOLIDAY &&
+                    (appointment.getStatus() == STATUS_OK || appointment.getStatus() == STATUS_CHANGED) &&
+                    appointment.getLessonId() != 0) {
+                lessonIds.add(appointment.getLessonId());
+            }
+        }
+        lessons.removeIf(lesson -> !lessonIds.contains(lesson.getId()));
+    }
+
+    @FXML
+    void viewLessonsLocation1(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> lesson.getLocationId() != 1);
+    }
+
+    @FXML
+    void viewLessonsLocation2(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> lesson.getLocationId() != 2);
+    }
+
+    @FXML
+    void viewLessonsLocation3(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> lesson.getLocationId() != 3);
+    }
+
+    @FXML
+    void viewLessonsLocation4(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> lesson.getLocationId() != 4);
+    }
+
+    @FXML
+    void viewLessonsLocation5(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> lesson.getLocationId() != 5);
+    }
+
+    @FXML
+    void viewLessonsFiltered(ActionEvent event) {
+        for (Toggle toggle : lessonFilterToggles.getToggles()) toggle.setSelected(false);
+        lessons.setAll(getLessonListFromDB());
+        lessons.removeIf(lesson -> !fitsLocationFilter(lesson));
+        lessons.removeIf(lesson -> !fitsTeacherFilter(lesson));
+        lessons.removeIf(lesson -> !fitsInstrumentFilter(lesson));
+        lessons.removeIf(lesson -> !fitsCategoryFilter(lesson));
+        lessons.removeIf(lesson -> !fitsTimePeriod(lesson));
+    }
+
+    private boolean fitsLocationFilter(Lesson lesson) {
+        if (!filterLocation1.isSelected() && !filterLocation2.isSelected() && !filterLocation3.isSelected() &&
+                !filterLocation4.isSelected() && !filterLocation5.isSelected()) return true;
+        boolean filterLoc1Fits = filterLocation1.isSelected() && lesson.getLocationId() == 1;
+        boolean filterLoc2Fits = filterLocation2.isSelected() && lesson.getLocationId() == 2;
+        boolean filterLoc3Fits = filterLocation3.isSelected() && lesson.getLocationId() == 3;
+        boolean filterLoc4Fits = filterLocation4.isSelected() && lesson.getLocationId() == 4;
+        boolean filterLoc5Fits = filterLocation5.isSelected() && lesson.getLocationId() == 5;
+        return filterLoc1Fits || filterLoc2Fits || filterLoc3Fits || filterLoc4Fits || filterLoc5Fits;
+    }
+
+    private boolean fitsTeacherFilter(Lesson lesson) {
+        if (!filterTeacher1.isSelected() && !filterTeacher2.isSelected() && !filterTeacher3.isSelected()) return true;
+        boolean filterTeacher1Fits = filterTeacher1.isSelected() && lesson.getTeacherId() == filterTeacher1ComboBox.getValue().getId();
+        boolean filterTeacher2Fits = filterTeacher2.isSelected() && lesson.getTeacherId() == filterTeacher2ComboBox.getValue().getId();
+        boolean filterTeacher3Fits = filterTeacher3.isSelected() && lesson.getTeacherId() == filterTeacher3ComboBox.getValue().getId();
+        return filterTeacher1Fits || filterTeacher2Fits || filterTeacher3Fits;
+    }
+
+    private boolean fitsInstrumentFilter(Lesson lesson) {
+        if (!filterInstrument1.isSelected() && !filterInstrument2.isSelected() && !filterInstrument3.isSelected()) return true;
+        boolean filterInstrument1Fits = filterInstrument1.isSelected() && lesson.getInstrument().equals(filterInstrument1ComboBox.getValue());
+        boolean filterInstrument2Fits = filterInstrument2.isSelected() && lesson.getInstrument().equals(filterInstrument2ComboBox.getValue());
+        boolean filterInstrument3Fits = filterInstrument3.isSelected() && lesson.getInstrument().equals(filterInstrument3ComboBox.getValue());
+        return filterInstrument1Fits || filterInstrument2Fits || filterInstrument3Fits;
+    }
+
+    private boolean fitsCategoryFilter(Lesson lesson) {
+        if (!filterCatSingle.isSelected() && !filterCatGroup.isSelected() && !filterCatCourse.isSelected() && !filterCatWorkGroup.isSelected()) return true;
+        boolean filterCatSingleFits = filterCatSingle.isSelected() && lesson.getCategory() == CATEGORY_SINGLE;
+        boolean filterCatGroupFits = filterCatGroup.isSelected() && lesson.getCategory() == CATEGORY_GROUP;
+        boolean filterCatCourseFits = filterCatCourse.isSelected() && lesson.getCategory() == CATEGORY_COURSE;
+        boolean filterCatWorkgroupFits = filterCatWorkGroup.isSelected() && lesson.getCategory() == CATEGORY_WORKGROUP;
+        return filterCatSingleFits || filterCatGroupFits || filterCatCourseFits || filterCatWorkgroupFits;
+    }
+
+    private boolean fitsTimePeriod(Lesson lesson) {
+        if (!filterTimeToday.isSelected() && !filterTimeDate.isSelected() && !filterTimeSpan.isSelected()) return true;
+        boolean filterTodayFits = filterTimeToday.isSelected() && lesson.hasAppointment(LocalDate.now());
+        boolean filterDateFits = filterTimeDate.isSelected() && lesson.hasAppointment(filterTimeDatePicker.getValue());
+        boolean filterSpanFits = filterTimeSpan.isSelected() && lesson.hasAppointment(filterTimeSpanFrom.getValue(), filterTimeSpanTo.getValue());
+        return filterTodayFits || filterDateFits || filterSpanFits;
+    }
+
+    @FXML
+    void resetFilter(ActionEvent event) {
+        lessons.setAll(getLessonListFromDB());
+        viewAllToggle.setSelected(true);
+        filterPane.setExpanded(false);
+
+        for (Node node : getAllNodes(filterPane)) {
+            if (node.getClass().getSimpleName().equals("TitledPane")) ((TitledPane)node).setExpanded(false);
+            if (node.getClass().getSimpleName().equals("CheckBox")) ((CheckBox)node).setSelected(false);
+            if (node.getClass().getSimpleName().equals("ComboBox")) ((ComboBox)node).getSelectionModel().clearSelection();
+        }
     }
 
     @FXML
@@ -317,30 +445,7 @@ public class LessonsController implements Initializable {
 
     }
 
-    @FXML
-    void viewLessonsFiltered(ActionEvent event) {
 
-    }
-
-    @FXML
-    void viewLessonsLocation1(ActionEvent event) {
-
-    }
-
-    @FXML
-    void viewLessonsLocation2(ActionEvent event) {
-
-    }
-
-    @FXML
-    void viewLessonsLocation3(ActionEvent event) {
-
-    }
-
-    @FXML
-    void viewLessonsToday(ActionEvent event) {
-
-    }
 
     private void enableLessonSelection(TableView<? extends Lesson> tableView) {
         tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -499,7 +604,7 @@ public class LessonsController implements Initializable {
     private Button editChangeButton(LessonChange lessonChange) {
         Button button = new Button("B");
         button.setOnAction(e -> {
-            editLesson(lessonChange.lesson());
+            editLesson(lessonChange);
         });
         return button;
     }
@@ -526,15 +631,52 @@ public class LessonsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        lessonListView.setVisible(false);
+        lessonCalendarView.setVisible(true);
+
+        lessonTogglesLocation.addAll(FXCollections.observableArrayList(lessonToggleLocation1, lessonToggleLocation2,
+                lessonToggleLocation3, lessonToggleLocation4, lessonToggleLocation5));
+
+        filterLocationCheckBoxes.addAll(FXCollections.observableArrayList(filterLocation1, filterLocation2,
+                filterLocation3, filterLocation4, filterLocation5));
+
         // Initialize Lesson List
         lessons.setAll(getLessonListFromDB());
         selectedHalfYear = currentHalfYear();
         aptLabel.setText("Termine im " + selectedHalfYear.title() + ":");
 
         // Initialize Lesson Filters
-        filterLocation1.setText(SCHOOL_LOCATIONS.get(0).getName());
-        filterLocation2.setText(SCHOOL_LOCATIONS.get(1).getName());
-        filterLocation3.setText(SCHOOL_LOCATIONS.get(2).getName());
+        int i = 0;
+        for (ToggleButton toggleButton : lessonTogglesLocation) {
+            if (SCHOOL_LOCATIONS.size() > i) toggleButton.setText(SCHOOL_LOCATIONS.get(i).getName());
+            else hide(toggleButton);
+            i++;
+        }
+
+        i = 0;
+        for (CheckBox checkBox : filterLocationCheckBoxes) {
+            if (SCHOOL_LOCATIONS.size() > i) checkBox.setText(SCHOOL_LOCATIONS.get(i).getName());
+            else hide(checkBox);
+            i++;
+        }
+
+        for (Teacher teacher : getTeacherListFromDB()) {
+            MenuItem item = new MenuItem(teacher.name());
+            item.setOnAction(e -> {
+                lessons.setAll(getLessonListFromDB());
+                lessons.removeIf(lesson -> lesson.getTeacherId() != teacher.getId());
+            });
+            lessonTeacherMenuButton.getItems().add(item);
+        }
+
+        for (String instrument : SCHOOL_INSTRUMENTS) {
+            MenuItem item = new MenuItem(instrument);
+            item.setOnAction(e -> {
+                lessons.setAll(getLessonListFromDB());
+                lessons.removeIf(lesson -> !lesson.getInstrument().equals(instrument));
+            });
+            lessonInstrumentMenuButton.getItems().add(item);
+        }
 
         filterTeacher1ComboBox.setItems(getTeacherListFromDB());
         filterTeacher1ComboBox.setButtonCell(new TeacherListCellShort());
