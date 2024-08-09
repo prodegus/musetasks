@@ -2,12 +2,18 @@ package prodegus.musetasks.contacts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
+import prodegus.musetasks.workspace.cells.ParentListCell;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static prodegus.musetasks.contacts.ParentModel.*;
 import static prodegus.musetasks.database.Database.OTHER_TABLE;
 import static prodegus.musetasks.database.Database.connect;
 

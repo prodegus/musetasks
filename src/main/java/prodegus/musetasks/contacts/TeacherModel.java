@@ -2,16 +2,47 @@ package prodegus.musetasks.contacts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
+import prodegus.musetasks.workspace.cells.ContactListCell;
+import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.database.Database.*;
 
 public class TeacherModel {
+
+    public static void enableTeacherSearch(ComboBox<Teacher> comboBox) {
+        FilteredList<Teacher> filteredTeachers = new FilteredList<>(comboBox.getItems());
+        comboBox.setItems(filteredTeachers);
+        comboBox.getEditor().textProperty().addListener(observable -> {
+            comboBox.hide();
+            if (comboBox.getSelectionModel().getSelectedItem() != null) return;
+            String filter = comboBox.getEditor().getText();
+            if (filter == null || filter.isBlank()) {
+                filteredTeachers.setPredicate(contact -> true);
+            } else {
+                filteredTeachers.setPredicate(contact ->
+                        containsIgnoreCase(contact.getLastName(), filter) ||
+                                containsIgnoreCase(contact.getFirstName(), filter));
+                if (!filteredTeachers.isEmpty()) comboBox.show();
+            }
+        });
+    }
+
+    public static void initializeForTeachers(ComboBox<Teacher> comboBox) {
+        comboBox.setItems(getTeacherListFromDB());
+        comboBox.setButtonCell(new TeacherListCellFormal());
+        comboBox.setCellFactory(teacher -> new TeacherListCellFormal());
+        comboBox.setConverter(teacherStringConverterFormal);
+        enableTeacherSearch(comboBox);
+    }
 
     public static StringConverter<Teacher> teacherStringConverterFormal = new StringConverter<Teacher>() {
         @Override

@@ -8,15 +8,20 @@ import java.io.FileInputStream;
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import prodegus.musetasks.database.Database;
 import prodegus.musetasks.database.Filter;
+import prodegus.musetasks.workspace.cells.ContactListCell;
+import prodegus.musetasks.workspace.cells.StudentListCell;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.database.Database.*;
 
 public class ContactModel {
@@ -29,6 +34,47 @@ public class ContactModel {
     public static final int CATEGORY_OTHER = 4;
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
+    public static void enableContactSearch(ComboBox<Contact> comboBox) {
+        FilteredList<Contact> filteredContacts = new FilteredList<>(comboBox.getItems());
+        comboBox.setItems(filteredContacts);
+        comboBox.getEditor().textProperty().addListener(observable -> {
+            comboBox.hide();
+            if (comboBox.getSelectionModel().getSelectedItem() != null) return;
+            String filter = comboBox.getEditor().getText();
+            if (filter == null || filter.isBlank()) {
+                filteredContacts.setPredicate(contact -> true);
+            } else {
+                filteredContacts.setPredicate(contact ->
+                        containsIgnoreCase(contact.getLastName(), filter) ||
+                                containsIgnoreCase(contact.getFirstName(), filter));
+                if (!filteredContacts.isEmpty()) comboBox.show();
+            }
+        });
+    }
+
+    public static void initializeForContacts(ComboBox<Contact> comboBox) {
+        comboBox.setItems(getContactListFromDB());
+        comboBox.setButtonCell(new ContactListCell());
+        comboBox.setCellFactory(contact -> new ContactListCell());
+        comboBox.setConverter(contactStringConverter);
+        enableContactSearch(comboBox);
+    }
+
+    public static StringConverter<Contact> contactStringConverter = new StringConverter<Contact>() {
+        @Override
+        public String toString(Contact contact) {
+            if (contact == null) return "";
+            return contact.formalName();
+        }
+
+        @Override
+        public Contact fromString(String string) {
+            for (Contact contact : getContactListFromDB())
+                if (contact.formalName().equals(string)) return contact;
+            return null;
+        }
+    };
+    
     public static ObservableList<Contact> getContactListFromDB() {
         ObservableList<Contact> contacts = FXCollections.observableArrayList();
         addContactsFromTable(STUDENT_TABLE, contacts);

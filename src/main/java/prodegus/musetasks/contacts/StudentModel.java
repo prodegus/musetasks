@@ -2,16 +2,46 @@ package prodegus.musetasks.contacts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import prodegus.musetasks.database.Filter;
+import prodegus.musetasks.workspace.cells.StudentListCell;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.database.Database.*;
 
 public class StudentModel {
+
+    public static void enableStudentSearch(ComboBox<Student> comboBox) {
+        FilteredList<Student> filteredStudents = new FilteredList<>(comboBox.getItems());
+        comboBox.setItems(filteredStudents);
+        comboBox.getEditor().textProperty().addListener(observable -> {
+            comboBox.hide();
+            if (comboBox.getSelectionModel().getSelectedItem() != null) return;
+            String filter = comboBox.getEditor().getText();
+            if (filter == null || filter.isBlank()) {
+                filteredStudents.setPredicate(contact -> true);
+            } else {
+                filteredStudents.setPredicate(contact ->
+                        containsIgnoreCase(contact.getLastName(), filter) ||
+                                containsIgnoreCase(contact.getFirstName(), filter));
+                if (!filteredStudents.isEmpty()) comboBox.show();
+            }
+        });
+    }
+
+    public static void initializeForStudents(ComboBox<Student> comboBox) {
+        comboBox.setItems(getStudentListFromDB());
+        comboBox.setButtonCell(new StudentListCell());
+        comboBox.setCellFactory(student -> new StudentListCell());
+        comboBox.setConverter(studentStringConverter);
+        enableStudentSearch(comboBox);
+    }
 
     public static StringConverter<Student> studentStringConverter = new StringConverter<Student>() {
         @Override

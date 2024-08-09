@@ -202,7 +202,7 @@ public class LessonModel {
     }
 
     public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments) {
-        if (appointments == null) {
+        if (appointments == null || appointments.isEmpty()) {
             insertLessonAppointments(lesson);
             return;
         }

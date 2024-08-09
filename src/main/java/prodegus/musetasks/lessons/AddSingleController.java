@@ -28,12 +28,13 @@ import java.util.ResourceBundle;
 
 import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
 import static prodegus.musetasks.contacts.StudentModel.*;
-import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
+import static prodegus.musetasks.contacts.TeacherModel.*;
 import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.school.LocationModel.initializeForLocations;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.school.SchoolModel.initializeForInstruments;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.Nodes.hide;
@@ -231,7 +232,7 @@ public class AddSingleController implements Initializable {
         Student student = studentComboBox.getValue();
         LocalDate changeDate = changeDatePicker.getValue();
 
-        if (customAppointments.size() > 0) {
+        if (!customAppointments.isEmpty()) {
             startDate = customAppointments.sorted().get(0).getDate();
             lesson.setStartDate(startDate);
             lesson.setTime(toTime(2359));
@@ -373,28 +374,14 @@ public class AddSingleController implements Initializable {
             }
         });
 
-        studentComboBox.setItems(getStudentListFromDB());
-        studentComboBox.setButtonCell(new StudentListCell());
-        studentComboBox.setCellFactory(student -> new StudentListCell());
-        studentComboBox.setConverter(studentStringConverter);
-
-        teacherComboBox.setItems(getTeacherListFromDB());
-        teacherComboBox.setButtonCell(new TeacherListCellFormal());
-        teacherComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
-        teacherComboBox.setConverter(teacherStringConverterFormal);
-
-        instrumentComboBox.setItems(SCHOOL_INSTRUMENTS);
-        instrumentComboBox.setButtonCell(new StringListCell());
-        instrumentComboBox.setCellFactory(string -> new StringListCell());
+        initializeForStudents(studentComboBox);
+        initializeForTeachers(teacherComboBox);
+        initializeForInstruments(instrumentComboBox);
 
         durationComboBox.setItems(FXCollections.observableArrayList("30 Minuten", "45 Minuten", "60 Minuten", "90 Minuten", "120 Minuten", "eingeben..."));
         durationComboBox.getSelectionModel().select(0);
 
-        locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new LocationListCell());
-        locationComboBox.setConverter(locationStringConverter);
-        locationComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
-                -> roomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
+        initializeForLocations(locationComboBox, roomComboBox);
 
         repeatComboBox.setItems(FXCollections.observableArrayList("auswählen", "jede Woche", "alle 2 Wochen", "alle 3 Wochen",
                 "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin", "individuelle Termine"));
@@ -419,6 +406,7 @@ public class AddSingleController implements Initializable {
 
         weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
                 "Freitag", "Samstag", "nicht festgelegt"));
+        weekdayComboBox.getSelectionModel().select(0);
 
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
 

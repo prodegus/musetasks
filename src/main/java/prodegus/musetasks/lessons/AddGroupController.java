@@ -28,12 +28,13 @@ import java.util.ResourceBundle;
 
 import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
 import static prodegus.musetasks.contacts.StudentModel.*;
-import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterFormal;
+import static prodegus.musetasks.contacts.TeacherModel.*;
 import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.school.LocationModel.initializeForLocations;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.school.SchoolModel.initializeForInstruments;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.DateTime.times;
 import static prodegus.musetasks.utils.DateTime.toTime;
@@ -465,6 +466,15 @@ public class AddGroupController implements Initializable {
         editMode = true;
         id = futureLesson.getId();
         titleTextField.setText(lesson.category() + " bearbeiten");
+        int numberOfStudents = lesson.students().size();
+        if (numberOfStudents > 1) show(studentHBox3);
+        if (numberOfStudents > 2) show(studentHBox4);
+        if (numberOfStudents > 3) show(studentHBox5);
+        if (numberOfStudents > 4) show(studentHBox6);
+        if (numberOfStudents > 5) show(studentHBox7);
+        if (numberOfStudents > 6) show(studentHBox8);
+        if (numberOfStudents > 7) show(studentHBox9);
+        if (numberOfStudents > 8) show(studentHBox10);
         if (lesson.getRepeat() == REPEAT_CUSTOM) customAppointments.setAll(getLessonAppointmentsFromDB(id));
 
         initValues(futureLesson);
@@ -496,7 +506,9 @@ public class AddGroupController implements Initializable {
                 studentComboBox10);
         studentHBoxes.addAll(studentHBox1, studentHBox2, studentHBox3, studentHBox4, studentHBox5, studentHBox6,
                 studentHBox7, studentHBox8, studentHBox9, studentHBox10);
+
         hide(changeDateVBox);
+
         for (Button button : deleteButtons()) {
             button.setTooltip(new Tooltip("Schüler entfernen"));
         }
@@ -529,46 +541,25 @@ public class AddGroupController implements Initializable {
         });
 
         for (ComboBox<Student> comboBox : studentComboBoxes) {
-            comboBox.setItems(getStudentListFromDB());
-            comboBox.setButtonCell(new StudentListCell());
-            comboBox.setCellFactory(student -> new StudentListCell());
-            comboBox.setConverter(studentStringConverter);
+            initializeForStudents(comboBox);
         }
 
-        studentHBox3.setVisible(false);
-        studentHBox3.setManaged(false);
-        studentHBox4.setVisible(false);
-        studentHBox4.setManaged(false);
-        studentHBox5.setVisible(false);
-        studentHBox5.setManaged(false);
-        studentHBox6.setVisible(false);
-        studentHBox6.setManaged(false);
-        studentHBox7.setVisible(false);
-        studentHBox7.setManaged(false);
-        studentHBox8.setVisible(false);
-        studentHBox8.setManaged(false);
-        studentHBox9.setVisible(false);
-        studentHBox9.setManaged(false);
-        studentHBox10.setVisible(false);
-        studentHBox10.setManaged(false);
+        hide(studentHBox3);
+        hide(studentHBox4);
+        hide(studentHBox5);
+        hide(studentHBox6);
+        hide(studentHBox7);
+        hide(studentHBox8);
+        hide(studentHBox9);
+        hide(studentHBox10);
 
-        teacherComboBox.setItems(getTeacherListFromDB());
-        teacherComboBox.setButtonCell(new TeacherListCellFormal());
-        teacherComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
-        teacherComboBox.setConverter(teacherStringConverterFormal);
-
-        instrumentComboBox.setItems(SCHOOL_INSTRUMENTS);
-        instrumentComboBox.setButtonCell(new StringListCell());
-        instrumentComboBox.setCellFactory(string -> new StringListCell());
+        initializeForTeachers(teacherComboBox);
+        initializeForInstruments(instrumentComboBox);
 
         durationComboBox.setItems(FXCollections.observableArrayList("30 Minuten", "45 Minuten", "60 Minuten", "90 Minuten", "120 Minuten", "eingeben..."));
         durationComboBox.getSelectionModel().select(0);
 
-        locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new LocationListCell());
-        locationComboBox.setConverter(locationStringConverter);
-        locationComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
-                -> roomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
+        initializeForLocations(locationComboBox, roomComboBox);
 
         repeatComboBox.setItems(FXCollections.observableArrayList("auswählen", "jede Woche", "alle 2 Wochen", "alle 3 Wochen",
                 "alle 4 Wochen", "alle 5 Wochen", "alle 6 Wochen", "einmaliger Termin", "individuelle Termine"));
@@ -592,6 +583,7 @@ public class AddGroupController implements Initializable {
 
         weekdayComboBox.setItems(FXCollections.observableArrayList("auswählen", "Montag", "Dienstag", "Mittwoch", "Donnerstag",
                 "Freitag", "Samstag", "nicht festgelegt"));
+        weekdayComboBox.getSelectionModel().select(0);
 
         timeComboBox.setItems(FXCollections.observableArrayList(times(8, 23)));
 

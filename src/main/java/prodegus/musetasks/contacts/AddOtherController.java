@@ -18,8 +18,7 @@ import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
-import static prodegus.musetasks.school.LocationModel.fromString;
-import static prodegus.musetasks.school.LocationModel.locationStringConverter;
+import static prodegus.musetasks.school.LocationModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.Strings.string;
@@ -231,16 +230,8 @@ public class AddOtherController implements Initializable {
         otherDataForm.setVisible(true);
         communicationForm.setVisible(false);
 
-        locationComboBox1.setItems(SCHOOL_LOCATIONS);
-        locationComboBox1.setCellFactory(string -> new LocationListCell());
-        locationComboBox1.setConverter(locationStringConverter);
-
-        locationComboBox2.setItems(SCHOOL_LOCATIONS);
-        locationComboBox2.setCellFactory(string -> new LocationListCell());
-        locationComboBox2.setConverter(locationStringConverter);
-
-        locationComboBox3.setItems(SCHOOL_LOCATIONS);
-        locationComboBox3.setCellFactory(string -> new LocationListCell());
-        locationComboBox3.setConverter(locationStringConverter);
+        initializeForLocations(locationComboBox1);
+        initializeForLocations(locationComboBox2);
+        initializeForLocations(locationComboBox3);
     }
 }

@@ -160,7 +160,7 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="parent1ComboBox" prefHeight="30.0" prefWidth="210.0" promptText="auswählen" />
+                              <ComboBox fx:id="parent1ComboBox" editable="true" prefHeight="30.0" prefWidth="210.0" promptText="Suchen oder auswählen" />
                               <Label fx:id="parent1Label" alignment="CENTER" prefHeight="17.0" prefWidth="210.0" text="oder" textAlignment="CENTER" />
                               <Button fx:id="newParent1Button" mnemonicParsing="false" onAction="#newParent1ButtonClicked" prefHeight="30.0" prefWidth="210.0" text="neu anlegen" />
                            </children>
@@ -175,7 +175,7 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="parent2ComboBox" prefHeight="30.0" prefWidth="210.0" promptText="auswählen" />
+                              <ComboBox fx:id="parent2ComboBox" editable="true" prefHeight="30.0" prefWidth="210.0" promptText="Suchen oder auswählen" />
                               <Label alignment="CENTER" prefHeight="17.0" prefWidth="210.0" text="oder" textAlignment="CENTER" />
                               <Button fx:id="newParent2Button" mnemonicParsing="false" onAction="#newParent2ButtonClicked" prefHeight="30.0" prefWidth="210.0" text="neu anlegen" />
                            </children>

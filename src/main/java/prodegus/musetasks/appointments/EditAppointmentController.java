@@ -30,6 +30,7 @@ import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.mail.EmailUtil.errorMail;
 import static prodegus.musetasks.mail.TLSEmail.sendMail;
 import static prodegus.musetasks.mail.Templates.*;
+import static prodegus.musetasks.school.LocationModel.initializeForLocations;
 import static prodegus.musetasks.school.LocationModel.locationStringConverter;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
@@ -357,11 +358,7 @@ public class EditAppointmentController implements Initializable {
         newDurationComboBox.setItems(FXCollections.observableArrayList("30 Minuten", "45 Minuten", "60 Minuten",
                 "90 Minuten", "120 Minuten", "auswählen"));
 
-        newLocationComboBox.setItems(SCHOOL_LOCATIONS);
-        newLocationComboBox.setCellFactory(string -> new LocationListCell());
-        newLocationComboBox.setConverter(locationStringConverter);
-        newLocationComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
-                -> newRoomComboBox.setItems(FXCollections.observableArrayList(newValue.rooms())));
+        initializeForLocations(newLocationComboBox, newRoomComboBox);
 
         informNoneCheckBox.setOnAction(event -> {
             if (informNoneCheckBox.isSelected()) {

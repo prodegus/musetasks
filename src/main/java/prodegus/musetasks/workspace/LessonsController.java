@@ -62,7 +62,7 @@ import static prodegus.musetasks.utils.Nodes.hide;
 public class LessonsController implements Initializable {
 
     @FXML private SplitPane lessonListView;
-    @FXML private HBox lessonCalendarView;
+    @FXML private VBox lessonCalendarView;
 
     @FXML private ToggleGroup lessonFilterToggles;
     @FXML private ToggleButton viewAllToggle;

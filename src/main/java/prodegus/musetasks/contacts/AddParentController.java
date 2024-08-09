@@ -23,11 +23,11 @@ import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.StudentModel.*;
-import static prodegus.musetasks.school.LocationModel.fromString;
-import static prodegus.musetasks.school.LocationModel.locationStringConverter;
+import static prodegus.musetasks.school.LocationModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
+import static prodegus.musetasks.utils.Nodes.hide;
 import static prodegus.musetasks.utils.Strings.string;
 
 public class AddParentController implements Initializable {
@@ -349,48 +349,23 @@ public class AddParentController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<Student> students = getStudentListFromDB();
 
-        locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new LocationListCell());
-        locationComboBox.setConverter(locationStringConverter);
+        initializeForLocations(locationComboBox);
 
-        child1ComboBox.setItems(students);
-        child1ComboBox.setButtonCell(new StudentListCell());
-        child1ComboBox.setCellFactory(student -> new StudentListCell());
-        child1ComboBox.setConverter(studentStringConverter);
-
-        child2ComboBox.setItems(students);
-        child2ComboBox.setButtonCell(new StudentListCell());
-        child2ComboBox.setCellFactory(student -> new StudentListCell());
-        child2ComboBox.setConverter(studentStringConverter);
-
-        child3ComboBox.setItems(students);
-        child3ComboBox.setButtonCell(new StudentListCell());
-        child3ComboBox.setCellFactory(student -> new StudentListCell());
-        child3ComboBox.setConverter(studentStringConverter);
-
-        child4ComboBox.setItems(students);
-        child4ComboBox.setButtonCell(new StudentListCell());
-        child4ComboBox.setCellFactory(student -> new StudentListCell());
-        child4ComboBox.setConverter(studentStringConverter);
-
-        child5ComboBox.setItems(students);
-        child5ComboBox.setButtonCell(new StudentListCell());
-        child5ComboBox.setCellFactory(student -> new StudentListCell());
-        child5ComboBox.setConverter(studentStringConverter);
+        initializeForStudents(child1ComboBox);
+        initializeForStudents(child2ComboBox);
+        initializeForStudents(child3ComboBox);
+        initializeForStudents(child4ComboBox);
+        initializeForStudents(child5ComboBox);
 
         child2DeleteButton.setVisible(false);
         child3DeleteButton.setVisible(false);
         child4DeleteButton.setVisible(false);
         child5DeleteButton.setVisible(false);
 
-        child2HBox.setVisible(false);
-        child2HBox.setManaged(false);
-        child3HBox.setVisible(false);
-        child3HBox.setManaged(false);
-        child4HBox.setVisible(false);
-        child4HBox.setManaged(false);
-        child5HBox.setVisible(false);
-        child5HBox.setManaged(false);
+        hide(child2HBox);
+        hide(child3HBox);
+        hide(child4HBox);
+        hide(child5HBox);
 
         child1ComboBox.getSelectionModel().selectedIndexProperty().addListener(index -> {
             child1DeleteButton.setVisible(!child1ComboBox.getSelectionModel().isEmpty());

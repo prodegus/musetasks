@@ -24,14 +24,13 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
-import static prodegus.musetasks.contacts.ParentModel.getParentListFromDB;
-import static prodegus.musetasks.contacts.ParentModel.parentStringConverterFormal;
+import static prodegus.musetasks.contacts.ParentModel.*;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.school.LocationModel.fromString;
-import static prodegus.musetasks.school.LocationModel.locationStringConverter;
+import static prodegus.musetasks.school.LocationModel.*;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.school.SchoolModel.initializeForInstruments;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.Strings.string;
@@ -342,28 +341,14 @@ public class AddStudentController implements Initializable {
         studentDataForm.setVisible(true);
         communicationForm.setVisible(false);
 
-        instrument1ComboBox.setItems(SCHOOL_INSTRUMENTS);
-        instrument1ComboBox.setCellFactory(string -> new StringListCell());
+        initializeForInstruments(instrument1ComboBox);
+        initializeForInstruments(instrument2ComboBox);
+        initializeForInstruments(instrument3ComboBox);
 
-        instrument2ComboBox.setItems(SCHOOL_INSTRUMENTS);
-        instrument2ComboBox.setCellFactory(string -> new StringListCell());
+        initializeForLocations(locationComboBox);
 
-        instrument3ComboBox.setItems(SCHOOL_INSTRUMENTS);
-        instrument3ComboBox.setCellFactory(string -> new StringListCell());
-
-        locationComboBox.setItems(SCHOOL_LOCATIONS);
-        locationComboBox.setCellFactory(string -> new LocationListCell());
-        locationComboBox.setConverter(locationStringConverter);
-
-        parent1ComboBox.setItems(parents);
-        parent1ComboBox.setCellFactory(parent -> new ParentListCellFormal());
-        parent1ComboBox.setConverter(parentStringConverterFormal);
-
-        parent2ComboBox.setItems(parents);
-        parent2ComboBox.setCellFactory(parent -> new ParentListCellFormal());
-        parent2ComboBox.setConverter(parentStringConverterFormal);
-
-
+        initializeForParents(parent1ComboBox);
+        initializeForParents(parent2ComboBox);
     }
 
 }

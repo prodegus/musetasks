@@ -251,7 +251,7 @@
       </VBox>
       <StackPane HBox.hgrow="ALWAYS">
          <children>
-            <SplitPane fx:id="lessonListView" dividerPositions="0.55">
+            <SplitPane fx:id="lessonListView" dividerPositions="0.55" visible="false">
                <items>
                   <HBox>
                      <children>
@@ -563,65 +563,165 @@
                   </VBox>
                </items>
             </SplitPane>
-            <HBox fx:id="lessonCalendarView" visible="false">
+            <VBox fx:id="lessonCalendarView" prefHeight="800.0" prefWidth="400.0" spacing="10.0">
                <children>
-                  <VBox prefHeight="800.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                  <HBox>
                      <children>
-                        <HBox>
-                           <children>
-                              <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#showAddSingleWindow" text="Einzelunterricht" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showAddGroupWindow" text="Gruppenunterricht" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showAddCourseWindow" text="Kurs/Workshop" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showAddWorkgroupWindow" text="AG" />
-                                 </items>
-                              </MenuButton>
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Unterrichte importieren" textAlignment="CENTER" wrapText="true" />
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
-                              <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" prefWidth="54.0" HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </HBox>
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToListView" prefHeight="70.0" prefWidth="90.0" text="Ansicht wechseln" textAlignment="CENTER" wrapText="true" />
-                           </children>
-                           <VBox.margin>
+                        <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#showAddSingleWindow" text="Einzelunterricht" />
+                              <MenuItem mnemonicParsing="false" onAction="#showAddGroupWindow" text="Gruppenunterricht" />
+                              <MenuItem mnemonicParsing="false" onAction="#showAddCourseWindow" text="Kurs/Workshop" />
+                              <MenuItem mnemonicParsing="false" onAction="#showAddWorkgroupWindow" text="AG" />
+                           </items>
+                        </MenuButton>
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Unterrichte importieren" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
+                        <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" prefWidth="54.0" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
                               <Insets />
-                           </VBox.margin>
+                           </HBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0" />
-                        <ScrollPane prefHeight="740.0" prefWidth="1280.0">
-                           <content>
-                              <StackPane alignment="TOP_LEFT">
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToListView" prefHeight="70.0" prefWidth="90.0" text="Ansicht wechseln" textAlignment="CENTER" wrapText="true" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0" />
+                  <ScrollPane prefHeight="740.0" prefWidth="1280.0">
+                     <content>
+                        <StackPane alignment="TOP_LEFT">
+                           <children>
+                              <VBox fx:id="background">
                                  <children>
-                                    <VBox fx:id="background">
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                 </children>
+                              </VBox>
+                              <HBox fx:id="calendarColumns" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox alignment="TOP_RIGHT" prefWidth="35.0" spacing="82.0">
                                        <children>
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="80.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
+                                          <Label prefHeight="18.0" text="8:00" />
+                                          <Label prefHeight="18.0" text="9:00" />
+                                          <Label prefHeight="18.0" text="10:00" />
+                                          <Label prefHeight="18.0" text="11:00" />
+                                          <Label prefHeight="18.0" text="12:00" />
+                                          <Label prefHeight="18.0" text="13:00" />
+                                          <Label prefHeight="18.0" text="14:00" />
+                                          <Label prefHeight="18.0" text="15:00" />
+                                          <Label prefHeight="18.0" text="16:00" />
+                                          <Label prefHeight="18.0" text="17:00" />
+                                          <Label prefHeight="18.0" text="18:00" />
+                                          <Label prefHeight="18.0" text="19:00" />
+                                          <Label prefHeight="18.0" text="20:00" />
+                                          <Label prefHeight="18.0" text="21:00" />
+                                          <Label prefHeight="18.0" text="22:00" />
+                                          <Label prefHeight="18.0" text="23:00" />
                                        </children>
                                     </VBox>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </HBox.margin>
+                                    </Separator>
+                                    <AnchorPane>
+                                       <children>
+                                          <VBox layoutY="160.0" prefHeight="50.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: lightblue;" AnchorPane.topAnchor="200.0">
+                                             <children>
+                                                <Label text="Magdalena Kesselschmied    (Gitarre Einzel, 30 min)" wrapText="true">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets left="2.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutY="256.0" prefHeight="50.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: lightgreen;" AnchorPane.topAnchor="250.0">
+                                             <children>
+                                                <Label text="Ferdinand Kupferstecher       (Gitarre Einzel, 30 min)" wrapText="true">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets left="2.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutY="170.0" prefHeight="50.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: lightblue;" AnchorPane.topAnchor="325.0">
+                                             <children>
+                                                <Label text="Magdalena Kesselschmied    (Gitarre Einzel, 30 min)" wrapText="true">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets left="2.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutY="266.0" prefHeight="50.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: lightgreen;" AnchorPane.topAnchor="375.0">
+                                             <children>
+                                                <Label text="Ferdinand Kupferstecher       (Gitarre Einzel, 30 min)" wrapText="true">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets left="2.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutY="276.0" prefHeight="75.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: orange;" AnchorPane.topAnchor="425.0">
+                                             <children>
+                                                <Label text="Ferdinand Kupferstecher       (Gitarre Einzel, 30 min)" wrapText="true">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets left="2.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </HBox.margin>
+                                    </Separator>
                                  </children>
-                              </StackPane>
-                           </content>
-                        </ScrollPane>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </VBox>
+                              </HBox>
+                           </children>
+                        </StackPane>
+                     </content>
+                  </ScrollPane>
                </children>
-            </HBox>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
          </children>
       </StackPane>
    </children>
