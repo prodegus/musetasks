@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.workspace.SettingsController">
+   <children>
+      <AnchorPane HBox.hgrow="ALWAYS">
+         <children>
+            <Label layoutX="10.0" layoutY="10.0" text="Einstellungen" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <GridPane layoutX="20.0" layoutY="100.0" vgap="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="140.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.0" minWidth="131.0" prefWidth="166.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="695.0" minWidth="435.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Name der Schule:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label text="Unterrichtsangebot:" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox fx:id="instrumentHBox" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label text="Blasinstrumente">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <CheckBox mnemonicParsing="false" text="Blockflöte" />
+                              <CheckBox mnemonicParsing="false" text="Querflöte" />
+                              <CheckBox mnemonicParsing="false" text="Oboe" />
+                              <CheckBox mnemonicParsing="false" text="Klarinette" />
+                              <CheckBox mnemonicParsing="false" text="Fagott" />
+                              <CheckBox mnemonicParsing="false" text="Saxophon" />
+                              <CheckBox mnemonicParsing="false" text="Horn" />
+                              <CheckBox mnemonicParsing="false" text="Tuba" />
+                              <CheckBox mnemonicParsing="false" text="Trompete" />
+                              <CheckBox mnemonicParsing="false" text="Posaune" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Streichinstrumente">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <CheckBox mnemonicParsing="false" text="Violine" />
+                              <CheckBox mnemonicParsing="false" text="Cello" />
+                              <CheckBox mnemonicParsing="false" text="Kontrabass" />
+                              <Label text="Zupfinstrumente">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <CheckBox mnemonicParsing="false" text="A-Gitarre" />
+                              <CheckBox mnemonicParsing="false" text="E-Gitarre" />
+                              <CheckBox mnemonicParsing="false" text="E-Bass" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Schlaginstrumente">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <CheckBox mnemonicParsing="false" text="Schlagzeug" />
+                              <CheckBox mnemonicParsing="false" text="Percussion" />
+                              <Label text="Sonstiges">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <CheckBox mnemonicParsing="false" text="Gesang" />
+                              <CheckBox mnemonicParsing="false" text="Improvisation" />
+                              <CheckBox mnemonicParsing="false" text="Tontechnik" />
+                              <CheckBox mnemonicParsing="false" text="Recording" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <TextField fx:id="schoolNameTextField" maxWidth="-Infinity" prefWidth="350.0" GridPane.columnIndex="1" />
+                  <Label text="Standorte:" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets top="4.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <HBox fx:id="location1HBox" alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" minWidth="175.0">
+                                 <children>
+                                    <Label fx:id="location1Label" text="Standort 1" />
+                                    <Label fx:id="location1RoomsLabel" text=" (3 Räume)" />
+                                 </children>
+                              </HBox>
+                              <Button mnemonicParsing="false" onAction="#editLocation1" prefWidth="100.0" text="Bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLocation1" prefWidth="100.0" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="location2HBox" alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" minWidth="175.0">
+                                 <children>
+                                    <Label fx:id="location2Label" text="Standort 1" />
+                                    <Label fx:id="location2RoomsLabel" text=" (3 Räume)" />
+                                 </children>
+                              </HBox>
+                              <Button mnemonicParsing="false" onAction="#editLocation2" prefWidth="100.0" text="Bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLocation2" prefWidth="100.0" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="location3HBox" alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" minWidth="175.0">
+                                 <children>
+                                    <Label fx:id="location3Label" text="Standort 1" />
+                                    <Label fx:id="location3RoomsLabel" text=" (3 Räume)" />
+                                 </children>
+                              </HBox>
+                              <Button mnemonicParsing="false" onAction="#editLocation3" prefWidth="100.0" text="Bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLocation3" prefWidth="100.0" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="location4HBox" alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" minWidth="175.0">
+                                 <children>
+                                    <Label fx:id="location4Label" text="Standort 1" />
+                                    <Label fx:id="location4RoomsLabel" text=" (3 Räume)" />
+                                 </children>
+                              </HBox>
+                              <Button mnemonicParsing="false" onAction="#editLocation4" prefWidth="100.0" text="Bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLocation4" prefWidth="100.0" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="location5HBox" alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" minWidth="175.0">
+                                 <children>
+                                    <Label fx:id="location5Label" text="Standort 1" />
+                                    <Label fx:id="location5RoomsLabel" text=" (3 Räume)" />
+                                 </children>
+                              </HBox>
+                              <Button mnemonicParsing="false" onAction="#editLocation5" prefWidth="100.0" text="Bearbeiten" />
+                              <Button mnemonicParsing="false" onAction="#deleteLocation5" prefWidth="100.0" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <Button fx:id="addLocationButton" mnemonicParsing="false" onAction="#addLocation" prefWidth="175.0" text="Standort hinzufügen" />
+                     </children>
+                  </VBox>
+                  <Label text="E-Mail-Account:" GridPane.rowIndex="6">
+                     <GridPane.margin>
+                        <Insets top="4.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" minHeight="25.0">
+                           <children>
+                              <Label prefWidth="100.0" text="E-Mail-Adresse:" />
+                              <Label fx:id="mailUserLabel" prefWidth="220.0" text="nicht hinterlegt" />
+                              <Button fx:id="addEditMailData" mnemonicParsing="false" onAction="#setMailAccount" prefWidth="100.0" text="Verknüpfen" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" minHeight="25.0">
+                           <children>
+                              <Label prefWidth="100.0" text="Absendername:" />
+                              <Label fx:id="senderNameLabel" prefWidth="220.0" text="nicht hinterlegt" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+               </children>
+            </GridPane>
+            <HBox alignment="CENTER" layoutX="258.0" layoutY="826.0" spacing="20.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
+               <children>
+                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#confirm" prefHeight="30.0" prefWidth="100.0" text="Bestätigen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#cancel" prefHeight="30.0" prefWidth="100.0" text="Abbrechen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>

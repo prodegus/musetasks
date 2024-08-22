@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.workspace.TodayController">
+   <children>
+      <AnchorPane fx:id="mainAnchorPane" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="dateLabel" text="Mittwoch, 21.08.2024" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <Label fx:id="timeLabel" text="23:48 Uhr" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="65.0">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Label fx:id="greetingLabel" layoutX="10.0" layoutY="10.0" text="Guten Morgen, Daniel!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <HBox layoutX="20.0" layoutY="130.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="130.0">
+               <children>
+                  <VBox spacing="10.0">
+                     <children>
+                        <Label text="Unterrichte heute">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="lessonsTodayVBox" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox spacing="10.0">
+                     <children>
+                        <Label text="Lehrer">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="teachersVBox" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox spacing="10.0">
+                     <children>
+                        <Label text="Interessenten">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane prefHeight="750.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="prospectivesVBox" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>
