@@ -25,7 +25,6 @@ public class Email implements Comparable {
     private SimpleStringProperty  message     = new SimpleStringProperty();
     private SimpleStringProperty  attachments = new SimpleStringProperty();
     private SimpleBooleanProperty draft       = new SimpleBooleanProperty();
-
     private SimpleBooleanProperty selected    = new SimpleBooleanProperty();
 
     public int getId() {

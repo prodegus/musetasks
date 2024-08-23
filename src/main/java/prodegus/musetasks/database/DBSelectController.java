@@ -3,27 +3,24 @@ package prodegus.musetasks.database;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.Strings.string;
 
-public class DBSelectController {
+public class DBSelectController implements Initializable {
 
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private Button createButton;
-
-    @FXML
-    private Button selectButton;
+    @FXML private Label currentDBLabel;
 
     @FXML
     void setDBLocation(ActionEvent event) {
@@ -56,6 +53,7 @@ public class DBSelectController {
                 createHolidayTable(dbPath);
                 createLocationTable(dbPath);
                 createInstrumentTable(dbPath);
+                createEmailTable(dbPath);
                 addConstraintsStudentTable(dbPath);
             }
         }
@@ -65,12 +63,16 @@ public class DBSelectController {
         Platform.exit();
     }
 
-
-
     @FXML
     void cancel(ActionEvent event) {
         if (!connected()) Platform.exit();
         stageOf(event).close();
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        String message = (DB_PATH.equals("Path not found") ? "Keine Datenbank ausgewählt." : "Aktuell ausgewählte Datenbank:\n" + DB_PATH) +
+                "\n\nBitte wählen Sie eine bestehende Datenbank oder legen eine neue an:";
+        currentDBLabel.setText(message);
+    }
 }

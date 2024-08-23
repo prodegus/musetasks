@@ -21,6 +21,8 @@ public class Database {
     public static final String LOCATION_TABLE = "mtlocations";
     public static final String INSTRUMENT_TABLE = "mtinstruments";
     public static final String HOLIDAY_TABLE = "mtholidays";
+    public static final String EMAIL_TABLE = "mtemails";
+    public static final String SCHOOL_TABLE = "mtschool";
 
     private static final String CONTACT_COLUMNS =
             "    id          INTEGER PRIMARY KEY ASC AUTOINCREMENT," +
@@ -357,6 +359,43 @@ public class Database {
                         "    description TEXT," +
                         "    start       INTEGER," +
                         "    end         INTEGER" +
+                        ")";
+
+        try (Connection conn = connect(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createEmailTable(String dbPath) {
+        String sql =
+                "CREATE TABLE " + EMAIL_TABLE + " (" +
+                        "    id          INTEGER," +
+                        "    date        INTEGER," +
+                        "    time        INTEGER," +
+                        "    sentfrom    TEXT," +
+                        "    sentto      TEXT," +
+                        "    cc          TEXT," +
+                        "    subject     TEXT," +
+                        "    message     TEXT," +
+                        "    attachments TEXT," +
+                        "    draft       INTEGER" +
+                        ")";
+
+        try (Connection conn = connect(dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createSchoolTable(String dbPath) {
+        String sql =
+                "CREATE TABLE " + SCHOOL_TABLE + " (" +
+                        "    name TEXT" +
                         ")";
 
         try (Connection conn = connect(dbPath);

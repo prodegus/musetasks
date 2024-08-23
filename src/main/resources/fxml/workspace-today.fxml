@@ -35,7 +35,7 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <ScrollPane prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
                            <content>
                               <VBox fx:id="lessonsTodayVBox" />
                            </content>
@@ -49,7 +49,7 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <ScrollPane prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" prefHeight="750.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
                            <content>
                               <VBox fx:id="teachersVBox" />
                            </content>
@@ -63,7 +63,7 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <ScrollPane prefHeight="750.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="750.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
                            <content>
                               <VBox fx:id="prospectivesVBox" />
                            </content>

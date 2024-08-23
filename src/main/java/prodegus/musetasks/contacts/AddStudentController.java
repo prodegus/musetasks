@@ -146,7 +146,7 @@ public class AddStudentController implements Initializable {
 
         if (contactMail.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Kontakt-E-Mail-Adresse auswählen");
+            errorMessage.append("- Bitte Kontakt-E-Mail-Adresse auswählen\n");
         }
         newStudent.setContactEmail(contactMail);
 

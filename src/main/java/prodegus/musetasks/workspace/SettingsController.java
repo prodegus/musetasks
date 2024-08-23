@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static prodegus.musetasks.database.Database.LOCATION_TABLE;
-import static prodegus.musetasks.database.Database.delete;
+import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.mail.EmailModel.getMailSender;
 import static prodegus.musetasks.mail.EmailModel.getMailUser;
 import static prodegus.musetasks.school.LocationModel.*;
@@ -52,6 +51,16 @@ public class SettingsController implements Initializable {
     @FXML private Label senderNameLabel;
     @FXML private Button addEditMailData;
 
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    private boolean cancelled = false;
+
     @FXML
     void addLocation(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/settings-addlocation.fxml"));
@@ -62,6 +71,7 @@ public class SettingsController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
+        setCancelled(true);
         stageOf(event).close();
     }
 
@@ -218,6 +228,11 @@ public class SettingsController implements Initializable {
             show(location5HBox);
             hide(addLocationButton);
         }
+    }
+
+    public void setSchoolName(String name) {
+        if (isEmptyTable(SCHOOL_TABLE)) insert(SCHOOL_TABLE, "name", "'" + name + "'");
+        else update(SCHOOL_TABLE, "1", "name", "'" + name + "'");
     }
 
     @Override

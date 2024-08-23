@@ -366,7 +366,7 @@ public class ContactsController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLS-Datei", "*.xls"));
         xlsFile = fileChooser.showOpenDialog(stageOf(event));
-        addContactsFromXLSToDB(xlsFile, CONTACT_TABLE);
+        if (xlsFile != null) addContactsFromXLSToDB(xlsFile, CONTACT_TABLE);
         contacts.setAll(getContactListFromDB());
     }
 

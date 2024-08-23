@@ -69,7 +69,8 @@ public class CustomAptController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
-
+        cancelled.set(true);
+        stageOf(event).close();
     }
 
     @FXML

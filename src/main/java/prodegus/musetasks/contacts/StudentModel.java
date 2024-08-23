@@ -11,11 +11,16 @@ import prodegus.musetasks.workspace.cells.StudentListCell;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.database.Database.*;
 
 public class StudentModel {
+
+    public static ObservableList<Student> getProspectiveListFromDB() {
+        return getFilteredStudentListFromDB(new Filter("prospective", "1"));
+    }
 
     public static void enableStudentSearch(ComboBox<Student> comboBox) {
         FilteredList<Student> filteredStudents = new FilteredList<>(comboBox.getItems());
@@ -81,24 +86,15 @@ public class StudentModel {
         }
     }
 
-    public static ObservableList<Student> getFilteredStudentListFromDB(Filter filter1, Filter... filters) {
+    public static ObservableList<Student> getFilteredStudentListFromDB(Filter... filters) {
         ObservableList<Student> students = FXCollections.observableArrayList();
-        StringBuilder sql = new StringBuilder("SELECT * FROM " + STUDENT_TABLE + " WHERE ");
+        StringJoiner filterJoiner = new StringJoiner(" AND ");
+        for (Filter filter : filters) filterJoiner.add(filter.toSQLString());
+        String sql = "SELECT * FROM " + STUDENT_TABLE + " WHERE " + filterJoiner;
 
-        sql.append(filter1.toSQLString());
-        if (filters.length > 0) sql.append(" AND ");
-
-        int i = 1;
-        for (Filter filter : filters) {
-            sql.append(filter.toSQLString());
-            if (i < filters.length) sql.append(" AND ");
-            i++;
-        }
-
-        students.clear();
         try (Connection connection = connect();
              Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql.toString())) {
+             ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
                 Student student = new Student();
                 student.setAttributes(rs);

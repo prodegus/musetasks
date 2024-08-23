@@ -2,15 +2,15 @@ package prodegus.musetasks.ui;
 
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import prodegus.musetasks.appointments.Appointment;
 
 import java.time.LocalDate;
-
-import static prodegus.musetasks.ui.Calendar.appointmentBox;
 
 public class CalendarColumn extends AnchorPane {
     private String header;
@@ -31,6 +31,15 @@ public class CalendarColumn extends AnchorPane {
 
     public void setAppointments(FilteredList<Appointment> appointments) {
         this.appointments = appointments;
+        this.appointments.setPredicate(appointment -> appointment.getDate().equals(date));
+
+        if (appointments.isEmpty()) this.getChildren().add(placeholder());
+
+        this.getChildren().clear();
+
+        for (Appointment appointment : appointments) {
+            this.getChildren().add(appointmentBox(appointment));
+        }
     }
 
     public LocalDate getDate() {
@@ -45,8 +54,29 @@ public class CalendarColumn extends AnchorPane {
         if (appointments.isEmpty()) this.getChildren().add(placeholder());
 
         for (Appointment appointment : appointments) {
-            this.getChildren().add(appointmentBox(appointment, 0, "#90ee90"));
+            this.getChildren().add(appointmentBox(appointment));
         }
+    }
+
+    public static VBox appointmentBox(Appointment appointment) {
+        VBox box = new VBox();
+        box.setPrefWidth(200);
+        box.setPadding(new Insets(0, 3, 0, 3));
+        box.setPrefHeight((double) appointment.getDuration() / 60 * 100);
+        box.setStyle("-fx-background-color: #90ee90;" +
+                "-fx-border-color: #5dd55d;" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-radius: 5;");
+
+        Label label = new Label(appointment.lesson().getLessonName());
+        label.setStyle("-fx-font-weight: bold");
+        label.setWrapText(true);
+        box.getChildren().add(label);
+
+        int hours = appointment.getTime().minusHours(8).getHour();
+        int minutes = appointment.getTime().getMinute();
+        AnchorPane.setTopAnchor(box, (hours + (minutes / 60.0)) * 100.0);
+        return box;
     }
 
     public CalendarColumn(String header, FilteredList<Appointment> appointments, LocalDate date) {
@@ -59,7 +89,7 @@ public class CalendarColumn extends AnchorPane {
         if (appointments.isEmpty()) this.getChildren().add(placeholder());
 
         for (Appointment appointment : appointments) {
-            this.getChildren().add(appointmentBox(appointment, 0, "#90ee90"));
+            this.getChildren().add(appointmentBox(appointment));
         }
     }
 
@@ -69,10 +99,23 @@ public class CalendarColumn extends AnchorPane {
         return box;
     }
 
+    public static Separator headerSeparator() {
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.VERTICAL);
+        HBox.setMargin(separator, new Insets(0, 5, 0, 5));
+        return separator;
+    }
+
+    public static Separator columnSeparator() {
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.VERTICAL);
+        HBox.setMargin(separator, new Insets(0, 2, 0, 5));
+        return separator;
+    }
+
     public Label headerLabel() {
         Label headerLabel = new Label(this.getHeader());
-        HBox.setMargin(headerLabel, new Insets(0, 0, 0, 5));
-        headerLabel.setMinWidth(195);
+        headerLabel.setMinWidth(197);
         return headerLabel;
     }
 }

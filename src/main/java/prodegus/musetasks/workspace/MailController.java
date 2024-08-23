@@ -128,7 +128,8 @@ public class MailController implements Initializable {
     }
 
     private void refreshEmails() {
-        emails.setAll(getEmailSentListFromDB());
+        emails.setAll(getEmailListFromDB());
+        emailsSent.setAll(getEmailSentListFromDB());
         drafts.setAll(getEmailDraftListFromDB());
     }
 
@@ -222,6 +223,7 @@ public class MailController implements Initializable {
 
     @FXML
     void viewLessonsFiltered(ActionEvent event) {
+        refreshEmails();
         mailTableView.setItems(sortableEmails);
         emails.removeIf(email -> !fitsTimePeriod(email));
     }

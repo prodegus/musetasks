@@ -48,6 +48,7 @@ public class ParentModel {
     public static StringConverter<Parent> parentStringConverterFormal = new StringConverter<Parent>() {
         @Override
         public String toString(Parent parent) {
+            if (parent == null) return "";
             return parent.getLastName() + ", " + parent.getFirstName();
         }
 
@@ -60,6 +61,7 @@ public class ParentModel {
     public static StringConverter<Parent> parentStringConverterShort = new StringConverter<Parent>() {
         @Override
         public String toString(Parent parent) {
+            if (parent == null) return "";
             return parent.getFirstName() + " " + parent.getLastName().charAt(0);
         }
 

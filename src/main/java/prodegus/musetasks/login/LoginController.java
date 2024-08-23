@@ -10,14 +10,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
+import prodegus.musetasks.database.DBSelectController;
 import prodegus.musetasks.database.Database;
+import prodegus.musetasks.lessons.CustomAptController;
+import prodegus.musetasks.lessons.CustomAptWindow;
+import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.school.Holiday;
 import prodegus.musetasks.ui.popup.PopupWindow;
+import prodegus.musetasks.workspace.SettingsController;
+import prodegus.musetasks.workspace.WorkspaceController;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
@@ -25,6 +33,7 @@ import static prodegus.musetasks.contacts.ContactModel.insertContact;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.school.HolidayModel.insertHoliday;
+import static prodegus.musetasks.school.School.setActiveUser;
 import static prodegus.musetasks.ui.StageFactories.*;
 
 public class LoginController implements Initializable {
@@ -99,28 +108,26 @@ public class LoginController implements Initializable {
             return;
         }
 
-        if (getMailUser() == null && PopupWindow.displayYesNo("Kein E-Mail-Konto gefunden. Jetzt verknüpfen?")) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mailsettings-view.fxml"));
-                Stage stage = newStage("E-Mail-Konto hinzufügen", loader);
-                stage.showAndWait();
+        // Enter school parameters (locations / rooms, instruments etc..)
+        if (isEmptyTable(SCHOOL_TABLE)) {
+            if(!initializeSettings()) return;
         }
 
-        // Enter school parameters (locations / rooms, instruments etc..)
-        if (isEmptyTable(INSTRUMENT_TABLE)) {
-            insert(INSTRUMENT_TABLE, "instrument", "'Gitarre'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Klavier'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Gesang'");
-            insert(INSTRUMENT_TABLE, "instrument", "'E-Bass'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Schlagzeug'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Violine'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Saxofon'");
-            insert(INSTRUMENT_TABLE, "instrument", "'Klarinette'");
-        }
-        if (isEmptyTable(LOCATION_TABLE)) {
-            insert(LOCATION_TABLE, "name, room1, room2, room3", "'Lohmar', 'Lokal', 'Studio', 'Büro'");
-            insert(LOCATION_TABLE, "name, room1, room2, room3, room4, room5", "'Gummersbach', 'R 110', 'R 114', 'R 122', 'R 210', 'R 212'");
-            insert(LOCATION_TABLE, "name, room1, room2", "'Meckenheim', 'OG', 'UG'");
-        }
+//        if (isEmptyTable(INSTRUMENT_TABLE)) {
+//            insert(INSTRUMENT_TABLE, "instrument", "'Gitarre'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Klavier'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Gesang'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'E-Bass'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Schlagzeug'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Violine'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Saxofon'");
+//            insert(INSTRUMENT_TABLE, "instrument", "'Klarinette'");
+//        }
+//        if (isEmptyTable(LOCATION_TABLE)) {
+//            insert(LOCATION_TABLE, "name, room1, room2, room3", "'Lohmar', 'Lokal', 'Studio', 'Büro'");
+//            insert(LOCATION_TABLE, "name, room1, room2, room3, room4, room5", "'Gummersbach', 'R 110', 'R 114', 'R 122', 'R 210', 'R 212'");
+//            insert(LOCATION_TABLE, "name, room1, room2", "'Meckenheim', 'OG', 'UG'");
+//        }
 
         // Enter/load regional holidays
         if (isEmptyTable(HOLIDAY_TABLE)) {
@@ -200,7 +207,7 @@ public class LoginController implements Initializable {
             insertHoliday(new Holiday("2. Weihnachtsfeiertag", LocalDate.of(2027, 12, 26), LocalDate.of(2027, 12, 26)));
         }
 
-
+        setActiveUser(user);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace.fxml"));
         Stage stage = newStage(APP_NAME, loader);
         stage.show();
@@ -216,6 +223,14 @@ public class LoginController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dbselect-view.fxml"));
         Stage stage = newStage("Datenbank auswählen", loader);
         stage.showAndWait();
+    }
+
+    public boolean initializeSettings() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace-settings.fxml"));
+        Stage stage = newStage("Einstellungen", loader);
+        SettingsController controller = loader.getController();
+        stage.showAndWait();
+        return !controller.isCancelled();
     }
 
     private void insertDummyEntries() {
@@ -321,8 +336,8 @@ public class LoginController implements Initializable {
             return;
         }
 
-        if (isEmptyTable(USER_TABLE)) {
-            insertDummyEntries();
-        }
+//        if (isEmptyTable(USER_TABLE)) {
+//            insertDummyEntries();
+//        }
     }
 }

@@ -36,4 +36,23 @@ public class SchoolModel {
         return instruments;
     }
 
+    public static void insertInstrument(String instrument) {
+        insert(INSTRUMENT_TABLE, "instrument", "'" + instrument + "'");
+    }
+
+    public static String getSchoolNameFromDB() {
+        String sql = "SELECT * FROM " + SCHOOL_TABLE;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
 }

@@ -23,14 +23,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
+import prodegus.musetasks.contacts.Contact;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.AddGroupController;
 import prodegus.musetasks.lessons.AddSingleController;
 import prodegus.musetasks.lessons.Lesson;
 import prodegus.musetasks.lessons.LessonChange;
+import prodegus.musetasks.school.Location;
+import prodegus.musetasks.ui.CalendarColumn;
 import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
@@ -50,8 +54,11 @@ import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
 import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
+import static prodegus.musetasks.ui.CalendarColumn.columnSeparator;
+import static prodegus.musetasks.ui.CalendarColumn.headerSeparator;
 import static prodegus.musetasks.ui.popup.PopupWindow.displayInformation;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.utils.DateTime.*;
@@ -63,6 +70,15 @@ public class LessonsController implements Initializable {
 
     @FXML private SplitPane lessonListView;
     @FXML private VBox lessonCalendarView;
+
+    @FXML private Label calendarDateLabel;
+    @FXML private ScrollPane columnHeaderScrollPane;
+    @FXML private HBox columnHeaders;
+    @FXML private Rectangle columnHeadersBackground;
+    @FXML private HBox calendarColumns;
+    @FXML private ScrollPane calendarScrollPane;
+    @FXML private VBox background;
+    @FXML private ScrollPane rowHeaderScrollPane;
 
     @FXML private ToggleGroup lessonFilterToggles;
     @FXML private ToggleButton viewAllToggle;
@@ -156,6 +172,9 @@ public class LessonsController implements Initializable {
     private TableView<? extends Lesson> selectedTableView;
     private HalfYear selectedHalfYear;
     private ContextMenu aptContextMenu;
+    
+    private LocalDate calendarStartDate;
+    private LocalDate calendarEndDate;
 
     private final InvalidationListener lessonSearchListener = new InvalidationListener() {
         @Override
@@ -172,6 +191,27 @@ public class LessonsController implements Initializable {
             }
         }
     };
+
+    @FXML void calendarBack() {
+        calendarStartDate = calendarStartDate.minusDays(1);
+        calendarEndDate = calendarEndDate.minusDays(1);
+        refreshCalendar();
+    }
+
+    @FXML void calendarForward() {
+        calendarStartDate = calendarStartDate.plusDays(1);
+        calendarEndDate = calendarEndDate.plusDays(1);
+        refreshCalendar();
+    }
+
+    private void refreshCalendar() {
+        calendarDateLabel.setText(weekdayDateString(calendarStartDate));
+        for (Node node : getAllNodes(calendarColumns)) {
+            if (node instanceof CalendarColumn calendarColumn) {
+                calendarColumn.setDate(calendarStartDate);
+            }
+        }
+    }
 
     @FXML void switchToListView(ActionEvent event) {
         lessonCalendarView.setVisible(false);
@@ -536,6 +576,7 @@ public class LessonsController implements Initializable {
         lessons.setAll(getLessonListFromDB());
         tableViewSelect(selectedTableView);
         showLessonInfo(selectedLesson);
+        refreshCalendarColumns();
     }
 
     public void refreshAppointments() {
@@ -626,6 +667,32 @@ public class LessonsController implements Initializable {
             }
         });
         return button;
+    }
+
+    private void addCalendarColumn(Location location, String room) {
+        ObservableList<Appointment> appointments = getRoomAppointments(location, room);
+        FilteredList<Appointment> filteredAppointments = new FilteredList<>(appointments, appointment -> true);
+        CalendarColumn column = new CalendarColumn(location.getName() + " - " + room, filteredAppointments, calendarStartDate);
+        columnHeaders.getChildren().addAll(column.headerLabel(), headerSeparator());
+        calendarColumns.getChildren().addAll(column, columnSeparator());
+    }
+
+    private List<CalendarColumn> getCalendarColumns() {
+        List<CalendarColumn> columns = new ArrayList<>();
+        for (Node node : getAllNodes(calendarColumns)) {
+            if (node instanceof CalendarColumn column) columns.add(column);
+        }
+        return columns;
+    }
+
+    private void refreshCalendarColumns() {
+        columnHeaders.getChildren().clear();
+        calendarColumns.getChildren().clear();
+        for (Location lessonLocation : getLocationListFromDB()) {
+            for (String room : lessonLocation.rooms()) {
+                addCalendarColumn(lessonLocation, room);
+            }
+        }
     }
 
 
@@ -796,6 +863,32 @@ public class LessonsController implements Initializable {
                     event.getY() < 24.0) return;
 
             aptContextMenu.show(aptTableView, event.getScreenX(), event.getScreenY());
+        });
+
+        // Initialize Calendar View
+        columnHeaderScrollPane.setStyle("-fx-background-color: lightgrey;");
+        rowHeaderScrollPane.setStyle("-fx-background-color: lightgrey;");
+        calendarScrollPane.setStyle("-fx-background-color: lightgrey;");
+
+        columnHeaderScrollPane.hvalueProperty().bind(calendarScrollPane.hvalueProperty());
+        rowHeaderScrollPane.vvalueProperty().bind(calendarScrollPane.vvalueProperty());
+
+        calendarStartDate = LocalDate.now();
+        calendarEndDate = LocalDate.now();
+        calendarDateLabel.setText(weekdayDateString(calendarStartDate));
+        for (Location lessonLocation : getLocationListFromDB()) {
+            for (String room : lessonLocation.rooms()) {
+                addCalendarColumn(lessonLocation, room);
+            }
+        }
+
+        calendarColumns.widthProperty().addListener(e -> {
+            for (Node node : background.getChildren()) {
+                if (node instanceof Rectangle rectangle) {
+                    rectangle.setWidth(calendarColumns.getWidth());
+                }
+            }
+            columnHeadersBackground.setWidth(calendarColumns.getWidth());
         });
     }
 

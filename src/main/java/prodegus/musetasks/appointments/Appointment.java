@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.util.StringJoiner;
 
 import static prodegus.musetasks.lessons.LessonModel.LESSON_APT_STATUS_REQUEST;
+import static prodegus.musetasks.lessons.LessonModel.getLessonFromDB;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
 import static prodegus.musetasks.utils.DateTime.*;
 import static prodegus.musetasks.utils.DateTime.toInt;
@@ -227,6 +228,10 @@ public class Appointment implements Comparable<Appointment> {
 
     public String locationRoom() {
         return this.location().getName() + " (" + this.getRoom() + ")";
+    }
+
+    public Lesson lesson() {
+        return getLessonFromDB(this.getLessonId());
     }
 
     public void setAttributesFromLesson(Lesson lesson) {

@@ -23,9 +23,23 @@ public class Nodes {
         node.setManaged(true);
     }
 
+    public static void show(Node ... nodes) {
+        for (Node node : nodes) {
+            node.setVisible(true);
+            node.setManaged(true);
+        }
+    }
+
     public static void hide(Node node) {
         node.setVisible(false);
         node.setManaged(false);
+    }
+
+    public static void hide(Node ... nodes) {
+        for (Node node : nodes) {
+            node.setVisible(false);
+            node.setManaged(false);
+        }
     }
 
     public static ArrayList<Node> getAllNodes(Parent root) {

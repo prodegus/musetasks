@@ -1,12 +1,17 @@
 package prodegus.musetasks.contacts;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.database.Filter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
+import static prodegus.musetasks.appointments.Appointment.*;
+import static prodegus.musetasks.appointments.AppointmentModel.getAppointmentListFromDB;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.lessons.LessonModel.CATEGORY_SINGLE;
 import static prodegus.musetasks.school.LocationModel.getLocationFromDB;
@@ -180,5 +185,25 @@ public class Teacher extends Contact {
     @Override
     public int hashCode() {
         return this.getId();
+    }
+
+    public List<Appointment> getPendingAppointments() {
+        List<Appointment> pendingAppointments = new ArrayList<>();
+        for (Appointment appointment : getAppointmentListFromDB(" WHERE status = " + STATUS_CANCELLED)) {
+            if (appointment.lesson().getTeacherId() == this.getId() && appointment.getDescription().contains("Lehrer")) {
+                pendingAppointments.add(appointment);
+            }
+        }
+        return pendingAppointments;
+    }
+
+    public Set<LocalDate> getAbsentDays() {
+        TreeSet<LocalDate> absentDays = new TreeSet<>();
+        for (Appointment appointment : getAppointmentListFromDB(" WHERE status != " + STATUS_OK + " AND status != " + STATUS_CHANGED)) {
+            if (appointment.lesson().getTeacherId() == this.getId() && appointment.getDescription().contains("Lehrer")) {
+                absentDays.add(appointment.getDate());
+            }
+        }
+        return absentDays;
     }
 }

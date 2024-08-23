@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import prodegus.musetasks.database.Database;
 import prodegus.musetasks.lessons.Lesson;
+import prodegus.musetasks.school.Location;
 import prodegus.musetasks.utils.HalfYear;
 
 import java.sql.Connection;
@@ -29,6 +30,14 @@ public class AppointmentModel {
             changes.add("Raum (alt): " + apt1.locationRoom() + " / Raum (neu): " + apt2.locationRoom());
         if (apt1.getDuration() != apt2.getDuration()) changes.add("Dauer (alt): " + apt1.getDuration() + " min / Dauer (neu): " + apt2.getDuration() + " min");
         return changes.toString();
+    }
+
+    public static ObservableList<Appointment> getRoomAppointmentsToday(Location location, String room) {
+        return getAppointmentListFromDB(" WHERE locationid = " + location.getId() + " AND room = '" + room + "'" + " AND date = " + toInt(LocalDate.now()));
+    }
+
+    public static ObservableList<Appointment> getRoomAppointments(Location location, String room) {
+        return getAppointmentListFromDB(" WHERE locationid = " + location.getId() + " AND room = '" + room + "'");
     }
 
     public static ObservableList<Appointment> getAppointmentListFromDB() {

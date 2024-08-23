@@ -7,6 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import org.apache.poi.ss.formula.functions.Today;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,27 +19,42 @@ import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.school.SchoolModel.getInstrumentListFromDB;
+import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.useractions.Actions.processLessonChanges;
 
 public class WorkspaceController implements Initializable {
 
     // Workspace - Fields ----------------------------------------------------------------------------------------------
 
-    @FXML private HBox displayContacts;
-    @FXML private HBox displayLessons;
     @FXML private StackPane displayPane;
 
     // Workspace - Methods ---------------------------------------------------------------------------------------------
 
     @FXML
-    void displayContacts(ActionEvent event) {
-        FXMLLoader contactsLoader = setScene(displayPane, getClass().getResource("/fxml/workspace-contacts.fxml"));
+    void displayToday(ActionEvent event) {
+        setScene(displayPane, getClass().getResource("/fxml/workspace-today.fxml"));
+    }
 
+    @FXML
+    void displayContacts(ActionEvent event) {
+        setScene(displayPane, getClass().getResource("/fxml/workspace-contacts.fxml"));
     }
 
     @FXML
     void displayLessons(ActionEvent event) {
-        FXMLLoader lessonsLoader = setScene(displayPane, getClass().getResource("/fxml/workspace-lessons.fxml"));
+        setScene(displayPane, getClass().getResource("/fxml/workspace-lessons.fxml"));
+    }
+
+    @FXML
+    void displayEmail(ActionEvent event) {
+        setScene(displayPane, getClass().getResource("/fxml/workspace-email.fxml"));
+    }
+
+    @FXML
+    void displaySettings(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/workspace-settings.fxml"));
+        Stage stage = newStage("Einstellungen", loader);
+        stage.showAndWait();
     }
 
     FXMLLoader setScene(Pane root, URL url) {
@@ -61,5 +78,7 @@ public class WorkspaceController implements Initializable {
 
         // Initialize locations
         SCHOOL_LOCATIONS.setAll(getLocationListFromDB());
+
+        displayToday(new ActionEvent());
     }
 }

@@ -72,21 +72,12 @@ public class EmailModel {
         updateMultiple(EMAIL_TABLE, id, email.valuesToSQLUpdateString());
     }
 
-    private static String activeUser;
     public static final Preferences prefs = Preferences.userNodeForPackage(Database.class);
 
     public static void setMailCredentials(String username, String password, String sender) {
         prefs.put("mail_user", username);
         prefs.put("mail_password", password);
         prefs.put("mail_sender", sender);
-    }
-
-    public static String getActiveUser() {
-        return activeUser;
-    }
-
-    public static void setActiveUser(String user) {
-        activeUser = user;
     }
 
     public static String getMailUser() {

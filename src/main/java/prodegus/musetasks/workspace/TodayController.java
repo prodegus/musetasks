@@ -29,8 +29,8 @@ import java.util.ResourceBundle;
 import static prodegus.musetasks.appointments.AppointmentModel.getRoomAppointmentsToday;
 import static prodegus.musetasks.contacts.StudentModel.getProspectiveListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.mail.EmailModel.getActiveUser;
 import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
+import static prodegus.musetasks.school.School.getActiveUser;
 import static prodegus.musetasks.utils.DateTime.asString;
 import static prodegus.musetasks.utils.DateTime.weekdayDateString;
 

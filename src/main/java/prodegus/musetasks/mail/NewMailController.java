@@ -11,6 +11,8 @@ import prodegus.musetasks.ui.popup.PopupWindow;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,6 +20,7 @@ import java.util.StringJoiner;
 
 import static prodegus.musetasks.login.Settings.getMailSender;
 import static prodegus.musetasks.login.Settings.getMailUser;
+import static prodegus.musetasks.mail.EmailModel.insert;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.mail.TLSEmail.sendMail;
 
@@ -48,6 +51,19 @@ public class NewMailController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
+        if (PopupWindow.displayYesNo("Entwurf speichern?")) {
+            Email draft = new Email();
+            draft.setDate(LocalDate.now());
+            draft.setTime(LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute()));
+            draft.setFrom(getMailSender() + " <" + getMailUser() + ">");
+            draft.setTo(toTextField.getText());
+            draft.setCc(ccTextField.getText());
+            draft.setSubject(subjectTextField.getText());
+            draft.setMessage(messageTextArea.getText());
+            draft.setAttachments(attachmentFileName.getText());
+            draft.setDraft(true);
+            insert(draft);
+        }
         stageOf(event).close();
     }
 
@@ -74,7 +90,20 @@ public class NewMailController implements Initializable {
         }
 
         if (sendMail(to, cc, subject, message, getMailSender(), attachments)) {
+            Email email = new Email();
+            email.setDate(LocalDate.now());
+            email.setTime(LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute()));
+            email.setFrom(getMailSender() + " <" + getMailUser() + ">");
+            email.setTo(to);
+            email.setCc(cc);
+            email.setSubject(subject);
+            email.setMessage(message);
+            email.setAttachments(attachmentFileName.getText());
+            email.setDraft(false);
+            insert(email);
+
             PopupWindow.displayInformation("E-Mail versendet!");
+
             stageOf(event).close();
         } else {
             PopupWindow.displayInformation("Fehler", "E-Mail konnte nicht gesendet werden. " +
