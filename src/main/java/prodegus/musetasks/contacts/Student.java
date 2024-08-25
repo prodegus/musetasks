@@ -483,6 +483,10 @@ public class Student extends Contact {
         return this.getParentId1() == parentId || this.getParentId2() == parentId;
     }
 
+    public boolean hasParent() {
+        return this.getParentId1() != 0 || this.getParentId2() != 0;
+    }
+
     public boolean hasLesson(int lessonId) {
         return this.getLessonId1() == lessonId || this.getLessonId2() == lessonId || this.getLessonId3() == lessonId;
     }
@@ -494,11 +498,18 @@ public class Student extends Contact {
     }
 
     public String studentStatus() {
-        if this.lessons().isEmpty() return "Schnuppertermin vereinbaren";
+        if (this.lessons().isEmpty()) return "Schnuppertermin vereinbaren";
         for (Lesson lesson : this.lessons()) {
             if (lesson.getLessonStatus() == LESSON_STATUS_MEET) return "Schnupperunterricht am " + asString(getLessonAppointmentsFromDB(lesson.getId()).get(0).getDate());
-            if (lesson.getLessonStatus() == LESSON_STATUS_TRIAL) return "Probemonat";
+            if (lesson.getLessonStatus() == LESSON_STATUS_TRIAL) return "Probemonat (" + asString(lesson.getStartDate()) + " bis " + asString(lesson.getEndDate()) + ")";
         }
         return "";
+    }
+
+    public boolean hasActiveLesson() {
+        for (Lesson lesson : this.lessons()) {
+            if (lesson.getLessonStatus() == LESSON_STATUS_ACTIVE) return true;
+        }
+        return false;
     }
 }

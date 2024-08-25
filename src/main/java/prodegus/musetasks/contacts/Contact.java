@@ -3,6 +3,7 @@ package prodegus.musetasks.contacts;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import prodegus.musetasks.lessons.Lesson;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
 import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 import static prodegus.musetasks.database.Database.*;
+import static prodegus.musetasks.lessons.LessonModel.LESSON_STATUS_ACTIVE;
 import static prodegus.musetasks.utils.Strings.string;
 
 public class Contact {
@@ -388,8 +390,13 @@ public class Contact {
     }
 
     public boolean isCustomer() {
-        if (this.customerIdProperty() == null) return false;
-        return this.getCustomerId() > 0;
+        if (this.isStudent()) return !this.toStudent().hasParent() && this.toStudent().hasActiveLesson();
+        if (this.isParent()) {
+            for (Student student : this.toParent().children()) {
+                if (student.hasActiveLesson()) return true;
+            }
+        }
+        return false;
     }
 
     public Student toStudent() {

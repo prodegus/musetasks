@@ -28,12 +28,13 @@ import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
 import prodegus.musetasks.contacts.Contact;
+import prodegus.musetasks.contacts.ContactModel;
+import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
-import prodegus.musetasks.lessons.AddGroupController;
-import prodegus.musetasks.lessons.AddSingleController;
-import prodegus.musetasks.lessons.Lesson;
-import prodegus.musetasks.lessons.LessonChange;
+import prodegus.musetasks.lessons.*;
+import prodegus.musetasks.mail.NewMailController;
 import prodegus.musetasks.school.Location;
+import prodegus.musetasks.ui.CalendarBox;
 import prodegus.musetasks.ui.CalendarColumn;
 import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.utils.HalfYear;
@@ -46,6 +47,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.appointments.Appointment.*;
@@ -54,6 +56,8 @@ import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
 import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.mail.EmailUtil.errorMail;
+import static prodegus.musetasks.mail.TLSEmail.sendMail;
 import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
@@ -164,6 +168,18 @@ public class LessonsController implements Initializable {
     @FXML private MenuButton aptEditButton;
     @FXML private Button aptForwardButton;
 
+    private final String STYLE_UNSELECTED =
+            "-fx-background-color: #90ee90;" +
+            "-fx-border-color: #5dd55d;" +
+            "-fx-background-radius: 5;" +
+            "-fx-border-radius: 5;";
+
+    private final String STYLE_SELECTED =
+            "-fx-background-color: #5dd55d;" +
+            "-fx-border-color: black;" +
+            "-fx-background-radius: 5;" +
+            "-fx-border-radius: 5;";
+
     private final ObservableList<Lesson> lessons = FXCollections.observableArrayList();
     private final FilteredList<Lesson> filteredLessons = new FilteredList<>(lessons, lesson -> true);
     private final SortedList<Lesson> sortableLessons = new SortedList<>(filteredLessons);
@@ -211,6 +227,7 @@ public class LessonsController implements Initializable {
                 calendarColumn.setDate(calendarStartDate);
             }
         }
+        enableCalendarBoxSelection();
     }
 
     @FXML void switchToListView(ActionEvent event) {
@@ -283,16 +300,34 @@ public class LessonsController implements Initializable {
 
     @FXML
     void deleteLesson(ActionEvent event) {
-        if (PopupWindow.displayYesNo("Der Unterricht \"" + selectedLesson.getLessonName() + "\" sowie alle " +
-                "zugehörigen Termine werden gelöscht.\n\nFortfahren?")) {
-            for (Appointment appointment : getLessonAppointmentsFromDB(selectedLesson.getId())) {
-                deleteAppointmentFromDB(appointment);
+        if (selectedLesson == null) return;
+        String message = "Der Unterricht \"" + selectedLesson.getLessonName() + "\" sowie alle zugehörigen Termine " +
+                "werden gelöscht.\n\nFortfahren?";
+        if (PopupWindow.displayYesNo(message)) deleteFullLesson(selectedLesson);
+        refreshLessons();
+    }
+
+    @FXML
+    void deleteLessons(ActionEvent event) {
+        ArrayList<Lesson> selectedLessons = new ArrayList<>();
+        StringJoiner lessonNames = new StringJoiner("\n");
+
+        for (Lesson lesson : lessonTableView.getItems()) {
+            if (lesson.isSelected()) {
+                selectedLessons.add(lesson);
+                lessonNames.add(lesson.getLessonName());
             }
-            for (LessonChange change : getLessonChangeListFromDB(selectedLesson.getId())) {
-                deleteLessonChange(selectedLesson.getId(), change.getChangeDate());
-            }
-            deleteLessonFromDB(selectedLesson);
         }
+
+        if (selectedLessons.size() == 0) {
+            deleteLesson(new ActionEvent());
+            return;
+        }
+
+        String message = selectedLessons.size() == 1 ? "Unterricht \"" + lessonNames + "\" wird gelöscht. Fortfahren?" :
+                "Folgende Unterrichte werden gelöscht:\n\n" + lessonNames + "\n\nFortfahren?";
+        if (!PopupWindow.displayYesNo(message)) return;
+        for (Lesson lesson : selectedLessons) deleteFullLesson(lesson);
         refreshLessons();
     }
 
@@ -574,9 +609,49 @@ public class LessonsController implements Initializable {
     
     @FXML void refreshLessons() {
         lessons.setAll(getLessonListFromDB());
-        tableViewSelect(selectedTableView);
+        tableViewSelect(lessonTableView);
         showLessonInfo(selectedLesson);
         refreshCalendarColumns();
+    }
+
+    @FXML void mailToLessonContacts() {
+        if (selectedLesson == null) return;
+        StringJoiner recipients = new StringJoiner(", ");
+        for (Student student : selectedLesson.students()) {
+            recipients.add(student.getContactEmail());
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Neue E-Mail", loader);
+        NewMailController controller = loader.getController();
+        controller.init(recipients.toString());
+        stage.showAndWait();
+    }
+
+    @FXML void mailToLessonsContacts() {
+        ArrayList<Lesson> selectedLessons = new ArrayList<>();
+
+        for (Lesson lesson : lessonTableView.getItems()) {
+            if (lesson.isSelected()) {
+                selectedLessons.add(lesson);
+            }
+        }
+
+        if (selectedLessons.size() == 0) {
+            mailToLessonContacts();
+            return;
+        }
+
+        StringJoiner recipients = new StringJoiner(", ");
+        for (Lesson lesson : selectedLessons) {
+            for (Student student : lesson.students()) {
+                recipients.add(student.getContactEmail());
+            }
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newmail-view.fxml"));
+        Stage stage = newStage("Neue E-Mail", loader);
+        NewMailController controller = loader.getController();
+        controller.init(recipients.toString());
+        stage.showAndWait();
     }
 
     public void refreshAppointments() {
@@ -640,6 +715,7 @@ public class LessonsController implements Initializable {
         }
         tableView.getSelectionModel().select(index);
         selectedLesson = tableView.getSelectionModel().getSelectedItem();
+        showLessonInfo(selectedLesson);
     }
 
     private Button editChangeButton(LessonChange lessonChange) {
@@ -693,8 +769,38 @@ public class LessonsController implements Initializable {
                 addCalendarColumn(lessonLocation, room);
             }
         }
+        enableCalendarBoxSelection();
     }
 
+    private List<CalendarBox> getCalendarBoxes() {
+        List<CalendarBox> boxes = new ArrayList<>();
+        for (Node node : getAllNodes(calendarColumns)) {
+            if (node instanceof CalendarBox calendarBox) {
+                boxes.add(calendarBox);
+            }
+        }
+        return boxes;
+    }
+
+    private void enableCalendarBoxSelection() {
+        for (CalendarBox calendarBox : getCalendarBoxes()) {
+            calendarBox.setOnMouseClicked(e -> {
+                unselectAllBoxes();
+                calendarBox.setStyle(STYLE_SELECTED);
+                selectedLesson = calendarBox.getAppointment().lesson();
+                if (e.getClickCount() == 2) {
+                    switchToListView(new ActionEvent());
+                    tableViewSelect(lessonTableView);
+                }
+            });
+        }
+    }
+
+    private void unselectAllBoxes() {
+        for (CalendarBox calendarBox : getCalendarBoxes()) {
+            calendarBox.setStyle(STYLE_UNSELECTED);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -890,6 +996,8 @@ public class LessonsController implements Initializable {
             }
             columnHeadersBackground.setWidth(calendarColumns.getWidth());
         });
+
+        enableCalendarBoxSelection();
     }
 
 }

@@ -1,25 +1,16 @@
 package prodegus.musetasks.test;
 
 
+import javafx.beans.property.SimpleIntegerProperty;
 import prodegus.musetasks.ui.AppointmentHBox;
 
 public class Test {
 
     public static void main(String[] args) {
 
-        String a = "abcdef";
-        String b = "abcdef.db";
-        String c = "ab";
-        String d = "a.db";
-        String e = "a";
-        String f = "";
+        SimpleIntegerProperty test = new SimpleIntegerProperty();
+        System.out.println(test.get());
 
-        checkString(a);
-        checkString(b);
-        checkString(c);
-        checkString(d);
-        checkString(e);
-        checkString(f);
     }
 
     static void checkString(String original) {

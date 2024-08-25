@@ -34,7 +34,7 @@
                <children>
                   <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
                      <children>
-                        <ToggleButton fx:id="contactToggleAll" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllContacts" prefHeight="45.0" prefWidth="180.0" selected="true" text="#  Alle">
+                        <ToggleButton fx:id="contactToggleAll" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllContacts" prefHeight="45.0" prefWidth="180.0" selected="true" text="Alle">
                            <toggleGroup>
                               <ToggleGroup fx:id="contactCategoryToggle" />
                            </toggleGroup>
@@ -42,22 +42,22 @@
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleStudents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllStudents" prefHeight="45.0" prefWidth="180.0" text="#  Schüler" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleStudents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllStudents" prefHeight="45.0" prefWidth="180.0" text="Schüler" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleParents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllParents" prefHeight="45.0" prefWidth="180.0" text="#  Eltern" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleParents" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllParents" prefHeight="45.0" prefWidth="180.0" text="Eltern" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleTeachers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllTeachers" prefHeight="45.0" prefWidth="180.0" text="#  Lehrer" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleTeachers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllTeachers" prefHeight="45.0" prefWidth="180.0" text="Lehrer" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleOthers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllOthers" prefHeight="45.0" prefWidth="180.0" text="#  Sonstige" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleOthers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllOthers" prefHeight="45.0" prefWidth="180.0" text="Sonstige" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -65,12 +65,12 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleProspectives" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllProspectives" prefHeight="45.0" prefWidth="180.0" text="#  Interessenten" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleProspectives" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllProspectives" prefHeight="45.0" prefWidth="180.0" text="Interessenten" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="contactToggleCustomers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllCustomers" prefHeight="45.0" prefWidth="180.0" text="#  Kunden" toggleGroup="$contactCategoryToggle">
+                        <ToggleButton fx:id="contactToggleCustomers" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllCustomers" prefHeight="45.0" prefWidth="180.0" text="Kunden" toggleGroup="$contactCategoryToggle">
                            <font>
                               <Font size="14.0" />
                            </font>

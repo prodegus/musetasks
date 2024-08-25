@@ -21,6 +21,14 @@ import static prodegus.musetasks.utils.DateTime.toTime;
 import static prodegus.musetasks.utils.Nodes.timeComboBox;
 
 public class AppointmentHBox extends HBox {
+    private Appointment appointment;
+    private SimpleIntegerProperty rowIndex = new SimpleIntegerProperty();
+    private Label rowNumberLabel;
+    private DatePicker datePicker;
+    private ComboBox<String> timeComboBox;
+    private Button deleteButton;
+    private Label holidayInfoLabel;
+
     public Appointment getAppointment() {
         String oldDescription = appointment.getDescription();
         String holidayInfo = this.getHolidayInfoLabel().getText();
@@ -33,6 +41,7 @@ public class AppointmentHBox extends HBox {
         if (appointment.getId() == 0) appointment.setCategory(CATEGORY_LESSON_REGULAR);
         return appointment;
     }
+
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
@@ -81,14 +90,6 @@ public class AppointmentHBox extends HBox {
     public void setHolidayInfoLabel(Label holidayInfoLabel) {
         this.holidayInfoLabel = holidayInfoLabel;
     }
-
-    private Appointment appointment;
-    private SimpleIntegerProperty rowIndex = new SimpleIntegerProperty();
-    private Label rowNumberLabel;
-    private DatePicker datePicker;
-    private ComboBox<String> timeComboBox;
-    private Button deleteButton;
-    private Label holidayInfoLabel;
 
 
     public AppointmentHBox(int rowIndex, Appointment appointment) {

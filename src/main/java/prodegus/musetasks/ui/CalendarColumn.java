@@ -38,7 +38,7 @@ public class CalendarColumn extends AnchorPane {
         this.getChildren().clear();
 
         for (Appointment appointment : appointments) {
-            this.getChildren().add(appointmentBox(appointment));
+            this.getChildren().add(new CalendarBox(appointment));
         }
     }
 
@@ -54,29 +54,8 @@ public class CalendarColumn extends AnchorPane {
         if (appointments.isEmpty()) this.getChildren().add(placeholder());
 
         for (Appointment appointment : appointments) {
-            this.getChildren().add(appointmentBox(appointment));
+            this.getChildren().add(new CalendarBox(appointment));
         }
-    }
-
-    public static VBox appointmentBox(Appointment appointment) {
-        VBox box = new VBox();
-        box.setPrefWidth(200);
-        box.setPadding(new Insets(0, 3, 0, 3));
-        box.setPrefHeight((double) appointment.getDuration() / 60 * 100);
-        box.setStyle("-fx-background-color: #90ee90;" +
-                "-fx-border-color: #5dd55d;" +
-                "-fx-background-radius: 5;" +
-                "-fx-border-radius: 5;");
-
-        Label label = new Label(appointment.lesson().getLessonName());
-        label.setStyle("-fx-font-weight: bold");
-        label.setWrapText(true);
-        box.getChildren().add(label);
-
-        int hours = appointment.getTime().minusHours(8).getHour();
-        int minutes = appointment.getTime().getMinute();
-        AnchorPane.setTopAnchor(box, (hours + (minutes / 60.0)) * 100.0);
-        return box;
     }
 
     public CalendarColumn(String header, FilteredList<Appointment> appointments, LocalDate date) {
@@ -89,7 +68,7 @@ public class CalendarColumn extends AnchorPane {
         if (appointments.isEmpty()) this.getChildren().add(placeholder());
 
         for (Appointment appointment : appointments) {
-            this.getChildren().add(appointmentBox(appointment));
+            this.getChildren().add(new CalendarBox(appointment));
         }
     }
 

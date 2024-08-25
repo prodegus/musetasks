@@ -453,4 +453,15 @@ public class LessonModel {
         return changes.size() > 0;
     }
 
+    public static void deleteFullLesson(Lesson lesson) {
+        for (Appointment appointment : getLessonAppointmentsFromDB(lesson.getId())) {
+            deleteAppointmentFromDB(appointment);
+        }
+        for (LessonChange change : getLessonChangeListFromDB(lesson.getId())) {
+            deleteLessonChange(lesson.getId(), change.getChangeDate());
+        }
+        deleteLessonFromDB(lesson);
+    }
+
+
 }
