@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.ContactModel.insertContact;
 import static prodegus.musetasks.database.Database.*;
-import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.mail.EmailModel.*;
 import static prodegus.musetasks.school.HolidayModel.insertHoliday;
 import static prodegus.musetasks.school.School.setActiveUser;
 import static prodegus.musetasks.ui.StageFactories.*;

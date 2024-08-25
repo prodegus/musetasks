@@ -6,7 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import prodegus.musetasks.ui.popup.PopupWindow;
 
-import static prodegus.musetasks.login.Settings.*;
+import static prodegus.musetasks.mail.EmailModel.getMailUser;
+import static prodegus.musetasks.mail.EmailModel.setMailCredentials;
 import static prodegus.musetasks.mail.TLSEmail.confirmMail;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 

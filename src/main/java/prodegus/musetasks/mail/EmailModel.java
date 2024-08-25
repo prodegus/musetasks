@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 import java.util.prefs.Preferences;
 
 import static prodegus.musetasks.database.Database.*;

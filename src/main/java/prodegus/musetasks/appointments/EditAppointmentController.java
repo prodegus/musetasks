@@ -27,12 +27,10 @@ import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
 import static prodegus.musetasks.lessons.LessonModel.*;
-import static prodegus.musetasks.mail.EmailUtil.errorMail;
+import static prodegus.musetasks.mail.EmailModel.getMailUser;
 import static prodegus.musetasks.mail.TLSEmail.sendMail;
 import static prodegus.musetasks.mail.Templates.*;
 import static prodegus.musetasks.school.LocationModel.initializeForLocations;
-import static prodegus.musetasks.school.LocationModel.locationStringConverter;
-import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.utils.DateTime.*;
@@ -151,6 +149,11 @@ public class EditAppointmentController implements Initializable {
 
         Appointment oldAppointment = appointmentToEdit;
 
+        if (reason == null) {
+            PopupWindow.displayInformation("Bitte Änderungsgrund angeben!");
+            return;
+        }
+
         if (newTimeComboBox.getSelectionModel().isEmpty()) {
             PopupWindow.displayInformation("Änderung konnte nicht durchgeführt werden:\n\n- Bitte gültige Uhrzeit angeben!");
             return;
@@ -247,7 +250,7 @@ public class EditAppointmentController implements Initializable {
             if (informContactCheckBox.isSelected()) {
                 for (Student student : lesson.students()) {
                     if (student.getContactEmail().equals("keine Angabe")) {
-                        sendMail(errorMail, "E-Mail an " + student.name() + " konnte nicht gesendet werden", "Inhalt der Mail:\n\n" + mailMessage);
+                        sendMail(getMailUser(), "E-Mail an " + student.name() + " konnte nicht gesendet werden", "Inhalt der Mail:\n\n" + mailMessage);
                     } else {
                         recipients.add(student.getContactEmail());
                     }

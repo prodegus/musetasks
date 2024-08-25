@@ -3,7 +3,7 @@ package prodegus.musetasks.database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import static prodegus.musetasks.login.Settings.prefs;
+import static prodegus.musetasks.mail.EmailModel.prefs;
 
 
 public class Database {

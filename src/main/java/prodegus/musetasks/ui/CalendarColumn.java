@@ -3,6 +3,7 @@ package prodegus.musetasks.ui;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.AnchorPane;
@@ -78,13 +79,6 @@ public class CalendarColumn extends AnchorPane {
         return box;
     }
 
-    public static Separator headerSeparator() {
-        Separator separator = new Separator();
-        separator.setOrientation(Orientation.VERTICAL);
-        HBox.setMargin(separator, new Insets(0, 5, 0, 5));
-        return separator;
-    }
-
     public static Separator columnSeparator() {
         Separator separator = new Separator();
         separator.setOrientation(Orientation.VERTICAL);
@@ -92,9 +86,14 @@ public class CalendarColumn extends AnchorPane {
         return separator;
     }
 
-    public Label headerLabel() {
-        Label headerLabel = new Label(this.getHeader());
-        headerLabel.setMinWidth(197);
-        return headerLabel;
+    public HBox headerBox() {
+        HBox headerBox = new HBox();
+        headerBox.setPadding(new Insets(0, 0, 0, 5));
+        headerBox.setAlignment(Pos.CENTER_LEFT);
+        headerBox.setPrefWidth(200);
+        headerBox.setPrefHeight(52);
+        headerBox.setPadding(new Insets(5, 0, 0, 0));
+        headerBox.getChildren().add(new Label(this.getHeader()));
+        return headerBox;
     }
 }

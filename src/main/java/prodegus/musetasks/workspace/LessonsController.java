@@ -27,8 +27,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.appointments.EditAppointmentController;
-import prodegus.musetasks.contacts.Contact;
-import prodegus.musetasks.contacts.ContactModel;
 import prodegus.musetasks.contacts.Student;
 import prodegus.musetasks.contacts.Teacher;
 import prodegus.musetasks.lessons.*;
@@ -43,7 +41,6 @@ import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -56,13 +53,10 @@ import static prodegus.musetasks.appointments.EditAppointmentController.*;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
 import static prodegus.musetasks.lessons.LessonModel.*;
-import static prodegus.musetasks.mail.EmailUtil.errorMail;
-import static prodegus.musetasks.mail.TLSEmail.sendMail;
 import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
 import static prodegus.musetasks.ui.CalendarColumn.columnSeparator;
-import static prodegus.musetasks.ui.CalendarColumn.headerSeparator;
 import static prodegus.musetasks.ui.popup.PopupWindow.displayInformation;
 import static prodegus.musetasks.ui.StageFactories.newStage;
 import static prodegus.musetasks.utils.DateTime.*;
@@ -749,7 +743,7 @@ public class LessonsController implements Initializable {
         ObservableList<Appointment> appointments = getRoomAppointments(location, room);
         FilteredList<Appointment> filteredAppointments = new FilteredList<>(appointments, appointment -> true);
         CalendarColumn column = new CalendarColumn(location.getName() + " - " + room, filteredAppointments, calendarStartDate);
-        columnHeaders.getChildren().addAll(column.headerLabel(), headerSeparator());
+        columnHeaders.getChildren().addAll(column.headerBox(), columnSeparator());
         calendarColumns.getChildren().addAll(column, columnSeparator());
     }
 
@@ -784,14 +778,30 @@ public class LessonsController implements Initializable {
 
     private void enableCalendarBoxSelection() {
         for (CalendarBox calendarBox : getCalendarBoxes()) {
-            calendarBox.setOnMouseClicked(e -> {
+            calendarBox.setOnMouseClicked(event -> {
                 unselectAllBoxes();
                 calendarBox.setStyle(STYLE_SELECTED);
                 selectedLesson = calendarBox.getAppointment().lesson();
-                if (e.getClickCount() == 2) {
+                if (event.getClickCount() == 2) {
                     switchToListView(new ActionEvent());
                     tableViewSelect(lessonTableView);
                 }
+            });
+
+            calendarBox.setOnContextMenuRequested(event -> {
+                unselectAllBoxes();
+                calendarBox.setStyle(STYLE_SELECTED);
+                selectedLesson = calendarBox.getAppointment().lesson();
+                selectedAppointment = calendarBox.getAppointment();
+                MenuItem item1 = new MenuItem("Termin absagen (ohne Ersatz)");
+                MenuItem item2 = new MenuItem("Termin absagen (mit Ersatz)");
+                MenuItem item3 = new MenuItem("Termin ändern");
+                item1.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_DROPPED));
+                item2.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_RESCHEDULE));
+                item3.setOnAction(e -> openEditAppointmentWindow(selectedAppointment, EDIT_MODE_CHANGE));
+                ContextMenu contextMenu = new ContextMenu(item1, item2, item3);
+                contextMenu.setAutoHide(true);
+                contextMenu.show(calendarBox, event.getScreenX(), event.getScreenY());
             });
         }
     }

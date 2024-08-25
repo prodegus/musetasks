@@ -184,6 +184,10 @@ public class Appointment implements Comparable<Appointment> {
         return getLocationFromDB(this.getLocationId());
     }
 
+    public String timeSpan() {
+        return this.getTime() + " - " + this.getTime().plusMinutes(this.getDuration()) + " Uhr";
+    }
+
     public String category() {
         return switch(this.getCategory()) {
             case 1 -> "Regulärer Termin";

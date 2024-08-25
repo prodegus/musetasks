@@ -3,8 +3,6 @@ package prodegus.musetasks.contacts;
 import java.io.*;
 import java.util.StringJoiner;
 
-import static prodegus.musetasks.login.Settings.*;
-import static prodegus.musetasks.login.Settings.getMailPassword;
 import static prodegus.musetasks.mail.TLSEmail.sendMail;
 
 public class VCard {

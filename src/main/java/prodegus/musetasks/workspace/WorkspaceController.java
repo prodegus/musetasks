@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static prodegus.musetasks.login.Settings.*;
 import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
 import static prodegus.musetasks.school.School.SCHOOL_LOCATIONS;
@@ -47,6 +46,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     void displayToday(ActionEvent event) {
         toggleToday.setSelected(true);
+        if (selectedDisplay.get() == DISPLAY_TODAY) return;
         selectedDisplay.set(DISPLAY_TODAY);
         setScene(displayPane, getClass().getResource("/fxml/workspace-today.fxml"));
     }
@@ -54,6 +54,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     void displayContacts(ActionEvent event) {
         toggleContacts.setSelected(true);
+        if (selectedDisplay.get() == DISPLAY_CONTACTS) return;
         selectedDisplay.set(DISPLAY_CONTACTS);
         setScene(displayPane, getClass().getResource("/fxml/workspace-contacts.fxml"));
     }
@@ -61,6 +62,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     void displayLessons(ActionEvent event) {
         toggleLessons.setSelected(true);
+        if (selectedDisplay.get() == DISPLAY_LESSONS) return;
         selectedDisplay.set(DISPLAY_LESSONS);
         setScene(displayPane, getClass().getResource("/fxml/workspace-lessons.fxml"));
     }
@@ -68,6 +70,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     void displayEmail(ActionEvent event) {
         toggleEmail.setSelected(true);
+        if (selectedDisplay.get() == DISPLAY_EMAIL) return;
         selectedDisplay.set(DISPLAY_EMAIL);
         setScene(displayPane, getClass().getResource("/fxml/workspace-email.fxml"));
     }

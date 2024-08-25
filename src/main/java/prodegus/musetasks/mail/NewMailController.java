@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
-import static prodegus.musetasks.login.Settings.getMailSender;
-import static prodegus.musetasks.login.Settings.getMailUser;
-import static prodegus.musetasks.mail.EmailModel.insert;
+import static prodegus.musetasks.mail.EmailModel.*;
 import static prodegus.musetasks.ui.StageFactories.stageOf;
 import static prodegus.musetasks.mail.TLSEmail.sendMail;
 

@@ -19,8 +19,7 @@ import jakarta.mail.internet.MimeMultipart;
 import prodegus.musetasks.contacts.Contact;
 
 import static prodegus.musetasks.contacts.VCard.vCard;
-import static prodegus.musetasks.login.Settings.*;
-import static prodegus.musetasks.mail.EmailUtil.getPropertiesOutlookSMTP;
+import static prodegus.musetasks.mail.EmailModel.*;
 import static prodegus.musetasks.ui.StageFactories.APP_NAME;
 
 public class TLSEmail {
@@ -106,6 +105,17 @@ public class TLSEmail {
 			return false;
 		}
 		return true;
+	}
+
+	public static Properties getPropertiesOutlookSMTP() {
+		Properties props = new Properties();
+		props.put("mail.smtp.host", "smtp-mail.outlook.com");
+		props.put("mail.smtp.port", "587");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+		props.put("mail.smtp.ssl.trust", "smtp-mail.outlook.com");
+		return props;
 	}
 
 }

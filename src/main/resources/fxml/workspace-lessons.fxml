@@ -32,7 +32,7 @@
    <children>
       <StackPane HBox.hgrow="ALWAYS">
          <children>
-            <SplitPane fx:id="lessonListView" dividerPositions="0.55">
+            <SplitPane fx:id="lessonListView" dividerPositions="0.55" visible="false">
                <items>
                   <HBox>
                      <children>
@@ -347,7 +347,7 @@
                            <children>
                               <HBox fx:id="singleInfo" maxHeight="165.0" spacing="20.0">
                                  <children>
-                                    <ScrollPane minWidth="275.0" HBox.hgrow="ALWAYS">
+                                    <ScrollPane hbarPolicy="NEVER" minWidth="275.0" HBox.hgrow="ALWAYS">
                                        <content>
                                           <GridPane fx:id="singleInfoGridPane" minWidth="255.0" prefWidth="260.0">
                                              <columnConstraints>
@@ -564,7 +564,7 @@
                   </VBox>
                </items>
             </SplitPane>
-            <VBox fx:id="lessonCalendarView" prefHeight="800.0" prefWidth="400.0" spacing="10.0" visible="false">
+            <VBox fx:id="lessonCalendarView" prefHeight="800.0" prefWidth="400.0" spacing="10.0">
                <children>
                   <HBox alignment="CENTER_LEFT" minHeight="70.0">
                      <children>
@@ -634,9 +634,6 @@
                                        <StackPane.margin>
                                           <Insets left="5.0" />
                                        </StackPane.margin>
-                                       <padding>
-                                          <Insets right="3.0" />
-                                       </padding>
                                     </HBox>
                                  </children>
                               </StackPane>
@@ -712,7 +709,7 @@
                                           <Rectangle fx:id="columnHeadersBackground" arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
                                           <HBox fx:id="columnHeaders" alignment="CENTER_LEFT" prefHeight="52.0">
                                              <padding>
-                                                <Insets left="8.0" />
+                                                <Insets left="6.0" />
                                              </padding>
                                           </HBox>
                                        </children>
