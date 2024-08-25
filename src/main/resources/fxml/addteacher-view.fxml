@@ -20,7 +20,7 @@
    <children>
       <StackPane>
          <children>
-            <GridPane fx:id="teacherDataForm" maxWidth="450.0" visible="false">
+            <GridPane fx:id="teacherDataForm" maxWidth="450.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
               </columnConstraints>
@@ -99,18 +99,36 @@
                         <VBox>
                            <children>
                               <Label text="Instrument(e)" />
-                              <ComboBox fx:id="instrumentComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="instrumentComboBox4" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                              <ComboBox fx:id="instrumentComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
+                              <ComboBox fx:id="instrumentComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
+                              <ComboBox fx:id="instrumentComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
+                              <ComboBox fx:id="instrumentComboBox4" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
                               <ComboBox fx:id="instrumentComboBox5" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
                            </children>
                         </VBox>
                         <VBox>
                            <children>
                               <Label text="Standort(e)" />
-                              <ComboBox fx:id="locationComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
-                              <ComboBox fx:id="locationComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
+                              <ComboBox fx:id="locationComboBox1" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
+                              <ComboBox fx:id="locationComboBox2" prefHeight="30.0" prefWidth="150.0" promptText="auswählen">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin></ComboBox>
                               <ComboBox fx:id="locationComboBox3" prefHeight="30.0" prefWidth="150.0" promptText="auswählen" />
                            </children>
                         </VBox>
@@ -139,7 +157,7 @@
                   </HBox>
                </children>
             </GridPane>
-            <GridPane fx:id="communicationForm" maxWidth="450.0">
+            <GridPane fx:id="communicationForm" maxWidth="450.0" visible="false">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
                </columnConstraints>

@@ -23,40 +23,51 @@ public class DBSelectController implements Initializable {
     @FXML private Label currentDBLabel;
 
     @FXML
-    void setDBLocation(ActionEvent event) {
+    void createDB(ActionEvent event) {
         Node source = (Node) event.getSource();
         File dbFile;
         String dbPath = null;
         FileChooser fileChooser = new FileChooser();
 
-        switch (source.getId()) {
-            case "selectButton" -> {
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Datenbank", "*.db"));
-                dbFile = fileChooser.showOpenDialog(source.getScene().getWindow());
-                if (dbFile == null) return;
-                dbPath = dbFile.getAbsolutePath();
-            }
-            case "createButton" -> {
-                dbFile = fileChooser.showSaveDialog(source.getScene().getWindow());
-                if (dbFile == null) return;
-                boolean hasSuffix = dbFile.getAbsolutePath().endsWith(".db");
-                dbPath = dbFile.getAbsolutePath() + (hasSuffix ? "" : ".db");
-                createUserTable(dbPath);
-                createStudentTable(dbPath);
-                createTeacherTable(dbPath);
-                createParentTable(dbPath);
-                createOtherTable(dbPath);
-                createLessonTable(dbPath);
-                createLessonChangeTable(dbPath);
-                createAppointmentTable(dbPath);
-                createTaskTable(dbPath);
-                createHolidayTable(dbPath);
-                createLocationTable(dbPath);
-                createInstrumentTable(dbPath);
-                createEmailTable(dbPath);
-                addConstraintsStudentTable(dbPath);
-            }
-        }
+        dbFile = fileChooser.showSaveDialog(source.getScene().getWindow());
+        if (dbFile == null) return;
+        boolean hasSuffix = dbFile.getAbsolutePath().endsWith(".db");
+        dbPath = dbFile.getAbsolutePath() + (hasSuffix ? "" : ".db");
+
+        createUserTable(dbPath);
+        createStudentTable(dbPath);
+        createTeacherTable(dbPath);
+        createParentTable(dbPath);
+        createOtherTable(dbPath);
+        createLessonTable(dbPath);
+        createLessonChangeTable(dbPath);
+        createAppointmentTable(dbPath);
+        createTaskTable(dbPath);
+        createHolidayTable(dbPath);
+        createLocationTable(dbPath);
+        createInstrumentTable(dbPath);
+        createEmailTable(dbPath);
+        createSchoolTable(dbPath);
+        addConstraintsStudentTable(dbPath);
+
+        saveDbPath(dbPath);
+        PopupWindow.displayInformation("Datenbank erzeugt! Bitte Anwendung erneut starten!");
+        stageOf(event).close();
+        Platform.exit();
+    }
+
+    @FXML
+    void selectDB(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        File dbFile;
+        String dbPath = null;
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Datenbank", "*.db"));
+        dbFile = fileChooser.showOpenDialog(source.getScene().getWindow());
+        if (dbFile == null) return;
+        dbPath = dbFile.getAbsolutePath();
+
         saveDbPath(dbPath);
         PopupWindow.displayInformation("Datenbank ausgewählt! Bitte Anwendung erneut starten!");
         stageOf(event).close();

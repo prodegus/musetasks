@@ -10,11 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static prodegus.musetasks.appointments.AppointmentModel.getLessonAppointmentsFromDB;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.contacts.ContactModel.updateContact;
-import static prodegus.musetasks.lessons.LessonModel.getLessonFromDB;
 import static prodegus.musetasks.contacts.ParentModel.getParentFromDB;
 import static prodegus.musetasks.contacts.TeacherModel.getTeacherFromDB;
+import static prodegus.musetasks.lessons.LessonModel.*;
+import static prodegus.musetasks.utils.DateTime.asString;
 import static prodegus.musetasks.utils.Strings.string;
 
 public class Student extends Contact {
@@ -489,5 +491,14 @@ public class Student extends Contact {
         return this.getTeacherId1() == teacher.getId() ||
                 this.getTeacherId2() == teacher.getId() ||
                 this.getTeacherId3() == teacher.getId();
+    }
+
+    public String studentStatus() {
+        if this.lessons().isEmpty() return "Schnuppertermin vereinbaren";
+        for (Lesson lesson : this.lessons()) {
+            if (lesson.getLessonStatus() == LESSON_STATUS_MEET) return "Schnupperunterricht am " + asString(getLessonAppointmentsFromDB(lesson.getId()).get(0).getDate());
+            if (lesson.getLessonStatus() == LESSON_STATUS_TRIAL) return "Probemonat";
+        }
+        return "";
     }
 }

@@ -263,12 +263,12 @@ public class AddParentController implements Initializable {
 
     @FXML
     void skypeCheckBoxClicked(MouseEvent event) {
-
+        skypeComboBox.setVisible(skypeCheckBox.isSelected());
     }
 
     @FXML
     void zoomCheckBoxClicked(MouseEvent event) {
-
+        zoomComboBox.setVisible(zoomCheckBox.isSelected());
     }
 
     private boolean isInvalidBirthDate(String birthDate) {

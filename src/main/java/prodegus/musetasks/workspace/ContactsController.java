@@ -528,7 +528,7 @@ public class ContactsController implements Initializable {
         }
 
         StringBuilder sb = new StringBuilder();
-        String newNote;
+        String newNotes;
 
         // Timestamp
         LocalDateTime now = LocalDateTime.now();
@@ -537,11 +537,11 @@ public class ContactsController implements Initializable {
 
         // Build new note
         if (newNoteTextField.getText().isBlank()) return;
-        if (!notesTextArea.getText().isEmpty()) sb.append("\n\n"); // Adds line breaks if previous note exists
+        if (!notesTextArea.getText().isEmpty()) sb.append(notesTextArea.getText()).append("\n\n");
         sb.append(timestamp).append("\n").append(newNoteTextField.getText());
-        newNote = sb.toString();
+        newNotes = sb.toString();
 
-        addNoteInDB(selectedContact, newNote);
+        setNotesInDB(selectedContact, newNotes);
         refreshAll();
         newNoteTextField.clear();
         deactivateNotesEditMode();

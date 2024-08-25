@@ -98,7 +98,7 @@ public class AddStudentController implements Initializable {
         String email = emailTextField.getText();
         String zoom = zoomComboBox.getSelectionModel().isEmpty() ? "" : zoomComboBox.getValue();
         String skype = skypeComboBox.getSelectionModel().isEmpty() ? "" : skypeComboBox.getValue();
-        String contactMail = contactMailComboBox.getSelectionModel().isEmpty() ? "" : contactMailComboBox.getValue();
+        String contactMail = contactMailComboBox.getValue() == null ? "" : contactMailComboBox.getValue();
         String birthDate = birthDatePicker.getEditor().getText();
         String notesInput = notesTextArea.getText();
         String notes = notesInput.isBlank() ? "" : timestamp + "\n" + notesInput;
@@ -317,15 +317,19 @@ public class AddStudentController implements Initializable {
         skypeCheckBox.setSelected(!student.getSkype().isEmpty());
         skypeComboBox.setValue(student.getSkype());
         contactMailComboBox.setValue(student.getContactEmail());
-        if (student.getParentId1() != 0) parent1ComboBox.setValue(student.parent1());
-        if (student.getParentId2() != 0) parent2ComboBox.setValue(student.parent2());
+        if (student.getParentId1() != 0) {
+            parent1ComboBox.setEditable(false);
+            parent1ComboBox.setValue(student.parent1());
+        }
+        if (student.getParentId2() != 0) {
+            parent2ComboBox.setEditable(false);
+            parent2ComboBox.setValue(student.parent2());
+        }
         notesTextArea.setText(student.getNotes());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<Parent> parents = getParentListFromDB();
-
         contactMailComboBox.setOnMouseClicked(e -> {
             ObservableList<String> email = FXCollections.observableArrayList();
             if (parent1ComboBox.getValue() != null && !parent1ComboBox.getValue().getEmail().isBlank())

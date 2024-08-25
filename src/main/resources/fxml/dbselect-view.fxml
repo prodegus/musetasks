@@ -20,12 +20,12 @@
       </Label>
       <HBox alignment="CENTER" fillHeight="false" layoutX="75.0" layoutY="288.0" prefWidth="450.0" spacing="40.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="75.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#setDBLocation" text="Datenbank auswählen">
+            <Button mnemonicParsing="false" onAction="#selectDB" text="Datenbank auswählen">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#setDBLocation" text="Neu anlegen">
+            <Button mnemonicParsing="false" onAction="#createDB" text="Neu anlegen">
                <font>
                   <Font size="14.0" />
                </font>

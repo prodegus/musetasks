@@ -19,7 +19,6 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import prodegus.musetasks.database.Filter;
 import prodegus.musetasks.workspace.cells.ContactListCell;
-import prodegus.musetasks.workspace.cells.StudentListCell;
 
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.database.Database.*;
@@ -186,8 +185,8 @@ public class ContactModel {
         }
     }
 
-    public static void addNoteInDB(Contact contact, String newNote) {
-        String sql = "UPDATE " + contact.table() + " SET notes = notes || '" + newNote + "' WHERE id = " + contact.id();
+    public static void setNotesInDB(Contact contact, String newNote) {
+        String sql = "UPDATE " + contact.table() + " SET notes = '" + newNote + "' WHERE id = " + contact.id();
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {

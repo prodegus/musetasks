@@ -74,7 +74,7 @@ public class TodayController implements Initializable {
     }
 
     private void addProspectivePane(Student prospective) {
-        VBox prospectiveVBox = new VBox(new Label("Status: " + prospective.getStatus()));
+        VBox prospectiveVBox = new VBox(new Label("Status: " + prospective.studentStatus()));
         TitledPane prospectivePane = new TitledPane(prospective.name(), prospectiveVBox);
         prospectivePane.setPrefWidth(298);
         prospectivesVBox.getChildren().add(prospectivePane);
