@@ -26,22 +26,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Benutzername:" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
+            <Label text="Benutzername:" GridPane.rowIndex="1" />
             <TextField fx:id="userTextfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Passwort:" GridPane.rowIndex="3">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
+            <Label text="Passwort:" GridPane.rowIndex="3" />
             <TextField fx:id="pwTextfield" prefHeight="25.0" prefWidth="247.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Passwort wiederholen:" GridPane.rowIndex="4">
-               <font>
-                  <Font size="14.0" />
-               </font></Label>
+            <Label text="Passwort wiederholen:" GridPane.rowIndex="4" />
             <TextField fx:id="pwConfirmTextfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Benutzer anlegen">
+            <Label styleClass="label-24-bold" text="Benutzer anlegen" GridPane.columnSpan="2">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -50,14 +41,8 @@
       </GridPane>
       <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <Button fx:id="createButton" mnemonicParsing="false" onAction="#create" prefWidth="130.0" text="Benutzer anlegen">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" prefWidth="130.0" text="Abbrechen">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
+            <Button fx:id="createButton" mnemonicParsing="false" onAction="#create" prefWidth="130.0" text="Benutzer anlegen" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" prefWidth="130.0" text="Abbrechen" />
          </children>
          <VBox.margin>
             <Insets top="60.0" />

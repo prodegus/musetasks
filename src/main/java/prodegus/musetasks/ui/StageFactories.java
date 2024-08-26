@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,7 +23,8 @@ public class StageFactories {
     }
 
     public static Stage newStage(String title, FXMLLoader loader) {
-        Parent root = null;
+        loadFonts();
+        Parent root;
         try {
             root = loader.load();
         } catch (IOException e) {
@@ -35,6 +37,13 @@ public class StageFactories {
         stage.setTitle(title);
         stage.setScene(scene);
         return stage;
+    }
+
+    public static void loadFonts() {
+        Font.loadFont(StageFactories.class.getResource("/fonts/FreeSans.ttf").toExternalForm(), 12);
+        Font.loadFont(StageFactories.class.getResource("/fonts/FreeSansBold.ttf").toExternalForm(), 12);
+        Font.loadFont(StageFactories.class.getResource("/fonts/Manrope-Regular.otf").toExternalForm(), 12);
+        Font.loadFont(StageFactories.class.getResource("/fonts/Manrope-Bold.otf").toExternalForm(), 12);
     }
 
     public static Stage newStage(FXMLLoader loader) throws IOException {

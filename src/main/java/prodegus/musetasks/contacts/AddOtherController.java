@@ -61,7 +61,7 @@ public class AddOtherController implements Initializable {
     void addOther(ActionEvent event) {
         Other newOther = new Other();
         boolean invalidData = false;
-        StringBuilder errorMessage = new StringBuilder();
+        StringJoiner errorMessage = new StringJoiner("\n");
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy   HH:mm");
         String timestamp = formatter.format(now);
@@ -80,8 +80,8 @@ public class AddOtherController implements Initializable {
         String city = cityTextField.getText();
         String phone = phoneTextField.getText();
         String email = emailTextField.getText();
-        String zoom = zoomComboBox.getSelectionModel().isEmpty() ? "" : zoomComboBox.getValue();
-        String skype = skypeComboBox.getSelectionModel().isEmpty() ? "" : skypeComboBox.getValue();
+        String zoom = zoomComboBox.getValue() == null ? "" : zoomComboBox.getValue();
+        String skype = skypeComboBox.getValue() == null ? "" : skypeComboBox.getValue();
         String birthDate = birthDatePicker.getEditor().getText();
         String notesInput = notesTextArea.getText();
         String notes = notesInput.isBlank() ? "" : timestamp + "\n" + notesInput;
@@ -89,21 +89,21 @@ public class AddOtherController implements Initializable {
 
         if (description.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Beschreibung des Kontakts eingeben\n");
+            errorMessage.add("- Bitte Beschreibung des Kontakts eingeben");
         } else {
             newOther.setDescription(description);
         }
 
         if (lastname.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Nachname eingeben\n");
+            errorMessage.add("- Bitte Nachname eingeben");
         } else {
             newOther.setLastName(lastname);
         }
 
         if (firstname.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Vorname eingeben\n");
+            errorMessage.add("- Bitte Vorname eingeben");
         } else {
             newOther.setFirstName(firstname);
         }
@@ -115,7 +115,7 @@ public class AddOtherController implements Initializable {
 
         if (isInvalidPostalCode(postalCode)) {
             invalidData = true;
-            errorMessage.append("- Bitte gültige Postleitzahl eingeben (5 Ziffern) oder Feld leer lassen\n");
+            errorMessage.add("- Bitte gültige Postleitzahl eingeben (5 Ziffern) oder Feld leer lassen");
         } else {
             newOther.setPostalCode(postalCodeToInt(postalCode));
         }
@@ -128,7 +128,7 @@ public class AddOtherController implements Initializable {
 
         if (isInvalidBirthDate(birthDate)) {
             invalidData = true;
-            errorMessage.append("- Bitte gültiges Geburtsdatum eingeben (z.B. 01.01.2000) oder Feld leer lassen\n");
+            errorMessage.add("- Bitte gültiges Geburtsdatum eingeben (z.B. 01.01.2000) oder Feld leer lassen");
         } else {
             newOther.setBirthDate(birthDate);
         }
@@ -167,11 +167,17 @@ public class AddOtherController implements Initializable {
     @FXML
     void skypeCheckBoxClicked(MouseEvent event) {
         skypeComboBox.setVisible(skypeCheckBox.isSelected());
+        if (!skypeComboBox.getItems().contains(emailTextField.getText())) {
+            skypeComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     @FXML
     void zoomCheckBoxClicked(MouseEvent event) {
         zoomComboBox.setVisible(zoomCheckBox.isSelected());
+        if (!zoomComboBox.getItems().contains(emailTextField.getText())) {
+            zoomComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     private boolean isInvalidBirthDate(String birthDate) {
@@ -218,10 +224,21 @@ public class AddOtherController implements Initializable {
         if (locations.length > 2) locationComboBox3.setValue(fromString(locations[2]));
         phoneTextField.setText(other.getPhone());
         emailTextField.setText(other.getEmail());
-        zoomCheckBox.setSelected(!other.getZoom().isEmpty());
-        zoomComboBox.setValue(other.getZoom());
-        skypeCheckBox.setSelected(!other.getSkype().isEmpty());
-        skypeComboBox.setValue(other.getSkype());
+
+        zoomComboBox.setItems(other.getAllMail());
+        if (!other.getZoom().isEmpty()) {
+            zoomCheckBox.setSelected(true);
+            zoomComboBox.setVisible(true);
+            zoomComboBox.setValue(other.getZoom());
+        }
+
+        skypeComboBox.setItems(other.getAllMail());
+        if (!other.getSkype().isEmpty()) {
+            skypeCheckBox.setSelected(true);
+            skypeComboBox.setVisible(true);
+            skypeComboBox.setValue(other.getSkype());
+        }
+
         notesTextArea.setText(other.getNotes());
     }
 

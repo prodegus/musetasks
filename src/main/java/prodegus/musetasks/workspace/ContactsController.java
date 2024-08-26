@@ -136,6 +136,7 @@ public class ContactsController implements Initializable {
     @FXML private ComboBox<Teacher> filterTeacher3ComboBox;
     @FXML private CheckBox filterProspectives;
     @FXML private CheckBox filterCustomers;
+    @FXML private Button resetFilterButton;
 
     @FXML private VBox contactDetails;
     @FXML private Label contactName;
@@ -911,9 +912,6 @@ public class ContactsController implements Initializable {
             Label name = new Label(child.name());
             Label lesson1 = new Label(child.lesson1() == null ? "" : child.lesson1().shortName());
             Label lesson1Teacher = new Label(child.lesson1() == null ? "" : child.lesson1().teacher().name());
-            name.setFont(new Font(14));
-            lesson1.setFont(new Font(14));
-            lesson1Teacher.setFont(new Font(14));
 
             parentChildrenInfo.addRow(row);
             parentChildrenInfo.add(new Separator(), 0, row, 3, 1);
@@ -929,8 +927,6 @@ public class ContactsController implements Initializable {
             if (child.getLessonId2() == 0) continue;
             Label lesson2 = new Label(child.lesson2().shortName());
             Label lesson2Teacher = new Label(child.lesson2().teacher().name());
-            lesson2.setFont(new Font(14));
-            lesson2Teacher.setFont(new Font(14));
             parentChildrenInfo.addRow(row, new Label(""), lesson2, lesson2Teacher);
             parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
             parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
@@ -939,8 +935,6 @@ public class ContactsController implements Initializable {
             if (child.getLessonId3() == 0) continue;
             Label lesson3 = new Label(child.lesson3().shortName());
             Label lesson3Teacher = new Label(child.lesson3().teacher().name());
-            lesson3.setFont(new Font(14));
-            lesson3Teacher.setFont(new Font(14));
             parentChildrenInfo.addRow(row, new Label(""), lesson3, lesson3Teacher);
             parentChildrenInfo.getRowConstraints().get(row).setMinHeight(20);
             parentChildrenInfo.getRowConstraints().get(row).setMaxHeight(20);
@@ -1096,7 +1090,6 @@ public class ContactsController implements Initializable {
         contactTableView.setItems(sortableContacts);
         sortableContacts.comparatorProperty().bind(contactTableView.comparatorProperty());
         enableContactSelection(contactTableView);
-        contactTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize TableView: Students
         studentSelectColumn.setCellValueFactory(cd -> cd.getValue().selectedProperty());
@@ -1122,7 +1115,6 @@ public class ContactsController implements Initializable {
         studentTableView.setItems(sortableStudents);
         sortableStudents.comparatorProperty().bind(studentTableView.comparatorProperty());
         enableContactSelection(studentTableView);
-        studentTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize TableView: Teachers
         teacherSelectColumn.setCellValueFactory(cd -> cd.getValue().selectedProperty());
@@ -1141,7 +1133,6 @@ public class ContactsController implements Initializable {
         teacherTableView.setItems(sortableTeachers);
         sortableTeachers.comparatorProperty().bind(teacherTableView.comparatorProperty());
         enableContactSelection(teacherTableView);
-        teacherTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize TableView: Parents
         parentSelectColumn.setCellValueFactory(cd -> cd.getValue().selectedProperty());
@@ -1164,7 +1155,6 @@ public class ContactsController implements Initializable {
         parentTableView.setItems(sortableParents);
         sortableParents.comparatorProperty().bind(parentTableView.comparatorProperty());
         enableContactSelection(parentTableView);
-        parentTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize TableView: Others
         otherSelectColumn.setCellValueFactory(cd -> cd.getValue().selectedProperty());
@@ -1186,7 +1176,6 @@ public class ContactsController implements Initializable {
         otherTableView.setItems(sortableOthers);
         sortableOthers.comparatorProperty().bind(otherTableView.comparatorProperty());
         enableContactSelection(otherTableView);
-        otherTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize displayed table view
         contactTableView.getSortOrder().setAll(nameColumn);

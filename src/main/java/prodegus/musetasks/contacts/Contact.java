@@ -1,14 +1,19 @@
 package prodegus.musetasks.contacts;
 
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import prodegus.musetasks.lessons.Lesson;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
@@ -433,5 +438,18 @@ public class Contact {
     @Override
     public String toString() {
         return this.formalName();
+    }
+
+    public ObservableList<String> getAllMail() {
+        Set<String> mailList = new HashSet<>();
+        if (!this.getEmail().isEmpty()) mailList.add(this.getEmail());
+        if (!this.getZoom().isEmpty()) mailList.add(this.getZoom());
+        if (!this.getSkype().isEmpty()) mailList.add(this.getSkype());
+        if (this.isStudent()) {
+            for (Parent parent : this.toStudent().parents()) {
+                if (!parent.getEmail().isEmpty()) mailList.add(parent.getEmail());
+            }
+        }
+        return FXCollections.observableArrayList(mailList);
     }
 }

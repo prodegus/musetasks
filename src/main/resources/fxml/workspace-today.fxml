@@ -11,17 +11,17 @@
    <children>
       <AnchorPane fx:id="mainAnchorPane" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="dateLabel" text="Mittwoch, 21.08.2024" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <Label fx:id="dateLabel" styleClass="label-36-bold" text="Mittwoch, 21.08.2024" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <Label fx:id="timeLabel" text="23:48 Uhr" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="65.0">
+            <Label fx:id="timeLabel" styleClass="label-36" text="23:48 Uhr" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="65.0">
                <font>
                   <Font size="36.0" />
                </font>
             </Label>
-            <Label fx:id="greetingLabel" layoutX="10.0" layoutY="10.0" text="Guten Morgen, Daniel!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <Label fx:id="greetingLabel" layoutX="10.0" layoutY="10.0" styleClass="label-36-bold" text="Guten Morgen, Daniel!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
@@ -30,7 +30,7 @@
                <children>
                   <VBox spacing="10.0">
                      <children>
-                        <Label text="Unterrichte heute">
+                        <Label styleClass="label-18-bold" text="Unterrichte heute">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -44,7 +44,7 @@
                   </VBox>
                   <VBox spacing="10.0">
                      <children>
-                        <Label text="Lehrer">
+                        <Label styleClass="label-18-bold" text="Lehrer">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -58,7 +58,7 @@
                   </VBox>
                   <VBox spacing="10.0">
                      <children>
-                        <Label text="Interessenten">
+                        <Label styleClass="label-18-bold" text="Interessenten">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>

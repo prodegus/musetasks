@@ -512,4 +512,11 @@ public class Student extends Contact {
         }
         return false;
     }
+
+    public List<Parent> parents() {
+        List<Parent> parents = new ArrayList<>();
+        if (this.getParentId1() != 0) parents.add(this.parent1());
+        if (this.getParentId2() != 0) parents.add(this.parent2());
+        return parents;
+    }
 }

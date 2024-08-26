@@ -36,19 +36,19 @@
                <children>
                   <HBox>
                      <children>
-                        <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="259.0" text="Termin bearbeiten">
+                        <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="259.0" styleClass="label-24-bold" text="Termin bearbeiten">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lessonCategoryLabel" alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Einzel-Unterricht">
+                        <Label fx:id="lessonCategoryLabel" alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" styleClass="label-24" text="Einzel-Unterricht">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="oldDateTimeLabel" text="Montag, 31.12.2024 - 14:00 Uhr">
+                  <Label fx:id="oldDateTimeLabel" styleClass="label-14" text="Montag, 31.12.2024 - 14:00 Uhr">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -68,52 +68,52 @@
                 <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Schüler:">
+                  <Label styleClass="label-14-bold" text="Schüler:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="studentNameLabel" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                  <Label fx:id="studentNameLabel" styleClass="label-14" GridPane.columnIndex="1" GridPane.columnSpan="3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Instrument:" GridPane.rowIndex="1">
+                  <Label styleClass="label-14-bold" text="Instrument:" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="instrumentLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="instrumentLabel" styleClass="label-14" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Standort/Raum:" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label styleClass="label-14-bold" text="Standort/Raum:" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="locationRoomLabel" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <Label fx:id="locationRoomLabel" styleClass="label-14" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Lehrer:" GridPane.rowIndex="2">
+                  <Label styleClass="label-14-bold" text="Lehrer:" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="teacherLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="teacherLabel" styleClass="label-14" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Termin regulär:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Label styleClass="label-14-bold" text="Termin regulär:" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="regularAptLabel" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                  <Label fx:id="regularAptLabel" styleClass="label-14" GridPane.columnIndex="3" GridPane.rowIndex="2">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -160,7 +160,7 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Beteiligte informieren:">
+                        <Label styleClass="label-12-bold" text="Beteiligte informieren:">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -172,7 +172,7 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="individuell:">
+                        <Label styleClass="label-12-bold" text="individuell:">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

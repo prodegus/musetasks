@@ -14,7 +14,7 @@
    <children>
       <VBox>
          <children>
-            <Label fx:id="titleTextField" prefHeight="35.0" text="Termine">
+            <Label fx:id="titleTextField" prefHeight="35.0" styleClass="label-24-bold" text="Termine">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

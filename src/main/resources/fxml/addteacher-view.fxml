@@ -20,7 +20,7 @@
    <children>
       <StackPane>
          <children>
-            <GridPane fx:id="teacherDataForm" maxWidth="450.0">
+            <GridPane fx:id="teacherDataForm" maxWidth="450.0" visible="false">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
               </columnConstraints>
@@ -40,12 +40,12 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
+                              <Label fx:id="titleTextField" prefHeight="35.0" prefWidth="221.0" styleClass="label-24-bold" text="Lehrer anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Lehrerdaten">
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" styleClass="label-24" text="Lehrerdaten">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
@@ -157,7 +157,7 @@
                   </HBox>
                </children>
             </GridPane>
-            <GridPane fx:id="communicationForm" maxWidth="450.0" visible="false">
+            <GridPane fx:id="communicationForm" maxWidth="450.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.0" minWidth="10.0" prefWidth="476.0" />
                </columnConstraints>
@@ -179,12 +179,12 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="221.0" text="Lehrer anlegen">
+                              <Label fx:id="titleTextField2" prefHeight="35.0" prefWidth="221.0" styleClass="label-24-bold" text="Lehrer anlegen">
                                  <font>
                                     <Font name="System Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" text="Kontaktdaten">
+                              <Label alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="231.0" styleClass="label-24" text="Kontaktdaten">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
@@ -207,13 +207,13 @@
                   </VBox>
                   <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="3">
                      <children>
-                        <CheckBox fx:id="zoomCheckBox" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
+                        <CheckBox fx:id="zoomCheckBox" minWidth="60.0" mnemonicParsing="false" onMouseClicked="#zoomCheckBoxClicked" text="Zoom" />
                         <ComboBox fx:id="zoomComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="4">
                      <children>
-                        <CheckBox fx:id="skypeCheckBox" mnemonicParsing="false" onMouseClicked="#skypeCheckBoxClicked" text="Skype" />
+                        <CheckBox fx:id="skypeCheckBox" minWidth="60.0" mnemonicParsing="false" onMouseClicked="#skypeCheckBoxClicked" text="Skype" />
                         <ComboBox fx:id="skypeComboBox" prefHeight="25.0" prefWidth="283.0" promptText="E-Mail-Adresse auswählen oder eingeben" visible="false" />
                      </children>
                   </HBox>

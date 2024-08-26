@@ -93,7 +93,7 @@ public class CalendarColumn extends AnchorPane {
         headerBox.setPrefWidth(200);
         headerBox.setPrefHeight(52);
         headerBox.setPadding(new Insets(5, 0, 0, 0));
-        headerBox.getChildren().add(new Label(this.getHeader()));
+        headerBox.getChildren().add(new Label("   " + this.getHeader()));
         return headerBox;
     }
 }

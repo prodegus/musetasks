@@ -30,33 +30,36 @@
          <items>
             <HBox>
                <children>
-                  <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
+                  <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0" styleClass="menu-bar-left">
                      <children>
-                        <Button alignment="BASELINE_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#newMail" prefHeight="45.0" prefWidth="180.0" text="Neue E-Mail">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" />
-                           </VBox.margin>
-                        </Button>
-                        <ToggleButton fx:id="toggleSent" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllSent" prefHeight="45.0" prefWidth="180.0" text="Gesendet">
+                        <ToggleButton alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#newMail" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Neue E-Mail">
                            <font>
                               <Font size="14.0" />
                            </font>
                            <toggleGroup>
                               <ToggleGroup fx:id="viewMailToggles" />
                            </toggleGroup>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </ToggleButton>
-                        <ToggleButton fx:id="toggleDraft" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllDrafts" prefHeight="45.0" prefWidth="180.0" text="Entwürfe" toggleGroup="$viewMailToggles">
+                        <ToggleButton fx:id="toggleSent" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllSent" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Gesendet" toggleGroup="$viewMailToggles">
                            <font>
                               <Font size="14.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="10.0" />
+                              <Insets top="30.0" />
                            </VBox.margin>
                         </ToggleButton>
-                        <TitledPane animated="false" expanded="false" text="Zeitraum">
+                        <ToggleButton fx:id="toggleDraft" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewAllDrafts" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Entwürfe" toggleGroup="$viewMailToggles">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </ToggleButton>
+                        <TitledPane fx:id="filterPane" animated="false" expanded="false" text="Zeitraum">
                            <content>
                               <VBox prefWidth="100.0" spacing="10.0">
                                  <padding>
@@ -93,12 +96,11 @@
                                  </children>
                               </VBox>
                            </content>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
                         </TitledPane>
-                        <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Button>
+                        <Button fx:id="resetFilterButton" mnemonicParsing="false" onAction="#resetFilter" prefWidth="180.0" styleClass="button-left" text="Filter zurücksetzen" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -108,7 +110,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <MenuButton fx:id="mailFromTemplate" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="E-Mail aus Vorlage" textAlignment="CENTER" wrapText="true">
+                              <MenuButton fx:id="mailFromTemplate" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="93.0" styleClass="upper-menu-button" text="E-Mail aus Vorlage" textAlignment="CENTER" wrapText="true">
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#fromTemplateReschedule" text="Unterricht absagen (mit Ersatzermin)" />
                                   <MenuItem mnemonicParsing="false" onAction="#fromTemplateToReschedule" text="Unterricht absagen (Ersatztermin folgt)" />
@@ -116,14 +118,14 @@
                                     <MenuItem mnemonicParsing="false" onAction="#fromTemplateChanged" text="Terminänderung" />
                                 </items>
                               </MenuButton>
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refresh" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refresh" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
                               <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
                               </HBox>
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteMail" prefHeight="70.0" prefWidth="90.0" text="E-Mail(s) löschen" textAlignment="CENTER" wrapText="true" />
-                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#forwardMail" prefHeight="70.0" prefWidth="90.0" text="E-Mail(s) weiterleiten" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteMail" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="E-Mail(s) löschen" textAlignment="CENTER" wrapText="true" />
+                              <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#forwardMail" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="E-Mail(s) weiterleiten" textAlignment="CENTER" wrapText="true" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -132,7 +134,7 @@
                         <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
                            <children>
                               <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" text="Alle auswählen" />
-                              <TextField fx:id="emailSearchBar" prefHeight="25.0" prefWidth="208.0" promptText="E-Mails durchsuchen" />
+                              <TextField fx:id="emailSearchBar" prefHeight="25.0" prefWidth="208.0" promptText="E-Mails durchsuchen" styleClass="searchbar" />
                            </children>
                         </HBox>
                         <StackPane VBox.vgrow="ALWAYS">
@@ -175,28 +177,28 @@
                   <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="NEVER" />
                </rowConstraints>
                <children>
-                  <Label text="Von:">
+                  <Label styleClass="label-14-bold" text="Von:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="An:" GridPane.rowIndex="1">
+                  <Label styleClass="label-14-bold" text="An:" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Kopie an:" GridPane.rowIndex="2">
+                  <Label styleClass="label-14-bold" text="Kopie an:" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Betreff:" GridPane.rowIndex="3">
+                  <Label styleClass="label-14-bold" text="Betreff:" GridPane.rowIndex="3">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                  <Label text="Anhang:" GridPane.rowIndex="6">
+                  <Label styleClass="label-14-bold" text="Anhang:" GridPane.rowIndex="6">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -229,32 +231,32 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <Label text="Gesendet:" GridPane.rowIndex="4">
+                  <Label styleClass="label-14-bold" text="Gesendet:" GridPane.rowIndex="4">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelDateTime" text="22.08.2024, 16:20 Uhr" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <Label fx:id="labelDateTime" styleClass="label-14" text="22.08.2024, 16:20 Uhr" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelSubject" text="Betreff" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Label fx:id="labelSubject" styleClass="label-14" text="Betreff" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelCc" text="CC" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="labelCc" styleClass="label-14" text="CC" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelTo" text="Empfänger" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="labelTo" styleClass="label-14" text="Empfänger" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelFrom" text="Absender" GridPane.columnIndex="1">
+                  <Label fx:id="labelFrom" styleClass="label-14" text="Absender" GridPane.columnIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>

@@ -38,7 +38,7 @@
          <children>
             <VBox>
                <children>
-                  <Label fx:id="titleTextField" prefHeight="35.0" text="Einzel-Unterricht anlegen">
+                  <Label fx:id="titleTextField" prefHeight="35.0" styleClass="label-24-bold" text="Einzel-Unterricht anlegen">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -156,7 +156,7 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Termin-Status">
+                        <Label styleClass="label-12-bold" text="Termin-Status">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -172,7 +172,7 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Unterrichts-Status">
+                        <Label styleClass="label-12-bold" text="Unterrichts-Status">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

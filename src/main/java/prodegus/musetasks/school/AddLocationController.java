@@ -3,6 +3,7 @@ package prodegus.musetasks.school;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import prodegus.musetasks.ui.popup.PopupWindow;
@@ -16,6 +17,7 @@ import static prodegus.musetasks.utils.Nodes.getAllNodes;
 
 public class AddLocationController {
 
+    @FXML private Label title;
     @FXML private TextField locationNameTextField;
     @FXML private VBox roomsVBox;
 
@@ -70,6 +72,7 @@ public class AddLocationController {
     }
 
     public void init(Location location) {
+        title.setText("Standort bearbeiten");
         locationNameTextField.setText(location.getName());
         List<String> rooms = location.rooms();
         List<TextField> roomTextFields = new ArrayList<>();

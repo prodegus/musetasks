@@ -32,71 +32,41 @@
    <children>
       <StackPane HBox.hgrow="ALWAYS">
          <children>
-            <SplitPane fx:id="lessonListView" dividerPositions="0.55" visible="false">
+            <SplitPane fx:id="lessonListView" dividerPositions="0.55">
                <items>
                   <HBox>
                      <children>
-                        <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0">
+                        <VBox maxWidth="-Infinity" minWidth="165.0" prefHeight="800.0" prefWidth="200.0" styleClass="menu-bar-left">
                            <children>
-                              <ToggleButton fx:id="viewAllToggle" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsAll" prefHeight="45.0" prefWidth="180.0" text="Alle">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <ToggleButton fx:id="viewAllToggle" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsAll" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Alle">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="lessonFilterToggles" />
                                  </toggleGroup>
                               </ToggleButton>
-                              <ToggleButton alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsToday" prefHeight="45.0" prefWidth="180.0" text="Heute" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <ToggleButton alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsToday" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Heute" toggleGroup="$lessonFilterToggles">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets top="30.0" />
                                  </VBox.margin>
                               </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation1" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation1" prefHeight="45.0" prefWidth="180.0" text="Standort 1" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <ToggleButton fx:id="lessonToggleLocation1" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation1" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Standort 1" toggleGroup="$lessonFilterToggles">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets top="30.0" />
                                  </VBox.margin>
                               </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation2" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation2" prefHeight="45.0" prefWidth="180.0" text="Standort 2" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation3" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation3" prefHeight="45.0" prefWidth="180.0" text="Standort 3" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <ToggleButton fx:id="lessonToggleLocation2" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation2" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Standort 2" toggleGroup="$lessonFilterToggles" />
+                              <ToggleButton fx:id="lessonToggleLocation3" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation3" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Standort 3" toggleGroup="$lessonFilterToggles">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
                               </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation4" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation4" prefHeight="45.0" prefWidth="180.0" text="Standort 4" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <ToggleButton fx:id="lessonToggleLocation5" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation5" prefHeight="45.0" prefWidth="180.0" text="Standort 5" toggleGroup="$lessonFilterToggles">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </ToggleButton>
-                              <MenuButton fx:id="lessonTeacherMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="Lehrer">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <ToggleButton fx:id="lessonToggleLocation4" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation4" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Standort 4" toggleGroup="$lessonFilterToggles" />
+                              <ToggleButton fx:id="lessonToggleLocation5" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="140.0" mnemonicParsing="false" onAction="#viewLessonsLocation5" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle" text="Standort 5" toggleGroup="$lessonFilterToggles" />
+                              <MenuButton fx:id="lessonTeacherMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle-menubutton" text="Lehrer">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets top="30.0" />
                                  </VBox.margin>
                               </MenuButton>
-                              <MenuButton fx:id="lessonInstrumentMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" text="Instrument">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                              <MenuButton fx:id="lessonInstrumentMenuButton" mnemonicParsing="false" prefHeight="45.0" prefWidth="180.0" styleClass="sub-toggle-menubutton" text="Instrument">
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
@@ -110,7 +80,7 @@
                                                 <Insets bottom="0" left="0" right="0" top="0" />
                                              </padding>
                                              <children>
-                                                <TitledPane animated="false" expanded="false" text="Standort">
+                                                <TitledPane animated="false" expanded="false" styleClass="titled-pane-left" text="Standort">
                                                    <content>
                                                       <VBox prefWidth="100.0" spacing="5.0">
                                                          <padding>
@@ -126,7 +96,7 @@
                                                       </VBox>
                                                    </content>
                                                 </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Lehrer">
+                                                <TitledPane animated="false" expanded="false" styleClass="titled-pane-left" text="Lehrer">
                                                    <content>
                                                       <VBox prefWidth="100.0" spacing="5.0">
                                                          <padding>
@@ -155,7 +125,7 @@
                                                       </VBox>
                                                    </content>
                                                 </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Instrument">
+                                                <TitledPane animated="false" expanded="false" styleClass="titled-pane-left" text="Instrument">
                                                    <content>
                                                       <VBox prefWidth="100.0" spacing="5.0">
                                                          <padding>
@@ -184,7 +154,7 @@
                                                       </VBox>
                                                    </content>
                                                 </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Unterrichtsart">
+                                                <TitledPane animated="false" expanded="false" styleClass="titled-pane-left" text="Unterrichtsart">
                                                    <content>
                                                       <VBox prefWidth="100.0" spacing="5.0">
                                                          <padding>
@@ -199,7 +169,7 @@
                                                       </VBox>
                                                    </content>
                                                 </TitledPane>
-                                                <TitledPane animated="false" expanded="false" text="Zeitraum">
+                                                <TitledPane animated="false" expanded="false" styleClass="titled-pane-left" text="Zeitraum">
                                                    <content>
                                                       <VBox prefWidth="100.0" spacing="10.0">
                                                          <padding>
@@ -210,9 +180,9 @@
                                                             <VBox>
                                                                <children>
                                                                   <CheckBox fx:id="filterTimeDate" mnemonicParsing="false" onAction="#viewLessonsFiltered" text="Datum:" />
-                                                                  <HBox alignment="CENTER_RIGHT">
+                                                                  <HBox alignment="CENTER_RIGHT" maxWidth="155.0">
                                                                      <children>
-                                                                        <DatePicker fx:id="filterTimeDatePicker" prefHeight="27.0" prefWidth="140.0" />
+                                                                        <DatePicker fx:id="filterTimeDatePicker" prefHeight="27.0" prefWidth="130.0" />
                                                                      </children>
                                                                   </HBox>
                                                                </children>
@@ -220,13 +190,13 @@
                                                             <VBox>
                                                                <children>
                                                                   <CheckBox fx:id="filterTimeSpan" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#viewLessonsFiltered" text="Zeitraum von:" />
-                                                                  <HBox alignment="CENTER_RIGHT">
+                                                                  <HBox alignment="CENTER_RIGHT" maxWidth="155.0">
                                                                      <children>
                                                                         <VBox>
                                                                            <children>
-                                                                              <DatePicker fx:id="filterTimeSpanFrom" prefHeight="27.0" prefWidth="140.0" />
+                                                                              <DatePicker fx:id="filterTimeSpanFrom" prefHeight="27.0" prefWidth="130.0" />
                                                                               <Label text="bis:" />
-                                                                              <DatePicker fx:id="filterTimeSpanTo" prefHeight="27.0" prefWidth="140.0" />
+                                                                              <DatePicker fx:id="filterTimeSpanTo" prefHeight="27.0" prefWidth="130.0" />
                                                                            </children>
                                                                         </VBox>
                                                                      </children>
@@ -242,15 +212,11 @@
                                        </content>
                                     </ScrollPane>
                                  </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
                               </TitledPane>
-                              <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="30.0" prefWidth="180.0" text="Filter zurücksetzen">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
+                              <Button fx:id="resetFilterButton" mnemonicParsing="false" onAction="#resetFilter" prefWidth="180.0" styleClass="button-left" text="Filter zurücksetzen" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -260,7 +226,7 @@
                            <children>
                               <HBox>
                                  <children>
-                                    <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
+                                    <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="93.0" styleClass="upper-menu-button" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
                                        <items>
                                           <MenuItem mnemonicParsing="false" onAction="#showAddSingleWindow" text="Einzelunterricht" />
                                           <MenuItem mnemonicParsing="false" onAction="#showAddGroupWindow" text="Gruppenunterricht" />
@@ -268,16 +234,16 @@
                                           <MenuItem mnemonicParsing="false" onAction="#showAddWorkgroupWindow" text="AG" />
                                        </items>
                                     </MenuButton>
-                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Unterrichte importieren" textAlignment="CENTER" wrapText="true" />
-                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
-                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteLessons" prefHeight="70.0" prefWidth="90.0" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
+                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Unterrichte importieren" textAlignment="CENTER" wrapText="true" />
+                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
+                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteLessons" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
                                     <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </HBox>
-                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#mailToLessonsContacts" prefHeight="70.0" prefWidth="90.0" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
-                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToCalendarView" prefHeight="70.0" prefWidth="90.0" text="Zum Kalender wechseln" textAlignment="CENTER" wrapText="true" />
+                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#mailToLessonsContacts" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
+                                    <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToCalendarView" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Zum Kalender wechseln" textAlignment="CENTER" wrapText="true" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -286,7 +252,7 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
                                  <children>
                                     <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" text="Alle auswählen" />
-                                    <TextField fx:id="lessonSearchBar" onKeyTyped="#searchBarKeyTyped" prefHeight="25.0" prefWidth="208.0" promptText="Unterrichte durchsuchen" />
+                                    <TextField fx:id="lessonSearchBar" onKeyTyped="#searchBarKeyTyped" prefHeight="25.0" prefWidth="208.0" promptText="Unterrichte durchsuchen" styleClass="searchbar" />
                                  </children>
                               </HBox>
                               <StackPane VBox.vgrow="ALWAYS">
@@ -310,23 +276,23 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox prefHeight="800.0" prefWidth="500.0">
+                  <VBox fx:id="lessonInfoArea" prefHeight="800.0" prefWidth="500.0">
                      <children>
                         <AnchorPane prefHeight="50.0" prefWidth="631.0">
                            <children>
-                              <Label fx:id="lessonInfoTitle" alignment="BOTTOM_LEFT" text="Einzel-Unterricht">
+                              <Label fx:id="lessonInfoTitle" alignment="BOTTOM_LEFT" styleClass="label-34" text="Einzel-Unterricht">
                                  <font>
                                     <Font size="34.0" />
                                  </font>
                               </Label>
                               <VBox AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
                                  <children>
-                                    <Label text="Lehrer:">
+                                    <Label styleClass="label-14-bold" text="Lehrer:">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="lessonInfoTeacherName" text="Mustafa Schleckenstein">
+                                    <Label fx:id="lessonInfoTeacherName" styleClass="label-14" text="Mustafa Schleckenstein">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -335,7 +301,7 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                        <Label fx:id="lessonInfoSubtitle" text="Fritz Müller / Gitarre / 30 Min / Lohmar (Studio)" VBox.vgrow="NEVER">
+                        <Label fx:id="lessonInfoSubtitle" styleClass="label-20" text="Fritz Müller / Gitarre / 30 Min / Lohmar (Studio)" VBox.vgrow="NEVER">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -351,8 +317,8 @@
                                        <content>
                                           <GridPane fx:id="singleInfoGridPane" minWidth="255.0" prefWidth="260.0">
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="-Infinity" prefWidth="90.0" />
-                                                <ColumnConstraints hgrow="ALWAYS" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="-Infinity" prefWidth="93.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" maxWidth="175.0" minWidth="167.0" prefWidth="167.0" />
                                                 <ColumnConstraints />
                                              </columnConstraints>
                                              <rowConstraints>
@@ -364,62 +330,62 @@
                                                 <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Schüler:" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Schüler:" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label text="Instrument:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Instrument:" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label text="Dauer:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Dauer:" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoStudentName" text="Magdalena Kesselschmied" wrapText="true" GridPane.columnIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+                                                <Label fx:id="singleInfoStudentName" styleClass="label-14" text="Magdalena Meier" wrapText="true" GridPane.columnIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoInstrument" text="Gitarre" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                                                <Label fx:id="singleInfoInstrument" styleClass="label-14" text="Gitarre" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoDuration" text="30 Minuten" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                                <Label fx:id="singleInfoDuration" styleClass="label-14" text="30 Minuten" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label text="Ort:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Ort:" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoLocationRoom" text="Lohmar (Studio)" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                                <Label fx:id="singleInfoLocationRoom" styleClass="label-14" text="Lohmar (Studio)" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label text="Termin:" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Termin:" GridPane.rowIndex="4" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoRegularAppointment" text="montags 13:30" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                                                <Label fx:id="singleInfoRegularAppointment" styleClass="label-14" text="montags 13:30" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label text="Status:" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                                <Label styleClass="label-14-bold" text="Status:" GridPane.rowIndex="5" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="singleInfoStatus" text="Aktiv" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                                                <Label fx:id="singleInfoStatus" styleClass="label-14" text="Aktiv" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>
@@ -430,7 +396,7 @@
                                     </ScrollPane>
                                     <VBox minWidth="343.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label text="Unterrichtsakte">
+                                          <Label styleClass="label-14-bold" text="Unterrichtsakte">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
@@ -439,9 +405,9 @@
                                              <content>
                                                 <GridPane fx:id="lessonChangesGridPane" prefWidth="341.0">
                                                    <columnConstraints>
-                                                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="70.0" />
-                                                      <ColumnConstraints hgrow="ALWAYS" prefWidth="150.0" />
-                                                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="53.0" />
+                                                      <ColumnConstraints hgrow="NEVER" maxWidth="81.0" minWidth="-Infinity" prefWidth="81.0" />
+                                                      <ColumnConstraints hgrow="ALWAYS" maxWidth="213.0" minWidth="183.0" prefWidth="183.0" />
+                                                      <ColumnConstraints hgrow="NEVER" maxWidth="77.0" minWidth="-Infinity" prefWidth="77.0" />
                                                    </columnConstraints>
                                                    <children>
                                                       <Label text="Datum">
@@ -481,7 +447,7 @@
                         </Separator>
                         <AnchorPane>
                            <children>
-                              <Label text="Aktionen" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <Label styleClass="label-14-bold" text="Aktionen" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -499,7 +465,7 @@
                               <Insets bottom="10.0" top="10.0" />
                            </VBox.margin>
                         </Separator>
-                        <Label fx:id="aptLabel" text="Termine im 1. Halbjahr 2024:">
+                        <Label fx:id="aptLabel" styleClass="label-14-bold" text="Termine im 1. Halbjahr 2024:">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -527,31 +493,16 @@
                         </StackPane>
                         <HBox alignment="CENTER" spacing="10.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#aptShowPreviousHalfYear" prefWidth="160.0" text="&lt;- Voriges Halbjahr">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
+                              <Button mnemonicParsing="false" onAction="#aptShowPreviousHalfYear" prefWidth="160.0" text="Voriges Halbjahr" />
                               <MenuButton fx:id="aptEditButton" mnemonicParsing="false" prefWidth="160.0" text="Bearbeiten">
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#aptEditDrop" text="Termin absagen (ohne Ersatz)" />
                                     <MenuItem mnemonicParsing="false" onAction="#aptEditReschedule" text="Termin absagen (mit Ersatz)" />
                                     <MenuItem mnemonicParsing="false" onAction="#aptEditChange" text="Termin ändern" />
                                 </items>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
                               </MenuButton>
-                              <Button fx:id="aptForwardButton" mnemonicParsing="false" onAction="#aptForwardTo" prefWidth="160.0" text="Senden an ...">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button mnemonicParsing="false" onAction="#aptShowNextHalfYear" prefWidth="160.0" text="Nächstes Halbjahr -&gt;">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
+                              <Button fx:id="aptForwardButton" mnemonicParsing="false" onAction="#aptForwardTo" prefWidth="160.0" text="Senden an ..." />
+                              <Button mnemonicParsing="false" onAction="#aptShowNextHalfYear" prefWidth="160.0" text="Nächstes Halbjahr" />
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
@@ -564,11 +515,11 @@
                   </VBox>
                </items>
             </SplitPane>
-            <VBox fx:id="lessonCalendarView" prefHeight="800.0" prefWidth="400.0" spacing="10.0">
+            <VBox fx:id="lessonCalendarView" prefHeight="800.0" prefWidth="400.0" spacing="10.0" visible="false">
                <children>
                   <HBox alignment="CENTER_LEFT" minHeight="70.0">
                      <children>
-                        <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="90.0" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
+                        <MenuButton alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="93.0" styleClass="upper-menu-button" text="Neuer Unterricht" textAlignment="CENTER" wrapText="true">
                            <items>
                               <MenuItem mnemonicParsing="false" onAction="#showAddSingleWindow" text="Einzelunterricht" />
                               <MenuItem mnemonicParsing="false" onAction="#showAddGroupWindow" text="Gruppenunterricht" />
@@ -576,33 +527,49 @@
                               <MenuItem mnemonicParsing="false" onAction="#showAddWorkgroupWindow" text="AG" />
                            </items>
                         </MenuButton>
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="90.0" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteLesson" prefHeight="70.0" prefWidth="90.0" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#refreshLessons" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Aktualisieren" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#deleteLesson" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Unterricht(e) löschen" textAlignment="CENTER" wrapText="true" />
                         <HBox alignment="TOP_RIGHT" maxWidth="-Infinity" prefWidth="54.0" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </HBox>
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#mailToLessonContacts" prefHeight="70.0" prefWidth="90.0" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToListView" prefHeight="70.0" prefWidth="90.0" text="Zur Liste wechseln" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#mailToLessonContacts" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Beteiligte kontaktieren" textAlignment="CENTER" wrapText="true" />
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#switchToListView" prefHeight="70.0" prefWidth="93.0" styleClass="upper-button" text="Zur Liste wechseln" textAlignment="CENTER" wrapText="true" />
                         <HBox alignment="CENTER" spacing="20.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#calendarBack" prefHeight="40.0" prefWidth="40.0" text="&lt;" />
-                              <Label fx:id="calendarDateLabel" alignment="CENTER" minWidth="400.0" text="Donnerstag, 23. September 2024">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                              <Button mnemonicParsing="false" onAction="#calendarForward" prefHeight="40.0" prefWidth="40.0" text="&gt;" />
+                              <Button mnemonicParsing="false" onAction="#calendarBack" prefHeight="51.0" prefWidth="51.0" styleClass="arrow-button" text="◄" />
+                              <StackPane>
+                                 <children>
+                                    <Label fx:id="calendarDateLabel" alignment="CENTER" minWidth="300.0" styleClass="label-24-bold" text="Donnerstag, 23.09.2024">
+                                       <font>
+                                          <Font name="System Bold" size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </StackPane>
+                              <Button mnemonicParsing="false" onAction="#calendarForward" prefHeight="51.0" prefWidth="51.0" styleClass="arrow-button" text="►" />
                            </children>
                            <HBox.margin>
-                              <Insets left="100.0" />
+                              <Insets left="59.0" />
                            </HBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                           <children>
+                              <DatePicker fx:id="calendarDatePicker" prefWidth="250.0" promptText="Datum eingeben / auswählen" />
+                              <Button mnemonicParsing="false" onAction="#confirmDate" text="OK" />
+                           </children>
                         </HBox>
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets left="42.0" />
+                     </padding>
                   </HBox>
                   <BorderPane>
                      <center>
@@ -709,7 +676,7 @@
                                           <Rectangle fx:id="columnHeadersBackground" arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
                                           <HBox fx:id="columnHeaders" alignment="CENTER_LEFT" prefHeight="52.0">
                                              <padding>
-                                                <Insets left="6.0" />
+                                                <Insets left="5.0" />
                                              </padding>
                                           </HBox>
                                        </children>

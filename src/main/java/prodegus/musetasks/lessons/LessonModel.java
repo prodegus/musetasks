@@ -20,6 +20,7 @@ import java.util.List;
 
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
+import static prodegus.musetasks.contacts.StudentModel.getStudentFromDB;
 import static prodegus.musetasks.database.Database.*;
 import static prodegus.musetasks.utils.DateTime.*;
 
@@ -288,6 +289,48 @@ public class LessonModel {
         }
     }
 
+    public static List<Student> getRemovedStudents(Lesson oldLesson, Lesson newLesson) {
+        List<Integer> oldIds = new ArrayList<>();
+        List<Integer> newIds = new ArrayList<>();
+        List<Student> removedStudents = new ArrayList<>();
+
+        for (Student student : oldLesson.students()) {
+            oldIds.add(student.getId());
+        }
+
+        for (Student student : newLesson.students()) {
+            newIds.add(student.getId());
+        }
+
+        for (Integer id : oldIds) {
+            if (!newIds.contains(id)) {
+                removedStudents.add(getStudentFromDB(id));
+            }
+        }
+        return removedStudents;
+    }
+
+    public static List<Student> getAddedStudents(Lesson oldLesson, Lesson newLesson) {
+        List<Integer> oldIds = new ArrayList<>();
+        List<Integer> newIds = new ArrayList<>();
+        List<Student> addedStudents = new ArrayList<>();
+
+        for (Student student : oldLesson.students()) {
+            oldIds.add(student.getId());
+        }
+
+        for (Student student : newLesson.students()) {
+            newIds.add(student.getId());
+        }
+
+        for (Integer id : newIds) {
+            if (!oldIds.contains(id)) {
+                addedStudents.add(getStudentFromDB(id));
+            }
+        }
+        return addedStudents;
+    }
+
     public static boolean trialExists(int lessonId) {
         Filter lesson = new Filter("lessonid", String.valueOf(lessonId));
         Filter trial = new Filter("category", CATEGORY_LESSON_TRIAL);
@@ -317,8 +360,7 @@ public class LessonModel {
 
     public static void updateLesson(Lesson lesson, int id) {
         Lesson oldLesson = getLessonFromDB(id);
-        List<Student> removedStudents = oldLesson.students();
-        removedStudents.removeAll(lesson.students());
+        List<Student> removedStudents = getRemovedStudents(oldLesson, lesson);
         updateMultiple(LESSON_TABLE, id, lesson.valuesToSQLUpdateString());
         for (Student student : removedStudents) {
             student.removeLessonInDB(id);

@@ -14,10 +14,10 @@
    <children>
       <AnchorPane prefHeight="140.0" prefWidth="400.0">
          <children>
-            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#settingsButtonClicked" text="Einstellungen" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#settingsButtonClicked" prefHeight="42.0" prefWidth="42.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
          </children>
       </AnchorPane>
-      <Label text="MuseTasks">
+      <Label styleClass="app-title" text="MuseTasks">
          <font>
             <Font size="40.0" />
          </font>

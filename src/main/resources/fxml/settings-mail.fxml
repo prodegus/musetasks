@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -11,10 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.PasswordField?>
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.login.MailSettingsController">
    <children>
-      <Label text="E-Mail-Konto hinzufügen">
+      <Label styleClass="label-24-bold" text="E-Mail-Konto hinzufügen">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
@@ -35,15 +35,15 @@
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="E-Mail-Adresse:">
+            <Label styleClass="label-14-bold" text="E-Mail-Adresse:">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-            <Label text="Passwort:" GridPane.rowIndex="1">
+            <Label styleClass="label-14-bold" text="Passwort:" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-            <Label text="Absendername:" GridPane.rowIndex="3">
+            <Label styleClass="label-14-bold" text="Absendername:" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

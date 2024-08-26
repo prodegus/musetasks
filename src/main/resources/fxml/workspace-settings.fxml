@@ -18,7 +18,7 @@
    <children>
       <AnchorPane HBox.hgrow="ALWAYS">
          <children>
-            <Label layoutX="10.0" layoutY="10.0" text="Einstellungen" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0">
+            <Label layoutX="10.0" layoutY="10.0" styleClass="label-36-bold" text="Einstellungen" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
@@ -38,12 +38,12 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Name der Schule:">
+                  <Label styleClass="label-14" text="Name der Schule:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Unterrichtsangebot:" GridPane.rowIndex="2">
+                  <Label styleClass="label-14" text="Unterrichtsangebot:" GridPane.rowIndex="2">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -52,7 +52,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <Label text="Blasinstrumente">
+                              <Label styleClass="label-14-bold" text="Blasinstrumente">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -71,7 +71,7 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <Label text="Streichinstrumente">
+                              <Label styleClass="label-14-bold" text="Streichinstrumente">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -79,7 +79,7 @@
                               <CheckBox mnemonicParsing="false" text="Violine" />
                               <CheckBox mnemonicParsing="false" text="Cello" />
                               <CheckBox mnemonicParsing="false" text="Kontrabass" />
-                              <Label text="Zupfinstrumente">
+                              <Label styleClass="label-14-bold" text="Zupfinstrumente">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -90,7 +90,7 @@
                               <CheckBox mnemonicParsing="false" text="A-Gitarre" />
                               <CheckBox mnemonicParsing="false" text="E-Gitarre" />
                               <CheckBox mnemonicParsing="false" text="E-Bass" />
-                              <Label text="Tasteninstrumente">
+                              <Label styleClass="label-14-bold" text="Tasteninstrumente">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -103,14 +103,14 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <Label text="Schlaginstrumente">
+                              <Label styleClass="label-14-bold" text="Schlaginstrumente">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
                               <CheckBox mnemonicParsing="false" text="Schlagzeug" />
                               <CheckBox mnemonicParsing="false" text="Percussion" />
-                              <Label text="Sonstiges">
+                              <Label styleClass="label-14-bold" text="Sonstiges">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -127,7 +127,7 @@
                      </children>
                   </HBox>
                   <TextField fx:id="schoolNameTextField" maxWidth="-Infinity" prefWidth="350.0" GridPane.columnIndex="1" />
-                  <Label text="Standorte:" GridPane.rowIndex="4">
+                  <Label styleClass="label-14" text="Standorte:" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets top="4.0" />
                      </GridPane.margin>
@@ -200,7 +200,7 @@
                         <Button fx:id="addLocationButton" mnemonicParsing="false" onAction="#addLocation" prefWidth="175.0" text="Standort hinzufügen" />
                      </children>
                   </VBox>
-                  <Label text="E-Mail-Account:" GridPane.rowIndex="6">
+                  <Label styleClass="label-14" text="E-Mail-Account:" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets top="4.0" />
                      </GridPane.margin>
@@ -232,16 +232,8 @@
             </GridPane>
             <HBox alignment="CENTER" layoutX="258.0" layoutY="826.0" spacing="20.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
                <children>
-                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#confirm" prefHeight="30.0" prefWidth="100.0" text="Bestätigen">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#cancel" prefHeight="30.0" prefWidth="100.0" text="Abbrechen">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
+                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#confirm" prefWidth="100.0" text="Bestätigen" />
+                  <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#cancel" prefWidth="100.0" text="Abbrechen" />
                </children>
             </HBox>
          </children>

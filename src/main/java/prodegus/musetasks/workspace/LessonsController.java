@@ -17,6 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -37,10 +39,12 @@ import prodegus.musetasks.ui.CalendarColumn;
 import prodegus.musetasks.ui.popup.PopupWindow;
 import prodegus.musetasks.utils.HalfYear;
 import prodegus.musetasks.workspace.cells.StringListCell;
+import prodegus.musetasks.workspace.cells.TeacherListCellFormal;
 import prodegus.musetasks.workspace.cells.TeacherListCellShort;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -50,8 +54,7 @@ import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static prodegus.musetasks.appointments.Appointment.*;
 import static prodegus.musetasks.appointments.AppointmentModel.*;
 import static prodegus.musetasks.appointments.EditAppointmentController.*;
-import static prodegus.musetasks.contacts.TeacherModel.getTeacherListFromDB;
-import static prodegus.musetasks.contacts.TeacherModel.teacherStringConverterShort;
+import static prodegus.musetasks.contacts.TeacherModel.*;
 import static prodegus.musetasks.lessons.LessonModel.*;
 import static prodegus.musetasks.school.LocationModel.getLocationListFromDB;
 import static prodegus.musetasks.school.School.SCHOOL_INSTRUMENTS;
@@ -69,7 +72,10 @@ public class LessonsController implements Initializable {
     @FXML private SplitPane lessonListView;
     @FXML private VBox lessonCalendarView;
 
+    @FXML private VBox lessonInfoArea;
+
     @FXML private Label calendarDateLabel;
+    @FXML private DatePicker calendarDatePicker;
     @FXML private ScrollPane columnHeaderScrollPane;
     @FXML private HBox columnHeaders;
     @FXML private Rectangle columnHeadersBackground;
@@ -123,6 +129,8 @@ public class LessonsController implements Initializable {
     @FXML private CheckBox filterTimeSpan;
     @FXML private DatePicker filterTimeSpanFrom;
     @FXML private DatePicker filterTimeSpanTo;
+
+    @FXML private Button resetFilterButton;
 
     @FXML private TableView<Lesson> lessonTableView;
     @FXML private TableColumn<Lesson, Boolean> selectColumn;
@@ -204,13 +212,11 @@ public class LessonsController implements Initializable {
 
     @FXML void calendarBack() {
         calendarStartDate = calendarStartDate.minusDays(1);
-        calendarEndDate = calendarEndDate.minusDays(1);
         refreshCalendar();
     }
 
     @FXML void calendarForward() {
         calendarStartDate = calendarStartDate.plusDays(1);
-        calendarEndDate = calendarEndDate.plusDays(1);
         refreshCalendar();
     }
 
@@ -222,6 +228,17 @@ public class LessonsController implements Initializable {
             }
         }
         enableCalendarBoxSelection();
+    }
+
+    @FXML void confirmDate(ActionEvent event) {
+        if (isInvalidDate(calendarDatePicker.getEditor().getText())) {
+            PopupWindow.displayInformation("Ungültiges Datum!");
+            calendarDatePicker.getEditor().clear();
+            return;
+        }
+        calendarStartDate = calendarDatePicker.getValue();
+        calendarDatePicker.getEditor().clear();
+        refreshCalendar();
     }
 
     @FXML void switchToListView(ActionEvent event) {
@@ -264,6 +281,16 @@ public class LessonsController implements Initializable {
     @FXML
     void editLesson(ActionEvent event) {
         editLesson(selectedLesson);
+    }
+
+    private boolean isInvalidDate(String birthDate) {
+        if (birthDate.isBlank()) return false;
+        try {
+            calendarDatePicker.getConverter().fromString(birthDate);
+        } catch (DateTimeParseException e) {
+            return true;
+        }
+        return false;
     }
 
     public void editLesson(Lesson lesson) {
@@ -530,6 +557,7 @@ public class LessonsController implements Initializable {
 
     public void showLessonInfo(Lesson lesson) {
         if (lesson == null) return;
+        lessonInfoArea.setVisible(true);
         lessonInfoTitle.setText(lesson.category() + " - Details");
         lessonInfoSubtitle.setText(lesson.getLessonName());
         lessonInfoTeacherName.setText(lesson.teacher().name());
@@ -565,9 +593,7 @@ public class LessonsController implements Initializable {
             Label changeNote = new Label(change.getChangeNote());
             changeNote.setWrapText(true);
             Button edit = editChangeButton(change);
-            edit.setPrefWidth(25);
             Button delete = deleteChangeButton(change);
-            delete.setPrefWidth(25);
             HBox buttonBox = new HBox(3, edit, delete);
 
             lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, -1, Integer.MAX_VALUE));
@@ -713,7 +739,9 @@ public class LessonsController implements Initializable {
     }
 
     private Button editChangeButton(LessonChange lessonChange) {
-        Button button = new Button("B");
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/edit.png").toExternalForm()));
+        Button button = new Button("", icon);
+        button.setStyle("-fx-background-color: transparent;");
         button.setOnAction(e -> {
             editLesson(lessonChange);
         });
@@ -721,7 +749,9 @@ public class LessonsController implements Initializable {
     }
 
     private Button deleteChangeButton(LessonChange lessonChange) {
-        Button button = new Button("L");
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/delete.png").toExternalForm()));
+        Button button = new Button("", icon);
+        button.setStyle("-fx-background-color: transparent;");
         button.setOnAction(e -> {
             Node source = (Node) e.getSource();
             int rowIndex = GridPane.getRowIndex(source.getParent());
@@ -862,23 +892,23 @@ public class LessonsController implements Initializable {
         }
 
         filterTeacher1ComboBox.setItems(getTeacherListFromDB());
-        filterTeacher1ComboBox.setButtonCell(new TeacherListCellShort());
-        filterTeacher1ComboBox.setCellFactory(teacher -> new TeacherListCellShort());
-        filterTeacher1ComboBox.setConverter(teacherStringConverterShort);
+        filterTeacher1ComboBox.setButtonCell(new TeacherListCellFormal());
+        filterTeacher1ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
+        filterTeacher1ComboBox.setConverter(teacherStringConverterFormal);
         filterTeacher1ComboBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> filterTeacher1.setDisable(newValue == null));
 
         filterTeacher2ComboBox.setItems(getTeacherListFromDB());
-        filterTeacher2ComboBox.setButtonCell(new TeacherListCellShort());
-        filterTeacher2ComboBox.setCellFactory(teacher -> new TeacherListCellShort());
-        filterTeacher2ComboBox.setConverter(teacherStringConverterShort);
+        filterTeacher2ComboBox.setButtonCell(new TeacherListCellFormal());
+        filterTeacher2ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
+        filterTeacher2ComboBox.setConverter(teacherStringConverterFormal);
         filterTeacher2ComboBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> filterTeacher2.setDisable(newValue == null));
 
         filterTeacher3ComboBox.setItems(getTeacherListFromDB());
-        filterTeacher3ComboBox.setButtonCell(new TeacherListCellShort());
-        filterTeacher3ComboBox.setCellFactory(teacher -> new TeacherListCellShort());
-        filterTeacher3ComboBox.setConverter(teacherStringConverterShort);
+        filterTeacher3ComboBox.setButtonCell(new TeacherListCellFormal());
+        filterTeacher3ComboBox.setCellFactory(teacher -> new TeacherListCellFormal());
+        filterTeacher3ComboBox.setConverter(teacherStringConverterFormal);
         filterTeacher3ComboBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> filterTeacher3.setDisable(newValue == null));
 
@@ -934,27 +964,27 @@ public class LessonsController implements Initializable {
         lessonTableView.setItems(sortableLessons);
         sortableLessons.comparatorProperty().bind(lessonTableView.comparatorProperty());
         enableLessonSelection(lessonTableView);
-        lessonTableView.getStylesheets().add(getClass().getResource("/css/tableView.css").toExternalForm());
 
         // Initialize displayed table view
         lessonTableView.getSortOrder().setAll(nameColumn);
         showTableView(lessonTableView);
 
         // Initialize lesson info
+        lessonInfoArea.setVisible(false);
         lessonChangesScrollPane.setFitToWidth(true);
 
         // Initialize appointment TableView
         aptColumnDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateInfo()));
-        aptColumnDate.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.23));
+        aptColumnDate.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.26));
 
         aptColumnTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().timeInfo()));
-        aptColumnTime.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.13));
+        aptColumnTime.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.16));
 
         aptColumnStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().status()));
         aptColumnStatus.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.23));
 
         aptColumnNote.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        aptColumnNote.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.4));
+        aptColumnNote.prefWidthProperty().bind(aptTableView.widthProperty().multiply(0.34));
 
         aptLabel.setText("Termine im 1. Halbjahr 2024:");
 
@@ -990,7 +1020,6 @@ public class LessonsController implements Initializable {
         rowHeaderScrollPane.vvalueProperty().bind(calendarScrollPane.vvalueProperty());
 
         calendarStartDate = LocalDate.now();
-        calendarEndDate = LocalDate.now();
         calendarDateLabel.setText(weekdayDateString(calendarStartDate));
         for (Location lessonLocation : getLocationListFromDB()) {
             for (String room : lessonLocation.rooms()) {

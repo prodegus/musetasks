@@ -7,7 +7,7 @@
 
 <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="160.0" minWidth="-Infinity" prefWidth="500.0" spacing="40.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.ui.popup.PopupInfoController">
    <children>
-      <Label fx:id="messageLabel" text="Hier steht die Nachricht des Popup-Fensters. Fortfahren?" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS" />
+      <Label fx:id="messageLabel" text="Hier steht die Nachricht des Popup-Fensters. Fortfahren?" wrapText="true" VBox.vgrow="ALWAYS" />
       <Button mnemonicParsing="false" onAction="#okButtonClicked" prefWidth="80.0" text="OK" />
    </children>
    <padding>

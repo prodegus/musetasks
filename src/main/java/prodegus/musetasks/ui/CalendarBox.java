@@ -50,14 +50,14 @@ public class CalendarBox extends VBox {
 
         if (lesson.getCategory() == CATEGORY_SINGLE) {
             Label label1 = new Label(appointment.getTime() + "   " + getStudentFromDB(lesson.getStudentId1()).name());
-            label1.setStyle("-fx-font-weight: bold");
+            label1.setStyle("-fx-font-weight: bold; -fx-font-family: system;");
             label1.setWrapText(true);
             Label label2 = new Label(String.join(", ", lesson.getInstrument(), "Einzel", lesson.getDuration() + " min"));
             label2.setWrapText(true);
             content.getChildren().addAll(label1, label2);
         } else {
             Label label3 = new Label(appointment.getTime() + "   " + lesson.getLessonName());
-            label3.setStyle("-fx-font-weight: bold");
+            label3.setStyle("-fx-font-weight: bold; -fx-font-family: system;");
             label3.setWrapText(true);
             content.getChildren().add(label3);
         }

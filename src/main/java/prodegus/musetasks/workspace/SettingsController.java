@@ -175,7 +175,7 @@ public class SettingsController implements Initializable {
 
     @FXML
     void setMailAccount(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mailsettings-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/settings-mail.fxml"));
         Stage stage = newStage("E-Mail-Konto hinzufügen", loader);
         stage.showAndWait();
         mailUserLabel.setText(getMailUser());

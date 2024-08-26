@@ -9,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import prodegus.musetasks.appointments.Appointment;
 import prodegus.musetasks.contacts.Student;
@@ -319,6 +322,9 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ImageView settingsIcon = new ImageView(new Image(getClass().getResource("/images/gear25x25.png").toExternalForm()));
+        settingsButton.setGraphic(settingsIcon);
+
         System.out.println("connected: " + connected());
         System.out.println("DB_PATH: " + DB_PATH);
         System.out.println("mail_user: " + getMailUser());

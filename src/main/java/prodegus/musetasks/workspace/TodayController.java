@@ -131,7 +131,7 @@ public class TodayController implements Initializable {
 
     private HBox appointmentRow(Appointment appointment) {
         Label time = new Label(asString(appointment.getTime()));
-        Label timeText = new Label("Uhr");
+        Label timeText = new Label(" Uhr");
         Label description = new Label(appointment.lesson().getLessonName());
         time.setPrefWidth(33);
         timeText.setPrefWidth(35);

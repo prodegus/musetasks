@@ -37,12 +37,16 @@ public class MailController implements Initializable {
 
     @FXML private MenuButton mailFromTemplate;
 
+    @FXML private TitledPane filterPane;
+
     @FXML private CheckBox filterTimeDate;
     @FXML private DatePicker filterTimeDatePicker;
     @FXML private CheckBox filterTimeSpan;
     @FXML private DatePicker filterTimeSpanFrom;
     @FXML private DatePicker filterTimeSpanTo;
     @FXML private CheckBox filterTimeToday;
+
+    @FXML private Button resetFilterButton;
     
     @FXML private TextField emailSearchBar;
     @FXML private TableView<Email> mailTableView;
@@ -275,6 +279,8 @@ public class MailController implements Initializable {
         sortableEmailsSent.comparatorProperty().bind(mailTableView.comparatorProperty());
         sortableDrafts.comparatorProperty().bind(mailTableView.comparatorProperty());
         enableEmailSelection(mailTableView);
+
+        toggleSent.setSelected(true);
         
         // Initialize SearchBar
         emailSearchBar.textProperty().addListener(emailSearchListener);

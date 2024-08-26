@@ -264,11 +264,17 @@ public class AddParentController implements Initializable {
     @FXML
     void skypeCheckBoxClicked(MouseEvent event) {
         skypeComboBox.setVisible(skypeCheckBox.isSelected());
+        if (!skypeComboBox.getItems().contains(emailTextField.getText())) {
+            skypeComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     @FXML
     void zoomCheckBoxClicked(MouseEvent event) {
         zoomComboBox.setVisible(zoomCheckBox.isSelected());
+        if (!zoomComboBox.getItems().contains(emailTextField.getText())) {
+            zoomComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     private boolean isInvalidBirthDate(String birthDate) {
@@ -338,10 +344,21 @@ public class AddParentController implements Initializable {
         selectChild(child5ComboBox, parent.getChildId5());
         phoneTextField.setText(parent.getPhone());
         emailTextField.setText(parent.getEmail());
-        zoomCheckBox.setSelected(!parent.getZoom().isEmpty());
-        zoomComboBox.setValue(parent.getZoom());
-        skypeCheckBox.setSelected(!parent.getSkype().isEmpty());
-        skypeComboBox.setValue(parent.getSkype());
+
+        zoomComboBox.setItems(parent.getAllMail());
+        if (!parent.getZoom().isEmpty()) {
+            zoomCheckBox.setSelected(true);
+            zoomComboBox.setVisible(true);
+            zoomComboBox.setValue(parent.getZoom());
+        }
+
+        skypeComboBox.setItems(parent.getAllMail());
+        if (!parent.getSkype().isEmpty()) {
+            skypeCheckBox.setSelected(true);
+            skypeComboBox.setVisible(true);
+            skypeComboBox.setValue(parent.getSkype());
+        }
+        
         notesTextArea.setText(parent.getNotes());
     }
 

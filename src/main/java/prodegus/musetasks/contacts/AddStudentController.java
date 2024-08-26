@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 import static prodegus.musetasks.contacts.ContactModel.*;
 import static prodegus.musetasks.contacts.ParentModel.*;
@@ -81,7 +82,7 @@ public class AddStudentController implements Initializable {
     void submitStudentData(ActionEvent event) {
         Student newStudent = (editMode ? getStudentFromDB(id) : new Student());
         boolean invalidData = false;
-        StringBuilder errorMessage = new StringBuilder();
+        StringJoiner errorMessage = new StringJoiner("\n");
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy   HH:mm");
         String timestamp = formatter.format(now);
@@ -114,14 +115,14 @@ public class AddStudentController implements Initializable {
 
         if (lastname.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Nachname eingeben\n");
+            errorMessage.add("- Bitte Nachname eingeben");
         } else {
             newStudent.setLastName(lastname);
         }
 
         if (firstname.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Vorname eingeben\n");
+            errorMessage.add("- Bitte Vorname eingeben");
         } else {
             newStudent.setFirstName(firstname);
         }
@@ -133,7 +134,7 @@ public class AddStudentController implements Initializable {
 
         if (isInvalidPostalCode(postalCode)) {
             invalidData = true;
-            errorMessage.append("- Bitte gültige Postleitzahl eingeben (5 Ziffern) oder Feld leer lassen\n");
+            errorMessage.add("- Bitte gültige Postleitzahl eingeben (5 Ziffern) oder Feld leer lassen");
         } else {
             newStudent.setPostalCode(postalCodeToInt(postalCode));
         }
@@ -146,13 +147,13 @@ public class AddStudentController implements Initializable {
 
         if (contactMail.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte Kontakt-E-Mail-Adresse auswählen\n");
+            errorMessage.add("- Bitte Kontakt-E-Mail-Adresse auswählen");
         }
         newStudent.setContactEmail(contactMail);
 
         if (isInvalidBirthDate(birthDate)) {
             invalidData = true;
-            errorMessage.append("- Bitte gültiges Geburtsdatum eingeben (z.B. 01.01.2000) oder Feld leer lassen\n");
+            errorMessage.add("- Bitte gültiges Geburtsdatum eingeben (z.B. 01.01.2000) oder Feld leer lassen");
         } else {
             newStudent.setBirthDate(birthDate);
         }
@@ -161,7 +162,7 @@ public class AddStudentController implements Initializable {
 
         if (instrument1.isBlank()) {
             invalidData = true;
-            errorMessage.append("- Bitte mindestens ein Instrument auswählen\n");
+            errorMessage.add("- Bitte mindestens ein Instrument auswählen");
         } else {
             newStudent.setInstrument1(instrument1);
         }
@@ -260,11 +261,17 @@ public class AddStudentController implements Initializable {
     @FXML
     void skypeCheckBoxClicked(MouseEvent event) {
         skypeComboBox.setVisible(skypeCheckBox.isSelected());
+        if (!skypeComboBox.getItems().contains(emailTextField.getText())) {
+            skypeComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     @FXML
     void zoomCheckBoxClicked(MouseEvent event) {
         zoomComboBox.setVisible(zoomCheckBox.isSelected());
+        if (!zoomComboBox.getItems().contains(emailTextField.getText())) {
+            zoomComboBox.getItems().add(emailTextField.getText());
+        }
     }
 
     private int postalCodeToInt(String postalCode) {
@@ -312,10 +319,21 @@ public class AddStudentController implements Initializable {
         if (!student.getInstrument3().isBlank()) instrument3ComboBox.setValue(student.getInstrument3());
         phoneTextField.setText(student.getPhone());
         emailTextField.setText(student.getEmail());
-        zoomCheckBox.setSelected(!student.getZoom().isEmpty());
-        zoomComboBox.setValue(student.getZoom());
-        skypeCheckBox.setSelected(!student.getSkype().isEmpty());
-        skypeComboBox.setValue(student.getSkype());
+
+        zoomComboBox.setItems(student.getAllMail());
+        if (!student.getZoom().isEmpty()) {
+            zoomCheckBox.setSelected(true);
+            zoomComboBox.setVisible(true);
+            zoomComboBox.setValue(student.getZoom());
+        }
+
+        skypeComboBox.setItems(student.getAllMail());
+        if (!student.getSkype().isEmpty()) {
+            skypeCheckBox.setSelected(true);
+            skypeComboBox.setVisible(true);
+            skypeComboBox.setValue(student.getSkype());
+        }
+        
         contactMailComboBox.setValue(student.getContactEmail());
         if (student.getParentId1() != 0) {
             parent1ComboBox.setEditable(false);

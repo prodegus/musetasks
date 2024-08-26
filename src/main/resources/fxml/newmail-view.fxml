@@ -15,7 +15,7 @@
 
 <VBox alignment="CENTER" prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.mail.NewMailController">
    <children>
-      <Label text="E-Mail senden">
+      <Label styleClass="label-24-bold" text="E-Mail senden">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
@@ -39,48 +39,48 @@
             <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Label text="Von:">
+            <Label styleClass="label-14-bold" text="Von:">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="An:" GridPane.rowIndex="1">
+            <Label styleClass="label-14-bold" text="An:" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Kopie an:" GridPane.rowIndex="2">
+            <Label styleClass="label-14-bold" text="Kopie an:" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Betreff:" GridPane.rowIndex="3">
+            <Label styleClass="label-14-bold" text="Betreff:" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="fromTextField" disable="true" GridPane.columnIndex="1">
+            <TextField fx:id="fromTextField" disable="true" styleClass="text-field-14" GridPane.columnIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="toTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="toTextField" styleClass="text-field-14" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="ccTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="ccTextField" styleClass="text-field-14" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="subjectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="subjectTextField" styleClass="text-field-14" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
             <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-            <Label text="Anhang:" GridPane.rowIndex="5">
+            <Label styleClass="label-14-bold" text="Anhang:" GridPane.rowIndex="5">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

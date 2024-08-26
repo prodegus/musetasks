@@ -1,7 +1,220 @@
+.root {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 13;
+    -fx-base: rgb(189, 219, 201);
+    -fx-background: white;
+}
+
+.text{
+    -fx-font-smoothing-type: gray;
+}
+
+.label-14 {
+    -fx-font-size: 14;
+}
+
+.label-14-bold {
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+.label-18-bold {
+    -fx-font-family: Manrope;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+}
+
+.label-20 {
+    -fx-font-family: Manrope;
+    -fx-font-size: 20;
+}
+
+.label-24 {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 24;
+}
+
+.label-24-bold {
+    -fx-font-family: FreeSans;
+    -fx-font-weight: bold;
+    -fx-font-size: 24;
+}
+
+.label-34 {
+    -fx-font-family: Manrope;
+    -fx-font-size: 34;
+}
+
+.label-36 {
+    -fx-font-family: Manrope;
+    -fx-font-size: 36;
+}
+
+.label-36-bold {
+    -fx-font-family: Manrope;
+    -fx-font-weight: bold;
+    -fx-font-size: 36;
+}
+
+.app-title {
+    -fx-font-family: Manrope;
+    -fx-font-size: 50;
+}
+
 .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
     -fx-background-color: transparent;
 }
 
 .split-pane {
     -fx-background-color: transparent;
+}
+
+.main-menu-bar {
+    -fx-background-color: derive(-fx-base, -15%);
+}
+
+.main-toggle {
+    -fx-background-color: transparent;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.main-toggle:hover {
+    -fx-background-color: derive(-fx-base, -30%);
+}
+
+.main-toggle:pressed {
+    -fx-background-color: derive(-fx-base, -50%);
+    -fx-text-fill: white;
+}
+
+.main-toggle:selected {
+    -fx-background-color: derive(-fx-base, -40%);
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 13;
+}
+
+.button-left {
+    -fx-font-size: 15;
+    -fx-alignment: center-left;
+}
+
+.custom-arrow-button {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 20;
+}
+
+#filterPane .title {
+    -fx-background-color: derive(-fx-base, -15%);
+}
+
+#filterPane .title .text {
+    -fx-font-size: 15;
+}
+
+.titled-pane-left {
+    -fx-background-radius: 0;
+}
+
+.titled-pane-left .title {
+    -fx-background-color: derive(-fx-base, -5%);
+    -fx-background-radius: 0;
+}
+
+.titled-pane-left .title .text {
+    -fx-font-size: 15;
+}
+
+#resetFilterButton {
+    -fx-background-radius: 0 0 5 5;
+    -fx-background-color: derive(-fx-base, -15%);
+}
+
+#resetFilterButton:hover {
+    -fx-background-color: derive(-fx-base, -25%);
+}
+
+#resetFilterButton:pressed {
+    -fx-background-color: derive(-fx-base, -35%);
+    -fx-text-fill: white;
+}
+
+.menu-bar-left {
+    -fx-background-color: derive(-fx-base, +15%);
+}
+
+.sub-toggle {
+    -fx-font-size: 15;
+    -fx-background-color: transparent;
+}
+
+.sub-toggle:hover {
+    -fx-background-color: derive(-fx-base, -20%);
+}
+
+.sub-toggle:pressed {
+    -fx-background-color: derive(-fx-base, -40%);
+    -fx-text-fill: white;
+}
+
+.sub-toggle:selected {
+    -fx-background-color: derive(-fx-base, -30%);
+    -fx-text-fill: white;
+}
+
+.sub-toggle-menubutton {
+    -fx-font-size: 15;
+    -fx-background-color: transparent;
+}
+
+.sub-toggle-menubutton:hover {
+    -fx-background-color: derive(-fx-base, -20%);
+}
+
+.sub-toggle-menubutton:pressed {
+    -fx-background-color: derive(-fx-base, -40%);
+    -fx-text-fill: white;
+}
+
+.sub-toggle-menubutton:selected {
+    -fx-background-color: derive(-fx-base, -30%);
+    -fx-text-fill: white;
+}
+
+.table-view {
+    -fx-font-size: 14px;
+}
+
+.table-column .label {
+    -fx-font-family: Manrope;
+}
+
+.text-area {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 14;
+}
+
+.text-field-14 {
+    -fx-font-family: FreeSans;
+    -fx-font-size: 14;
+}
+
+#settingsButton {
+    -fx-background-color: white;
+}
+
+#settingsButton:hover {
+    -fx-background-color: derive(-fx-base, +30%);
+}
+
+#settingsButton:pressed {
+    -fx-background-color: derive(-fx-base, +50%);
 }

@@ -8,33 +8,17 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prodegus.musetasks.database.DBSelectController">
    <children>
-      <Label layoutX="176.0" layoutY="103.0" text="Datenbank auswählen" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="75.0">
+      <Label layoutX="176.0" layoutY="103.0" styleClass="label-24-bold" text="Datenbank auswählen" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="75.0">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="currentDBLabel" layoutX="75.0" layoutY="168.0" text="Keine Datenbank ausgewählt." AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="168.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
+      <Label fx:id="currentDBLabel" layoutX="75.0" layoutY="168.0" text="Keine Datenbank ausgewählt." AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="168.0" />
       <HBox alignment="CENTER" fillHeight="false" layoutX="75.0" layoutY="288.0" prefWidth="450.0" spacing="40.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="75.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#selectDB" text="Datenbank auswählen">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#createDB" text="Neu anlegen">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
+            <Button mnemonicParsing="false" onAction="#selectDB" text="Datenbank auswählen" />
+            <Button mnemonicParsing="false" onAction="#createDB" text="Neu anlegen" />
+            <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
          </children>
       </HBox>
    </children>
