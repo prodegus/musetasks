@@ -181,7 +181,7 @@ public class LessonChange extends Lesson {
         if (previousChange.getAptStatus() != this.getAptStatus()) {
             changeNote.add("Terminstatus: " + this.appointmentStatus());
         }
-        if (previousChange.getEndDate() != this.getEndDate()) {
+        if (!previousChange.getEndDate().equals(getEndDate())) {
             changeNote.add("Verlängert bis " + asString(this.getEndDate()));
         }
         if (removedStudents.size() > 0) {

@@ -406,8 +406,8 @@
                                                 <GridPane fx:id="lessonChangesGridPane" prefWidth="341.0">
                                                    <columnConstraints>
                                                       <ColumnConstraints hgrow="NEVER" maxWidth="81.0" minWidth="-Infinity" prefWidth="81.0" />
-                                                      <ColumnConstraints hgrow="ALWAYS" maxWidth="213.0" minWidth="183.0" prefWidth="183.0" />
-                                                      <ColumnConstraints hgrow="NEVER" maxWidth="77.0" minWidth="-Infinity" prefWidth="77.0" />
+                                                      <ColumnConstraints hgrow="ALWAYS" maxWidth="213.0" minWidth="183.0" prefWidth="209.0" />
+                                                      <ColumnConstraints hgrow="NEVER" maxWidth="77.0" minWidth="-Infinity" prefWidth="51.0" />
                                                    </columnConstraints>
                                                    <children>
                                                       <Label text="Datum">

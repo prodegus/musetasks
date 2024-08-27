@@ -179,20 +179,16 @@ public class LessonModel {
     }
 
     public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments, LocalDate changeDate) {
-        if (appointments == null) {
+        if (appointments.isEmpty()) {
             insertLessonAppointments(lesson);
             return;
         }
 
         List<Appointment> oldLessonAppointments = getLessonAppointmentsFromDB(lesson.getId());
-        List<Integer> newIds = new ArrayList<>();
-        for (Appointment newAppointment : appointments) newIds.add(newAppointment.getId());
 
-        if (oldLessonAppointments.size() > 0) {
-            for (Appointment oldAppointment : oldLessonAppointments) {
-                if (oldAppointment.getCategory() == CATEGORY_LESSON_RESCHEDULED && oldAppointment.getDateOld().isBefore(changeDate)) continue;
-                if (!newIds.contains(oldAppointment.getId())) deleteAppointmentFromDB(oldAppointment);
-            }
+        for (Appointment oldAppointment : oldLessonAppointments) {
+            if (oldAppointment.getCategory() == CATEGORY_LESSON_RESCHEDULED && oldAppointment.getDateOld().isBefore(changeDate)) continue;
+            deleteAppointmentFromDB(oldAppointment);
         }
 
         for (Appointment appointment : appointments) {
@@ -203,7 +199,7 @@ public class LessonModel {
     }
 
     public static void insertLessonAppointments(Lesson lesson, ObservableList<Appointment> appointments) {
-        if (appointments == null || appointments.isEmpty()) {
+        if (appointments.isEmpty()) {
             insertLessonAppointments(lesson);
             return;
         }

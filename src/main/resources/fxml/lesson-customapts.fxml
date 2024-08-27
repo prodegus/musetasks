@@ -19,7 +19,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="lessonTitle">
+            <Label fx:id="lessonTitle" styleClass="label-14">
                <font>
                   <Font size="14.0" />
                </font>

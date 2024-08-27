@@ -320,23 +320,24 @@ public class AddSingleController implements Initializable {
         repeatComboBox.getSelectionModel().select(lesson.getRepeat());
         if (lesson.getRepeat() != REPEAT_OFF && lesson.getRepeat() != REPEAT_CUSTOM && lesson.getWeekday() != 0)
             weekdayComboBox.setValue(lesson.weekday());
+        if (lesson.getRepeat() == REPEAT_CUSTOM) customAppointments.setAll(getLessonAppointmentsFromDB(id));
         timeComboBox.setValue(lesson.getTime().toString() + " Uhr");
-        startDatePicker.setValue(lesson.getStartDate());
         endDatePicker.setValue(lesson.getEndDate().equals(LocalDate.MAX) ? null : lesson.getEndDate());
     }
 
     public void initLesson(Lesson lesson) {
         LessonChange latestChange = getLatestLessonChange(lesson.getId());
-        Lesson futureLesson = latestChange == null ? lesson : latestChange.lesson();
+        Lesson futureLesson = latestChange.lesson();
         show(changeDateVBox);
         changeDatePicker.valueProperty().addListener(e -> {
             LessonChange currentChange = getLatestLessonChange(lesson.getId(), changeDatePicker.getValue());
             if (currentChange != null) initValues(currentChange.lesson());
+            startDatePicker.setValue(changeDatePicker.getValue());
         });
         if (getLessonChangeListFromDB(lesson.getId()).size() > 1) startDatePicker.setDisable(true);
         gridPane.getRowConstraints().set(1, new RowConstraints(60));
         gridPane.getRowConstraints().set(10, new RowConstraints(10));
-        changeDatePicker.setValue(latestChange == null ? lesson.getStartDate() : latestChange.getChangeDate());
+        changeDatePicker.setValue(latestChange.getChangeDate());
         editMode = true;
         id = futureLesson.getId();
         titleTextField.setText("Einzel-Unterricht bearbeiten");

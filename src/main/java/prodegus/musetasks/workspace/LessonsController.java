@@ -12,11 +12,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -592,9 +594,10 @@ public class LessonsController implements Initializable {
             Label date = new Label(asString(change.getChangeDate()));
             Label changeNote = new Label(change.getChangeNote());
             changeNote.setWrapText(true);
-            Button edit = editChangeButton(change);
-            Button delete = deleteChangeButton(change);
-            HBox buttonBox = new HBox(3, edit, delete);
+            ImageView editIcon = editChangeIcon(change);
+            ImageView deleteIcon = deleteChangeIcon(change);
+            HBox.setMargin(deleteIcon, new Insets(0, 0, 0, 5));
+            HBox buttonBox = new HBox(3, editIcon, deleteIcon);
 
             lessonChangesGridPane.getRowConstraints().add(new RowConstraints(22, -1, Integer.MAX_VALUE));
             lessonChangesGridPane.addRow(row, date, changeNote, buttonBox);
@@ -738,21 +741,23 @@ public class LessonsController implements Initializable {
         showLessonInfo(selectedLesson);
     }
 
-    private Button editChangeButton(LessonChange lessonChange) {
+    private ImageView editChangeIcon(LessonChange lessonChange) {
         ImageView icon = new ImageView(new Image(getClass().getResource("/images/edit.png").toExternalForm()));
-        Button button = new Button("", icon);
-        button.setStyle("-fx-background-color: transparent;");
-        button.setOnAction(e -> {
-            editLesson(lessonChange);
+        icon.setOnMouseClicked(e -> editLesson(lessonChange));
+        icon.setOnMouseEntered(e -> {
+            icon.setScaleX(1.2);
+            icon.setScaleY(1.2);
         });
-        return button;
+        icon.setOnMouseExited(e -> {
+            icon.setScaleX(1.0);
+            icon.setScaleY(1.0);
+        });
+        return icon;
     }
 
-    private Button deleteChangeButton(LessonChange lessonChange) {
+    private ImageView deleteChangeIcon(LessonChange lessonChange) {
         ImageView icon = new ImageView(new Image(getClass().getResource("/images/delete.png").toExternalForm()));
-        Button button = new Button("", icon);
-        button.setStyle("-fx-background-color: transparent;");
-        button.setOnAction(e -> {
+        icon.setOnMouseClicked(e -> {
             Node source = (Node) e.getSource();
             int rowIndex = GridPane.getRowIndex(source.getParent());
             if (rowIndex == 2) {
@@ -766,7 +771,15 @@ public class LessonsController implements Initializable {
                 removeRow(lessonChangesGridPane, rowIndex);
             }
         });
-        return button;
+        icon.setOnMouseEntered(e -> {
+            icon.setScaleX(1.2);
+            icon.setScaleY(1.2);
+        });
+        icon.setOnMouseExited(e -> {
+            icon.setScaleX(1.0);
+            icon.setScaleY(1.0);
+        });
+        return icon;
     }
 
     private void addCalendarColumn(Location location, String room) {
