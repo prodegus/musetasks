@@ -37,10 +37,12 @@ public class NewMailController implements Initializable {
         List<File> files = new FileChooser().showOpenMultipleDialog(stageOf(event));
         StringJoiner fileNames = new StringJoiner(", ");
         if (!attachmentFileName.getText().isBlank()) fileNames.add(attachmentFileName.getText());
-        attachments.addAll(files);
+        if (files != null && !files.isEmpty()) {
+            attachments.addAll(files);
 
-        for (File file : files) {
-            fileNames.add(file.getName());
+            for (File file : files) {
+                fileNames.add(file.getName());
+            }
         }
         attachmentFileName.setText(fileNames.toString());
         attachmentFileName.setVisible(true);
